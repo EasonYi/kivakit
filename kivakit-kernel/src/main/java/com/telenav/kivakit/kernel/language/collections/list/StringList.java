@@ -19,6 +19,7 @@
 package com.telenav.kivakit.kernel.language.collections.list;
 
 import com.telenav.kivakit.kernel.data.conversion.string.StringConverter;
+import com.telenav.kivakit.kernel.data.conversion.string.BaseStringConverter;
 import com.telenav.kivakit.kernel.data.conversion.string.collection.BaseListConverter;
 import com.telenav.kivakit.kernel.data.conversion.string.language.IdentityConverter;
 import com.telenav.kivakit.kernel.interfaces.comparison.Matcher;
@@ -270,16 +271,24 @@ public class StringList extends ObjectList<String>
      * @author jonathanl (shibo)
      */
     @LexakaiJavadoc(complete = true)
-    public static class Converter extends BaseListConverter<String>
+    public static class Converter extends BaseStringConverter<StringList>
     {
+        private final String delimiter;
         public Converter(final Listener listener)
         {
-            super(listener, new IdentityConverter(listener), ",");
+            this(listener, ",");
         }
 
-        public Converter(final Listener listener, final String delimiter)
+        public Converter(final Listener listener, String delimiter)
         {
-            super(listener, new IdentityConverter(listener), delimiter);
+            super(listener);
+            this.delimiter = delimiter;
+        }
+
+        @Override
+        protected StringList onToValue(final String value)
+        {
+            return StringList.split(value, delimiter);
         }
     }
 
