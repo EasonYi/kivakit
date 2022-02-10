@@ -36,7 +36,7 @@ import com.telenav.kivakit.kernel.logging.LoggerFactory;
 import com.telenav.kivakit.kernel.messaging.Listener;
 import com.telenav.kivakit.resource.Resource;
 import com.telenav.kivakit.resource.project.lexakai.diagrams.DiagramResourceArchive;
-import com.telenav.kivakit.serialization.core.SerializationSession;
+import com.telenav.kivakit.serialization.core.BinarySerializationSession;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.associations.UmlRelation;
@@ -60,7 +60,7 @@ import static com.telenav.kivakit.resource.compression.archive.ZipArchive.Mode.R
 /**
  * A wrapper around the JDK zip filesystem that makes it easier to use. A {@link ZipArchive} can be created with {@link
  * #open(Listener, File, ProgressReporter, Mode)}, which returns the open zip archive or null if the operation fails.
- * Adds the ability to save and load objects into zip entries using a {@link SerializationSession}. A zip archive
+ * Adds the ability to save and load objects into zip entries using a {@link BinarySerializationSession}. A zip archive
  * contains entries wrapped by {@link ZipEntry} and a {@link ZipArchive} is {@link Iterable} to make it easy to
  * enumerate zip entries:
  * <pre>
@@ -82,20 +82,20 @@ import static com.telenav.kivakit.resource.compression.archive.ZipArchive.Mode.R
  *
  * <ul>
  *     <li>{@link #save(String, Resource)} - Saves the given resources into the named zip entry</li>
- *     <li>{@link #save(SerializationSession, String, VersionedObject)} - Writes the object to the given entry</li>
+ *     <li>{@link #save(BinarySerializationSession, String, VersionedObject)} - Writes the object to the given entry</li>
  *     <li>{@link #saveEntry(String, Callback)} - Saves to the named entry calling the callback to do the work</li>
  * </ul>
  *
  * <p><b>Loading</b></p>
  *
  * <ul>
- *     <li>{@link #load(SerializationSession, String)} - Loads the object from the named entry using the given serializer </li>
+ *     <li>{@link #load(BinarySerializationSession, String)} - Loads the object from the named entry using the given serializer </li>
  * </ul>
  *
  * @author jonathanl (shibo)
  * @see ZipEntry
  * @see ProgressReporter
- * @see SerializationSession
+ * @see BinarySerializationSession
  * @see Resource
  */
 @UmlClassDiagram(diagram = DiagramResourceArchive.class)
@@ -171,9 +171,9 @@ public final class ZipArchive implements Iterable<ZipEntry>, AutoCloseable, Byte
         WRITE
     }
 
-    private FileSystem filesystem;
-
     private final File file;
+
+    private FileSystem filesystem;
 
     private final ProgressReporter reporter;
 
@@ -275,7 +275,7 @@ public final class ZipArchive implements Iterable<ZipEntry>, AutoCloseable, Byte
     /**
      * @return The versioned object loaded from the given archive entry using the given serialization
      */
-    public synchronized <T> VersionedObject<T> load(SerializationSession session, String entryName)
+    public synchronized <T> VersionedObject<T> load(BinarySerializationSession session, String entryName)
     {
         try
         {
@@ -286,8 +286,8 @@ public final class ZipArchive implements Iterable<ZipEntry>, AutoCloseable, Byte
                 {
                     if (input != null)
                     {
-                        session.open(SerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), input);
-                        return session.read();
+                        session.open(BinarySerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), input);
+                        return session.readVersionedObject();
                     }
                 }
                 session.close();
@@ -328,7 +328,7 @@ public final class ZipArchive implements Iterable<ZipEntry>, AutoCloseable, Byte
     /**
      * Saves the given object to the zip archive under the given entry name using the given serialization
      */
-    public <T> void save(SerializationSession session,
+    public <T> void save(BinarySerializationSession session,
                          String entryName,
                          VersionedObject<T> object)
     {
@@ -336,7 +336,7 @@ public final class ZipArchive implements Iterable<ZipEntry>, AutoCloseable, Byte
         {
             try
             {
-                session.open(SerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), output);
+                session.open(BinarySerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), output);
                 session.write(object);
             }
             finally

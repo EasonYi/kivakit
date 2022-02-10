@@ -29,8 +29,8 @@ import com.telenav.kivakit.kernel.language.types.Classes;
 import com.telenav.kivakit.kernel.logging.Logger;
 import com.telenav.kivakit.kernel.logging.LoggerFactory;
 import com.telenav.kivakit.kernel.messaging.Debug;
-import com.telenav.kivakit.serialization.core.SerializationSession;
-import com.telenav.kivakit.serialization.core.SerializationSessionFactory;
+import com.telenav.kivakit.serialization.core.BinarySerializationSession;
+import com.telenav.kivakit.serialization.core.BinarySerializationSessionFactory;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 
 import java.util.HashMap;
@@ -74,9 +74,9 @@ import static com.telenav.kivakit.kernel.data.validation.ensure.Ensure.fail;
  *
  * <p>
  * Once all relevant serializable types have been added to a type set, it can be merged with other type set(s) using
- * {@link #mergedWith(KryoTypes)}. The resulting merged set can be used to produce a {@link SerializationSessionFactory}
- * with {@link #sessionFactory()}. This session factory can then be used to create a {@link SerializationSession} which
- * can be used to read and write data.
+ * {@link #mergedWith(KryoTypes)}. The resulting merged set can be used to produce a {@link
+ * BinarySerializationSessionFactory} with {@link #sessionFactory()}. This session factory can then be used to create a
+ * {@link BinarySerializationSession} which can be used to read and write data.
  * </p>
  *
  * <p><b>Backwards Compatibility</b></p>
@@ -274,9 +274,9 @@ public class KryoTypes implements Named
     /**
      * @return A session factory for this set of types
      */
-    public SerializationSessionFactory sessionFactory()
+    public BinarySerializationSessionFactory sessionFactory()
     {
-        return new SerializationSessionFactory(() -> new KryoSerializationSession(this));
+        return new BinarySerializationSessionFactory(() -> new KryoSerializationSession(this));
     }
 
     @Override

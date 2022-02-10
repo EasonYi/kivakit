@@ -33,13 +33,17 @@ public class Booleans
 {
     public static boolean isFalse(String string)
     {
-        return "false".equalsIgnoreCase(string) || "f".equalsIgnoreCase(string) || "no".equalsIgnoreCase(string)
-                || "disabled".equalsIgnoreCase(string);
+        return "false".equalsIgnoreCase(string) ||
+                "f".equalsIgnoreCase(string) ||
+                "no".equalsIgnoreCase(string) ||
+                "disabled".equalsIgnoreCase(string);
     }
 
     public static boolean isTrue(String string)
     {
-        return "true".equalsIgnoreCase(string) || "t".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string)
-                || "enabled".equalsIgnoreCase(string);
+        return "true".equalsIgnoreCase(string) ||
+                "t".equalsIgnoreCase(string) ||
+                "yes".equalsIgnoreCase(string) ||
+                "enabled".equalsIgnoreCase(string);
     }
 }

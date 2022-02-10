@@ -35,8 +35,8 @@ import com.telenav.kivakit.kernel.messaging.Repeater;
 import com.telenav.kivakit.kernel.messaging.repeaters.BaseRepeater;
 import com.telenav.kivakit.resource.Resource;
 import com.telenav.kivakit.resource.project.lexakai.diagrams.DiagramResourceArchive;
-import com.telenav.kivakit.serialization.core.SerializationSession;
-import com.telenav.kivakit.serialization.core.SerializationSessionFactory;
+import com.telenav.kivakit.serialization.core.BinarySerializationSession;
+import com.telenav.kivakit.serialization.core.BinarySerializationSessionFactory;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.associations.UmlAggregation;
@@ -46,9 +46,9 @@ import static com.telenav.kivakit.kernel.data.validation.ensure.Ensure.ensure;
 
 /**
  * A field archive serializes data into zip file entries in a {@link ZipArchive}. The constructor for this class takes a
- * {@link Resource}, which is used to construct the zip archive, and a {@link SerializationSessionFactory}, which is
- * used to create {@link SerializationSession}s to save and load fields to and from the archive. {@link FieldArchive}
- * only serializes fields that are explicitly labeled with the {@link KivaKitArchivedField} annotation.
+ * {@link Resource}, which is used to construct the zip archive, and a {@link BinarySerializationSessionFactory}, which
+ * is used to create {@link BinarySerializationSession}s to save and load fields to and from the archive. {@link
+ * FieldArchive} only serializes fields that are explicitly labeled with the {@link KivaKitArchivedField} annotation.
  * <p>
  * When the fields of an object are saved with {@link #saveFieldsOf(NamedObject, Version)}, the object's name via {@link
  * NamedObject#objectName()} is used as a prefix for each field that is saved. For example, if an object named
@@ -78,7 +78,7 @@ import static com.telenav.kivakit.kernel.data.validation.ensure.Ensure.ensure;
  * streams are closed.
  *
  * @author jonathanl (shibo)
- * @see SerializationSession
+ * @see BinarySerializationSession
  * @see Resource
  * @see VersionedObject
  * @see Version
@@ -118,7 +118,7 @@ public class FieldArchive extends BaseRepeater implements Closeable
             return field.toString();
         }
 
-        boolean saveObject(SerializationSession session, String entryName)
+        boolean saveObject(BinarySerializationSession session, String entryName)
         {
             var outer = FieldArchive.this;
             var value = field.get(object);
@@ -150,14 +150,14 @@ public class FieldArchive extends BaseRepeater implements Closeable
     private final ZipArchive.Mode mode;
 
     /** The session for this field archive */
-    private final Lazy<SerializationSession> session;
+    private final Lazy<BinarySerializationSession> session;
 
     /**
      * @param file A field archive resource
      * @param mode The mode of access to this archive
      */
     public FieldArchive(File file,
-                        SerializationSessionFactory sessionFactory,
+                        BinarySerializationSessionFactory sessionFactory,
                         ProgressReporter reporter,
                         ZipArchive.Mode mode)
     {
@@ -325,7 +325,7 @@ public class FieldArchive extends BaseRepeater implements Closeable
         }
     }
 
-    public SerializationSession session()
+    public BinarySerializationSession session()
     {
         return session.get();
     }

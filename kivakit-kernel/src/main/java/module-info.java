@@ -41,6 +41,7 @@ open module kivakit.kernel
     exports com.telenav.kivakit.kernel.interfaces.factory;
     exports com.telenav.kivakit.kernel.interfaces.function;
     exports com.telenav.kivakit.kernel.interfaces.io;
+    exports com.telenav.kivakit.kernel.interfaces.io.serialization;
     exports com.telenav.kivakit.kernel.interfaces.lifecycle;
     exports com.telenav.kivakit.kernel.interfaces.loading;
     exports com.telenav.kivakit.kernel.interfaces.messaging;

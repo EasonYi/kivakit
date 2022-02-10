@@ -23,8 +23,8 @@ import com.telenav.kivakit.kernel.data.validation.ensure.Ensure;
 import com.telenav.kivakit.kernel.language.io.IO;
 import com.telenav.kivakit.kernel.language.values.version.Version;
 import com.telenav.kivakit.kernel.language.values.version.VersionedObject;
-import com.telenav.kivakit.serialization.core.SerializationSession;
-import com.telenav.kivakit.serialization.core.SerializationSessionFactory;
+import com.telenav.kivakit.serialization.core.BinarySerializationSession;
+import com.telenav.kivakit.serialization.core.BinarySerializationSessionFactory;
 import com.telenav.kivakit.test.UnitTest;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 
@@ -42,7 +42,7 @@ import java.io.IOException;
 @LexakaiJavadoc(complete = true)
 public class KryoUnitTest extends UnitTest
 {
-    private SerializationSessionFactory factory;
+    private BinarySerializationSessionFactory factory;
 
     protected KryoTypes kryoTypes()
     {
@@ -62,7 +62,7 @@ public class KryoUnitTest extends UnitTest
                 var session = session();
                 try (var output = data)
                 {
-                    session.open(SerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), output);
+                    session.open(BinarySerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), output);
                     for (var index = 0; index < 3; index++)
                     {
                         session.write(new VersionedObject<>(version, object));
@@ -79,10 +79,10 @@ public class KryoUnitTest extends UnitTest
                 var session = session();
                 try (var input = new ByteArrayInputStream(data.toByteArray()))
                 {
-                    Ensure.ensureEqual(session.open(SerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), input), KivaKit.get().projectVersion());
+                    Ensure.ensureEqual(session.open(BinarySerializationSession.Type.RESOURCE, KivaKit.get().projectVersion(), input), KivaKit.get().projectVersion());
                     for (var index = 0; index < 3; index++)
                     {
-                        var deserialized = session.read();
+                        var deserialized = session.readVersionedObject();
                         trace("version $ after deserialization = $", deserialized.version(), deserialized.get());
                         ensureEqual(deserialized.version(), version);
                         ensureEqual(deserialized.get(), object);
@@ -96,12 +96,12 @@ public class KryoUnitTest extends UnitTest
         }
     }
 
-    protected SerializationSession session()
+    protected BinarySerializationSession session()
     {
         return sessionFactory().session(this);
     }
 
-    protected final SerializationSessionFactory sessionFactory()
+    protected final BinarySerializationSessionFactory sessionFactory()
     {
         if (factory == null)
         {

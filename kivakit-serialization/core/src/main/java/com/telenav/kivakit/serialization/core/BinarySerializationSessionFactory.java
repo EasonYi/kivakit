@@ -24,41 +24,53 @@ import com.telenav.kivakit.kernel.messaging.Listener;
 import static com.telenav.kivakit.kernel.data.validation.ensure.Ensure.ensureNotNull;
 
 /**
- * Creates new thread-local instances of {@link SerializationSession} using the {@link Factory} passed to the
- * constructor.
+ * Creates new instances of {@link BinarySerializationSession} using the {@link Factory} passed to the constructor.
+ *
+ * <p><b>Thread-Local Session Factories</b></p>
+ *
+ * <p>
+ * The convenience methods {@link #threadLocal(BinarySerializationSessionFactory)} and {@link #threadLocal()} can be
+ * used to store and retrieve a session factory by thread.
+ * </p>
  *
  * @author jonathanl (shibo)
  */
-public class SerializationSessionFactory
+public class BinarySerializationSessionFactory
 {
-    private static ThreadLocal<SerializationSessionFactory> local;
+    private static ThreadLocal<BinarySerializationSessionFactory> local;
 
-    public static void threadLocal(SerializationSessionFactory factory)
+    /**
+     * Sets the thread-local session factory
+     */
+    public static void threadLocal(BinarySerializationSessionFactory factory)
     {
         local = ThreadLocal.withInitial(() -> factory);
     }
 
-    public static SerializationSessionFactory threadLocal()
+    /**
+     * @return Retrieves the thread-local session factory
+     */
+    public static BinarySerializationSessionFactory threadLocal()
     {
         ensureNotNull(local);
         return local.get();
     }
 
     /** Factory that produces serialization objects */
-    private final Factory<SerializationSession> factory;
+    private final Factory<BinarySerializationSession> factory;
 
     /**
-     * @param factory The factory for creating {@link SerializationSession} objects
+     * @param factory The factory for creating {@link BinarySerializationSession} objects
      */
-    public SerializationSessionFactory(Factory<SerializationSession> factory)
+    public BinarySerializationSessionFactory(Factory<BinarySerializationSession> factory)
     {
         this.factory = factory;
     }
 
     /**
-     * @return A thread-local {@link SerializationSession} object with only the given listener
+     * @return A thread-local {@link BinarySerializationSession} object with only the given listener
      */
-    public SerializationSession session(Listener listener)
+    public BinarySerializationSession session(Listener listener)
     {
         return listener.listenTo(factory.newInstance());
     }

@@ -23,7 +23,6 @@ import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.telenav.kivakit.kernel.interfaces.naming.Named;
 import com.telenav.kivakit.kernel.language.collections.list.ObjectList;
 import com.telenav.kivakit.kernel.language.collections.map.ObjectMap;
 import com.telenav.kivakit.kernel.language.io.IO;
@@ -31,7 +30,7 @@ import com.telenav.kivakit.kernel.language.time.Duration;
 import com.telenav.kivakit.kernel.language.values.version.Version;
 import com.telenav.kivakit.kernel.language.values.version.VersionedObject;
 import com.telenav.kivakit.kernel.messaging.repeaters.BaseRepeater;
-import com.telenav.kivakit.serialization.core.SerializationSession;
+import com.telenav.kivakit.serialization.core.BinarySerializationSession;
 import com.telenav.kivakit.serialization.kryo.project.lexakai.diagrams.DiagramSerializationKryo;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
@@ -47,24 +46,24 @@ import static com.telenav.kivakit.kernel.data.validation.ensure.Ensure.fail;
 
 /**
  * An extension of the {@link Kryo} object which adds enhanced reading and writing capabilities and enforces versioning
- * of all data that is read or written, according to the {@link SerializationSession} contract.
+ * of all data that is read or written, according to the {@link BinarySerializationSession} contract.
  *
  * <p>
- * To begin serializing data, you must call {@link SerializationSession#open(Type, Version, InputStream, OutputStream)}.
- * Once as session has started, the current version is made available to subclasses through a thread-local so there is
- * no need to pass version information around during serialization.
+ * To begin serializing data, you must call {@link BinarySerializationSession#open(Type, Version, InputStream,
+ * OutputStream)}. Once as session has started, the current version is made available to subclasses through a
+ * thread-local so there is no need to pass version information around during serialization.
  * </p>
  *
  * <p>
- * In the case of {@link SerializationSession.Type#RESOURCE} sessions, the input and output stream are opened and the
- * version is read and written. For {@link SerializationSession.Type#CLIENT} and {@link
- * SerializationSession.Type#SERVER} sessions, version handshaking occurs with the client writing its version first and
- * the server reading it before the server writes its version and the client reads that.
+ * In the case of {@link BinarySerializationSession.Type#RESOURCE} sessions, the input and output stream are opened and
+ * the version is read and written. For {@link BinarySerializationSession.Type#CLIENT} and {@link
+ * BinarySerializationSession.Type#SERVER} sessions, version handshaking occurs with the client writing its version
+ * first and the server reading it before the server writes its version and the client reads that.
  * </p>
  *
  * @author jonathanl (shibo)
  * @see Kryo
- * @see SerializationSession
+ * @see BinarySerializationSession
  * @see KryoSerializer
  */
 @UmlClassDiagram(diagram = DiagramSerializationKryo.class)
@@ -73,7 +72,7 @@ import static com.telenav.kivakit.kernel.data.validation.ensure.Ensure.fail;
              referent = Serializer.class,
              referentCardinality = "*")
 @LexakaiJavadoc(complete = true)
-public final class KryoSerializationSession extends BaseRepeater implements Named, SerializationSession
+public final class KryoSerializationSession extends BaseRepeater implements BinarySerializationSession
 {
     /**
      * Map from Kryo object back to serialization session
@@ -88,20 +87,20 @@ public final class KryoSerializationSession extends BaseRepeater implements Name
         return kryoToSession.get(kryo);
     }
 
-    /** Serialization object */
-    private final Kryo kryo = new DebugKryo(this);
-
-    /** The version of data being read or written */
-    private Version version;
-
     /** Kryo input when reading */
     private Input input;
+
+    /** Serialization object */
+    private final Kryo kryo = new DebugKryo(this);
 
     /** Kryo output when writing */
     private Output output;
 
     /** The Kryo types that have been registered for this session */
     private final KryoTypes types;
+
+    /** The version of data being read or written */
+    private Version version;
 
     /**
      * @param types The kryo types to register for this session
@@ -242,27 +241,6 @@ public final class KryoSerializationSession extends BaseRepeater implements Name
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> VersionedObject<T> read()
-    {
-        try
-        {
-            var version = readVersion();
-            trace("Read version $", version);
-            T object = readClassAndObject();
-            trace("Read $", object);
-            return new VersionedObject<>(version, object);
-        }
-        catch (Exception e)
-        {
-            fatal(e, "Unable to read object");
-        }
-        return null;
-    }
-
     @Override
     public boolean readBoolean()
     {
@@ -377,6 +355,27 @@ public final class KryoSerializationSession extends BaseRepeater implements Name
     public Version readVersion()
     {
         return kryo.readObject(input, Version.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> VersionedObject<T> readVersionedObject()
+    {
+        try
+        {
+            var version = readVersion();
+            trace("Read version $", version);
+            T object = readClassAndObject();
+            trace("Read $", object);
+            return new VersionedObject<>(version, object);
+        }
+        catch (Exception e)
+        {
+            fatal(e, "Unable to read object");
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
