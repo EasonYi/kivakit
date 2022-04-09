@@ -18,12 +18,12 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.interfaces.time.LengthOfTime;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
-public class PreciseDuration implements LengthOfTime
+import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
+
+public class PreciseDuration extends BaseDuration<PreciseDuration>
 {
     private static final double WEEKS_PER_YEAR = 52.177457;
 
@@ -62,32 +62,8 @@ public class PreciseDuration implements LengthOfTime
 
     private PreciseDuration(long nanoseconds)
     {
+        super(nanoseconds / 1_000_000);
         this.nanoseconds = nanoseconds;
-    }
-
-    /**
-     * Retrieves the number of days of the current <code>Duration</code>.
-     *
-     * @return Number of days of the current <code>Duration</code>
-     */
-    public final double asDays()
-    {
-        return asHours() / 24.0;
-    }
-
-    public Duration asDuration()
-    {
-        return Duration.milliseconds(asMilliseconds());
-    }
-
-    /**
-     * Retrieves the number of hours of the current <code>Duration</code>.
-     *
-     * @return number of hours of the current <code>Duration</code>
-     */
-    public final double asHours()
-    {
-        return asMinutes() / 60.0;
     }
 
     public double asMicroseconds()
@@ -95,54 +71,9 @@ public class PreciseDuration implements LengthOfTime
         return nanoseconds / 1000.0;
     }
 
-    public double asMilliseconds()
-    {
-        return nanoseconds / 1_000_000.0;
-    }
-
-    /**
-     * Retrieves the number of minutes of the current <code>Duration</code>.
-     *
-     * @return number of minutes of the current <code>Duration</code>
-     */
-    public final double asMinutes()
-    {
-        return asSeconds() / 60.0;
-    }
-
     public long asNanoseconds()
     {
         return nanoseconds;
-    }
-
-    /**
-     * Retrieves the number of seconds of the current <code>Duration</code>.
-     *
-     * @return number of seconds of the current <code>Duration</code>
-     */
-    public final double asSeconds()
-    {
-        return asMilliseconds() / 1000.0;
-    }
-
-    /**
-     * Retrieves the number of weeks of the current <code>Duration</code>.
-     *
-     * @return Number of weeks of the current <code>Duration</code>
-     */
-    public final double asWeeks()
-    {
-        return asDays() / 7;
-    }
-
-    /**
-     * Retrieves the number of years of the current <code>Duration</code>.
-     *
-     * @return Number of years of the current <code>Duration</code>
-     */
-    public final double asYears()
-    {
-        return asWeeks() / WEEKS_PER_YEAR;
     }
 
     public boolean isGreaterThan(PreciseDuration that)
@@ -156,19 +87,49 @@ public class PreciseDuration implements LengthOfTime
     }
 
     @Override
-    public long milliseconds()
+    public PreciseDuration maximum(PreciseDuration that)
     {
-        return (long) asMilliseconds();
+        return isGreaterThan(that) ? this : that;
+    }
+
+    @Override
+    public PreciseDuration maximum()
+    {
+        return nanoseconds(Long.MAX_VALUE);
+    }
+
+    @Override
+    public long millisecondsPerUnit()
+    {
+        return unsupported();
+    }
+
+    @Override
+    public PreciseDuration minimum(PreciseDuration that)
+    {
+        return nanoseconds(that.nanoseconds);
+    }
+
+    @Override
+    public PreciseDuration minimum()
+    {
+        return nanoseconds(0);
     }
 
     public PreciseDuration minus(PreciseDuration that)
     {
-        return new PreciseDuration(nanoseconds - that.nanoseconds);
+        return nanoseconds(nanoseconds - that.nanoseconds);
+    }
+
+    @Override
+    public PreciseDuration newInstance(long milliseconds)
+    {
+        return milliseconds(milliseconds);
     }
 
     public PreciseDuration plus(PreciseDuration that)
     {
-        return new PreciseDuration(nanoseconds + that.nanoseconds);
+        return nanoseconds(nanoseconds + that.nanoseconds);
     }
 
     @Override
@@ -184,6 +145,7 @@ public class PreciseDuration implements LengthOfTime
      * @param units the units to apply singular or plural suffix to
      * @return a <code>String</code> representation
      */
+    @Override
     public String unitString(double value, String units)
     {
         return String.format("%.1f", value) + " " + units + (value > 1.0 ? "s" : "");

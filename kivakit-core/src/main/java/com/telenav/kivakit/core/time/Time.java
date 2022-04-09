@@ -19,12 +19,13 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.lexakai.DiagramTime;
-import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
+import java.time.ZoneId;
+
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
-import static com.telenav.kivakit.core.time.LocalTime.utcTimeZone;
-import static com.telenav.kivakit.core.time.Second.second;
+import static com.telenav.kivakit.core.time.ZonedTime.localTime;
 
 /**
  * An immutable <code>Time</code> class that represents a specific point in UNIX time. The underlying representation is
@@ -38,16 +39,16 @@ import static com.telenav.kivakit.core.time.Second.second;
  */
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTime.class)
-public class Time extends BaseTime<Time> implements Quantizable
+public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
 {
     /** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
-    public static final Time START_OF_UNIX_TIME = milliseconds(0);
+    public static final Time START_OF_UNIX_EPOCH = epochMilliseconds(0);
 
     /** The minimum time value is the start of UNIX time */
-    public static final Time MINIMUM = START_OF_UNIX_TIME;
+    public static final Time MINIMUM = START_OF_UNIX_EPOCH;
 
     /** The end of time */
-    public static final Time MAXIMUM = milliseconds(Long.MAX_VALUE);
+    public static final Time MAXIMUM = epochMilliseconds(Long.MAX_VALUE);
 
     /**
      * Retrieves a <code>Time</code> instance based on the given milliseconds.
@@ -55,7 +56,7 @@ public class Time extends BaseTime<Time> implements Quantizable
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
-    public static Time milliseconds(long milliseconds)
+    public static Time epochMilliseconds(long milliseconds)
     {
         return new Time(milliseconds);
     }
@@ -66,52 +67,52 @@ public class Time extends BaseTime<Time> implements Quantizable
      * @param nanoseconds the <code>Time</code> value in nanoseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
-    public static Time nanoseconds(long nanoseconds)
+    public static Time epochNanoseconds(long nanoseconds)
     {
         return new Time(nanoseconds / 1_000_000);
     }
 
     /**
-     * Retrieves a <code>Time</code> instance based on the current time.
-     *
-     * @return the current <code>Time</code>
+     * @return A <code>Time</code> object representing the given number of seconds since START_OF_UNIX_TIME
      */
-    public static Time now()
+    public static Time epochSeconds(double seconds)
     {
-        return milliseconds(System.currentTimeMillis());
+        return epochMilliseconds((long) (seconds * 1000));
     }
 
     /**
-     * @return A <code>Time</code> object representing the given number of seconds since START_OF_UNIX_TIME
+     * Retrieves the current time
+     *
+     * @return The current time
      */
-    public static Time seconds(double seconds)
+    public static Time now()
     {
-        return milliseconds((long) (seconds * 1000));
+        return epochMilliseconds(System.currentTimeMillis());
     }
 
-    public static Time utcTime(Year year, Month month, Day dayOfMonth, Hour hour)
+    public static Time time(Year year, Month month, Day dayOfMonth, Hour hour)
     {
-        return utcTime(year, month, dayOfMonth, hour, Minute.minute(0), second(0));
+        return time(year, month, dayOfMonth, hour, Minute.minutes(0), Second.seconds(0));
     }
 
-    public static Time utcTime(Year year, Month month, Day dayOfMonth)
+    public static Time time(Year year, Month month, Day dayOfMonth)
     {
-        return utcTime(year, month, dayOfMonth, militaryHour(0));
+        return time(year, month, dayOfMonth, militaryHour(0));
     }
 
-    public static Time utcTime(Year year, Month month)
+    public static Time time(Year year, Month month)
     {
-        return utcTime(year, month, Day.dayOfMonth(1), militaryHour(0));
+        return time(year, month, Day.dayOfMonth(1), militaryHour(0));
     }
 
-    public static Time utcTime(Year year,
-                               Month month,
-                               Day dayOfMonth,
-                               Hour hour,
-                               Minute minute,
-                               Second second)
+    public static Time time(Year year,
+                            Month month,
+                            Day dayOfMonth,
+                            Hour hour,
+                            Minute minute,
+                            Second second)
     {
-        return milliseconds(LocalTime.localTime(utcTimeZone(), year, month, dayOfMonth, hour, minute, second).asMilliseconds());
+        return localTime(TimeZoned.utc(), year, month, dayOfMonth, hour, minute, second).asTime();
     }
 
     /**
@@ -137,23 +138,25 @@ public class Time extends BaseTime<Time> implements Quantizable
     @Override
     public Time minimum()
     {
-        return START_OF_UNIX_TIME;
+        return START_OF_UNIX_EPOCH;
     }
 
     @Override
-    public Time newInstance(long count)
+    public Duration newLengthOfTime(long milliseconds)
     {
-        return milliseconds(count);
+        return Duration.milliseconds(milliseconds);
     }
 
     @Override
-    public String toString()
+    public Time newPointInTime(long epochMilliseconds)
     {
-        return localTime().toString();
+        return epochMilliseconds(epochMilliseconds);
     }
 
-    public LocalTime utc()
+    @Override
+    @SuppressWarnings("unchecked")
+    public ZonedTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
     {
-        return localTime().utc();
+        return ZonedTime.epochMilliseconds(zone, epochMilliseconds);
     }
 }

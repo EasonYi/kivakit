@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 package com.telenav.kivakit.core.language.module;
+
 import com.telenav.kivakit.core.test.CoreUnitTest;
 import com.telenav.kivakit.core.time.Time;
 import com.telenav.kivakit.core.value.count.Bytes;
@@ -45,7 +46,7 @@ public class ModuleResourceTest extends CoreUnitTest
     {
         try
         {
-            ensureEqual(a().lastModified(), Time.milliseconds(Files.getLastModifiedTime(packagePath().asJavaPath()).toMillis()));
+            ensureEqual(a().lastModified(), Time.epochMilliseconds(Files.getLastModifiedTime(packagePath().asJavaPath()).toMillis()));
         }
         catch (IOException ignored)
         {

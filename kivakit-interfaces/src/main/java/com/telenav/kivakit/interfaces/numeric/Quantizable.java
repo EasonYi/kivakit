@@ -20,50 +20,41 @@ package com.telenav.kivakit.interfaces.numeric;
 
 import com.telenav.kivakit.interfaces.collection.Indexed;
 import com.telenav.kivakit.interfaces.collection.LongKeyed;
-import com.telenav.kivakit.interfaces.factory.MapFactory;
 import com.telenav.kivakit.interfaces.lexakai.DiagramNumeric;
 import com.telenav.kivakit.interfaces.model.Identifiable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
-import java.util.Collection;
-
 /**
- * A quantizable object can be turned into a quantum. A quantum is a discrete value and is represented by the Java
- * primitive type "long". Quanta are a unification point among classes which have a quantum representation, allowing
- * certain operations to be applied to quantizable objects uniformly (such as converting to and from string
- * representations or using the quantum value as an index or identifier in a map or data store).
+ * A quantizable object can be turned into a quantum value.
+ *
+ * <p>
+ * A quantum is a discrete value that can be retrieved by calling the functional interface method {@link #quantum()} .
+ * Quanta are a unification point among classes which have a quantum representation, allowing certain operations to be
+ * applied to quantizable objects uniformly (such as comparison, converting to and from string representations, or using
+ * a quantum value as an index or identifier in a map or data store).
+ * </p>
  *
  * <p>
  * Examples of quantizable objects include objects that are {@link Indexed}, {@link Identifiable} or {@link LongKeyed}.
- * In addition, objects like <i>Time</i>, <i>Duration</i>, and <i>Count</i> are quantizable. In the cases of time and
- * duration objects, the quantum is the number of milliseconds. Quantizable values can also be compared and checked for
- * zero or non-zero.
+ * In addition, most objects representing counts are quantizable, including time objects (where the count is the number
+ * of milliseconds since the start of the UNIX epoch).
  * </p>
+ *
+ * <p><b>Comparisons</b></p>
  *
  * <p>
- * Quantizable provides a converter which can convert between a String value and any {@link Quantizable} value. The
- * value is instantiated by passing the quantum to a {@link MapFactory}.
+ * Quantizable values can also be compared in several ways:
  * </p>
  *
- * <p>
- * Clients may extend <i>QuantizableConverter</i> (see <i>kivakit-core</i>) to quickly create a converter for any {@link
- * Quantizable} value. For example, EdgeIdentifier provides a converter between String values and EdgeIdentifiers like
- * this:
- * </p>
- *
- * <pre>
- * public static class Converter extends Quantizable.Converter&lt;EdgeIdentifier&gt;
- * {
- *     public Converter( Listener&lt;Message&gt; listener)
- *     {
- *         super(listener, EdgeIdentifier::new);
- *     }
- * }</pre>
- *
- * <p>
- * A collection of quantizable values can be converted to an int[] with {@link #toIntArray(Collection)} or a long[] with
- * {@link #toLongArray(Collection)}.
- * </p>
+ * <ul>
+ *     <li>{@link #isApproximately(Quantizable, Quantizable)}</li>
+ *     <li>{@link #isGreaterThan(Quantizable)}</li>
+ *     <li>{@link #isGreaterThanOrEqualTo(Quantizable)}</li>
+ *     <li>{@link #isLessThan(Quantizable)}</li>
+ *     <li>{@link #isLessThanOrEqualTo(Quantizable)}</li>
+ *     <li>{@link #isNonZero()}</li>
+ *     <li>{@link #isZero()}</li>
+ * </ul>
  *
  * @author jonathanl (shibo)
  */
@@ -72,6 +63,16 @@ import java.util.Collection;
 @UmlClassDiagram(diagram = DiagramNumeric.class)
 public interface Quantizable extends DoubleQuantizable
 {
+    default String asCommaSeparatedString()
+    {
+        return String.format("%,d", quantum());
+    }
+
+    default String asSimpleString()
+    {
+        return Long.toString(quantum());
+    }
+
     @Override
     default double doubleQuantum()
     {

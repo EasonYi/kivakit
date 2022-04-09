@@ -27,13 +27,13 @@ import static java.lang.Integer.MAX_VALUE;
  */
 @SuppressWarnings("unused")
 @Tested
-public class Day extends BaseTime<Day>
+public class Day extends BaseDuration<Day>
 {
     /**
      * @return An absolute day from 0 to n
      */
     @Tested
-    public static Day day(int day)
+    public static Day day(long day)
     {
         return new Day(DAY, null, day);
     }
@@ -42,7 +42,7 @@ public class Day extends BaseTime<Day>
      * @return A day since the start of a month, from 1 to 31
      */
     @Tested
-    public static Day dayOfMonth(int day)
+    public static Day dayOfMonth(long day)
     {
         return new Day(DAY_OF_MONTH, null, day);
     }
@@ -51,7 +51,7 @@ public class Day extends BaseTime<Day>
      * @return A day since the start of the UNIX epoch, from 0 to n
      */
     @Tested
-    public static Day dayOfUnixEpoch(int day)
+    public static Day dayOfUnixEpoch(long day)
     {
         return new Day(DAY_OF_UNIX_EPOCH, null, day);
     }
@@ -60,7 +60,7 @@ public class Day extends BaseTime<Day>
      * @return A day since the start of the week in the given day-of-week {@link Standard}
      */
     @Tested
-    public static Day dayOfWeek(int day, Standard standard)
+    public static Day dayOfWeek(long day, Standard standard)
     {
         return new Day(DAY_OF_WEEK, standard, day);
     }
@@ -69,7 +69,7 @@ public class Day extends BaseTime<Day>
      * @return A day since the start of the year, from 0 to 365 (in leap years)
      */
     @Tested
-    public static Day dayOfYear(int day)
+    public static Day dayOfYear(long day)
     {
         return new Day(DAY_OF_YEAR, null, day);
     }
@@ -96,13 +96,13 @@ public class Day extends BaseTime<Day>
         DAY_OF_YEAR
     }
 
+    private final Standard standard;
+
     /** The type of day this is */
     private final Type type;
 
-    private final Standard standard;
-
     @NoTestRequired
-    protected Day(Type type, Standard standard, int day)
+    protected Day(Type type, Standard standard, long day)
     {
         super(day);
 
@@ -121,8 +121,8 @@ public class Day extends BaseTime<Day>
         ensure(type() == DAY_OF_WEEK);
 
         return standard == JAVA
-                ? javaDayOfWeek(asInt())
-                : isoDayOfWeek(asInt());
+                ? javaDayOfWeek(asUnits())
+                : isoDayOfWeek(asUnits());
     }
 
     /**
@@ -136,15 +136,15 @@ public class Day extends BaseTime<Day>
             case DAY:
             case DAY_OF_UNIX_EPOCH:
             case DAY_OF_YEAR:
-                return asInt();
+                return asUnits();
 
             case DAY_OF_WEEK:
                 return standard == JAVA
-                        ? asInt() - 1
-                        : asInt();
+                        ? asUnits() - 1
+                        : asUnits();
 
             case DAY_OF_MONTH:
-                return asInt() - 1;
+                return asUnits() - 1;
 
             default:
                 return unsupported();
@@ -157,7 +157,7 @@ public class Day extends BaseTime<Day>
         if (object instanceof Day)
         {
             Day that = (Day) object;
-            return this.asInt() == that.asInt()
+            return this.asUnits() == that.asUnits()
                     && type() == that.type();
         }
         return false;
@@ -166,7 +166,7 @@ public class Day extends BaseTime<Day>
     @Override
     public int hashCode()
     {
-        return Objects.hash(asInt(), type());
+        return Objects.hash(asUnits(), type());
     }
 
     /**
@@ -179,31 +179,61 @@ public class Day extends BaseTime<Day>
         switch (type)
         {
             case DAY:
-                return asInt() >= 0;
+                return asUnits() >= 0;
 
             case DAY_OF_MONTH:
-                return Ints.isBetweenInclusive(asInt(), 1, 31);
+                return Ints.isBetweenInclusive(asUnits(), 1, 31);
 
             case DAY_OF_WEEK:
                 if (standard() == ISO)
                 {
-                    return Ints.isBetweenInclusive(asInt(), 0, 6);
+                    return Ints.isBetweenInclusive(asUnits(), 0, 6);
                 }
                 if (standard() == JAVA)
                 {
-                    return Ints.isBetweenInclusive(asInt(), 1, 7);
+                    return Ints.isBetweenInclusive(asUnits(), 1, 7);
                 }
                 return unsupported();
 
             case DAY_OF_YEAR:
-                return Ints.isBetweenInclusive(asInt(), 0, 365);
+                return Ints.isBetweenInclusive(asUnits(), 0, 365);
 
             case DAY_OF_UNIX_EPOCH:
-                return Ints.isBetweenInclusive(asInt(), 0, MAX_VALUE);
+                return Ints.isBetweenInclusive(asUnits(), 0, MAX_VALUE);
 
             default:
                 return unsupported();
         }
+    }
+
+    @Override
+    public Day maximum(Day that)
+    {
+        return isGreaterThan(that) ? this : that;
+    }
+
+    @Override
+    public Day maximum()
+    {
+        return null;
+    }
+
+    @Override
+    public long millisecondsPerUnit()
+    {
+        return 24 * 60 * 60 * 1_000;
+    }
+
+    @Override
+    public Day minimum(Day that)
+    {
+        return isLessThan(that) ? this : that;
+    }
+
+    @Override
+    public Day minimum()
+    {
+        return null;
     }
 
     @Override

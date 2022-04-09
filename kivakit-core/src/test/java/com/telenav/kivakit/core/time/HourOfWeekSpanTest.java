@@ -18,9 +18,9 @@ import static com.telenav.kivakit.core.time.Hour.pm;
 import static com.telenav.kivakit.core.time.HourOfWeek.hourOfWeek;
 import static com.telenav.kivakit.core.time.HourOfWeekSpan.hourOfWeekSpan;
 import static com.telenav.kivakit.core.time.HourOfWeekSpan.hourOfWeekSpanUtc;
-import static com.telenav.kivakit.core.time.Minute.minute;
+import static com.telenav.kivakit.core.time.Minute.minutes;
 import static com.telenav.kivakit.core.time.Month.APRIL;
-import static com.telenav.kivakit.core.time.Second.second;
+import static com.telenav.kivakit.core.time.Second.seconds;
 import static com.telenav.kivakit.core.time.Year.year;
 import static com.telenav.kivakit.core.value.count.Count._0;
 import static com.telenav.kivakit.core.value.count.Range.rangeExclusive;
@@ -86,8 +86,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(9),
                 militaryHour(23),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // Right excluded: Monday at 3am to Saturday at 11pm in UTC should not include Sunday at midnight
         ensure(!utcSpan().includes(LocalTime.localTime(utc(),
@@ -95,8 +95,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(10),
                 militaryHour(0),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // Left included: Monday at 3am to Saturday at 11pm in UTC should include Monday at 3am
         ensure(utcSpan().includes(LocalTime.localTime(utc(),
@@ -104,8 +104,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(4),
                 militaryHour(3),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // Left excluded: Monday at 3am to Saturday at 11pm in UTC should include Monday at 2am
         ensure(!utcSpan().includes(LocalTime.localTime(utc(),
@@ -113,8 +113,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(4),
                 militaryHour(2),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // Center included: Monday at 3am to Saturday at 11pm in UTC should include all times betweeen
         rangeInclusive(MONDAY.at(am(3)), SATURDAY.at(pm(11)))
@@ -130,8 +130,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(3),
                 militaryHour(0),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         //  sat at 3am to tues at 11pm, should include sat at 3am
         ensure(utcSpanWrapping().includes(LocalTime.localTime(utc(),
@@ -139,8 +139,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(9),
                 militaryHour(3),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // sat at 3am to tues at 11pm should include tues 5 at 11pm
         ensure(utcSpanWrapping().includes(LocalTime.localTime(utc(),
@@ -148,8 +148,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(5),
                 militaryHour(23),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         //  sat at 3am to tues at 11pm should not include fri at midnight
         ensure(!utcSpanWrapping().includes(LocalTime.localTime(utc(),
@@ -157,8 +157,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(8),
                 militaryHour(0),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // sat at 3am to tues at 11pm should include sat 9 at 2am
         ensure(!utcSpanWrapping().includes(LocalTime.localTime(utc(),
@@ -166,8 +166,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(9),
                 militaryHour(2),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
 
         // sat at 3am to tues at 11pm should include wed at midnight
         ensure(!utcSpanWrapping().includes(LocalTime.localTime(utc(),
@@ -175,8 +175,8 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 APRIL,
                 dayOfMonth(6),
                 militaryHour(0),
-                minute(0),
-                second(0))));
+                minutes(0),
+                seconds(0))));
     }
 
     @Test

@@ -32,11 +32,6 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @UmlClassDiagram(diagram = DiagramString.class)
 public interface StringSource
 {
-    static StringSource of(String string)
-    {
-        return () -> string;
-    }
-
     /**
      * @return The string value
      */

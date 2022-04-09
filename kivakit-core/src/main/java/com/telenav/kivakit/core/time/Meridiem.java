@@ -27,12 +27,21 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 
 /**
- * Anti-meridiem (AM) or post-meridiem (PM) in the English system of keeping time, or MILITARY_TIME for the rest of the
+ * Anti-meridiem (AM) or post-meridiem (PM) in the English system of keeping time, or NO_MERIDIEM for the rest of the
  * world.
  *
+ * <p>
+ * The meridiem value for a military hour can be obtained with {@link #meridiem(int)}, and the meridiem hour with {@link
+ * #meridiemHour(int)}. The method {@link #asMilitaryHour(int)} can convert from a meridiem hour back to military time.
+ * </p>
+ *
  * @author jonathanl (shibo)
+ * @see Hour#am(long)
+ * @see Hour#pm(long)
+ * @see Hour#asMeridiemHour()
+ * @see Hour#asMilitaryHour()
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "SpellCheckingInspection" })
 @UmlClassDiagram(diagram = DiagramTime.class)
 @LexakaiJavadoc(complete = true)
 public enum Meridiem

@@ -48,7 +48,7 @@ public class FolderPrunerTest extends UnitTest
             }
         };
         pruner.capacity(Bytes.bytes(4));
-        pruner.minimumAge(Duration.ZERO_DURATION);
+        pruner.minimumAge(Duration.INSTANTANEOUS);
         pruner.minimumUsableDiskSpace(Percent._0);
         pruner.start();
 
@@ -83,7 +83,7 @@ public class FolderPrunerTest extends UnitTest
                 }
             };
             pruner.minimumUsableDiskSpace(Percent.percent(100));
-            pruner.minimumAge(Duration.ZERO_DURATION);
+            pruner.minimumAge(Duration.INSTANTANEOUS);
             pruner.start();
             Duration.seconds(0.25).sleep();
             ensureFalse(file.exists());

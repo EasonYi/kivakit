@@ -60,14 +60,12 @@ public class Retry extends BaseRepeater
 
     private final Duration retryWaitTime;
 
-    final Class<? extends Throwable> exceptionType;
-
     /**
      * A basic {@link Retry} that does not wait before retrying and catches all {@link Throwable} errors.
      */
     public Retry(Listener listener)
     {
-        this(listener, MAXIMUM_NUMBER_RETRIES, Duration.ZERO_DURATION, Throwable.class);
+        this(listener, MAXIMUM_NUMBER_RETRIES, Duration.INSTANTANEOUS, Throwable.class);
     }
 
     /**
@@ -202,4 +200,6 @@ public class Retry extends BaseRepeater
 
         return Ensure.fail("Unable to run");
     }
+
+    final Class<? extends Throwable> exceptionType;
 }

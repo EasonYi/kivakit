@@ -3,6 +3,10 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.value.count.BaseCount;
+import com.telenav.kivakit.interfaces.time.LengthOfTime;
+import com.telenav.kivakit.interfaces.time.PointInTime;
+import com.telenav.kivakit.interfaces.time.TimeZoned;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.ZoneId;
 import java.util.Objects;
@@ -83,7 +87,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
 
     public Time asEpochTime()
     {
-        return Time.milliseconds(asMilliseconds());
+        return Time.epochMilliseconds(asMilliseconds());
     }
 
     /**
@@ -92,6 +96,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
      * @param zone The time zone to offset by
      * @return The hour of the week in the given time zone
      */
+    @Override
     @Tested
     public HourOfWeek asLocalTime(ZoneId zone)
     {
@@ -115,6 +120,12 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     public HourOfWeek asUtc(ZoneId localZone)
     {
         return offset(localZone, true);
+    }
+
+    @Override
+    public int compareTo(@NotNull final Object o)
+    {
+        return 0;
     }
 
     /**
@@ -154,10 +165,22 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     }
 
     @Override
+    public Object maximum(final Object o)
+    {
+        return null;
+    }
+
+    @Override
     @Tested
     public HourOfWeek maximum()
     {
         return hourOfWeek(7 * 24 - 1);
+    }
+
+    @Override
+    public HourOfWeek minimum(LengthOfTime<?> that)
+    {
+        return null;
     }
 
     @Override
@@ -175,6 +198,24 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     public HourOfWeek newInstance(long count)
     {
         return hourOfWeek((int) count);
+    }
+
+    @Override
+    public LengthOfTime newLengthOfTime(final long milliseconds)
+    {
+        return null;
+    }
+
+    @Override
+    public PointInTime newPointInTime(final long epochMilliseconds)
+    {
+        return null;
+    }
+
+    @Override
+    public TimeZoned newZonedPointInTime(final ZoneId zone, final long epochMilliseconds)
+    {
+        return null;
     }
 
     @Override

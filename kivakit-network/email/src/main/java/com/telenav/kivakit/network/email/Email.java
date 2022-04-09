@@ -62,26 +62,6 @@ import static com.telenav.kivakit.core.ensure.Ensure.illegalState;
 @LexakaiJavadoc(complete = true)
 public class Email implements Validatable
 {
-    @UmlAggregation(label = "to")
-    Set<EmailAddress> to = new HashSet<>();
-
-    @UmlAggregation(label = "from")
-    EmailAddress from;
-
-    String subject;
-
-    @UmlAggregation
-    EmailBody body;
-
-    Time sentAt = Time.START_OF_UNIX_TIME;
-
-    @UmlAggregation
-    final List<EmailAttachment> attachments = new ArrayList<>();
-
-    Time lastRetry;
-
-    int tries;
-
     public Email addTo(EmailAddress address)
     {
         to.add(address);
@@ -198,4 +178,24 @@ public class Email implements Validatable
             return illegalState(e, "Cannot parse email address: $", email);
         }
     }
+
+    @UmlAggregation(label = "to")
+    Set<EmailAddress> to = new HashSet<>();
+
+    @UmlAggregation(label = "from")
+    EmailAddress from;
+
+    String subject;
+
+    @UmlAggregation
+    EmailBody body;
+
+    Time sentAt = Time.START_OF_UNIX_EPOCH;
+
+    @UmlAggregation
+    final List<EmailAttachment> attachments = new ArrayList<>();
+
+    Time lastRetry;
+
+    int tries;
 }

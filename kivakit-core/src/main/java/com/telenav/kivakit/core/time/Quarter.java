@@ -6,6 +6,11 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 import static com.telenav.kivakit.core.time.Quarter.Type.CALENDAR;
 import static com.telenav.kivakit.core.time.Quarter.Type.FISCAL;
 
+/**
+ * Represents calendar an fiscal quarters of a year
+ *
+ * @author jonathanl (shibo)
+ */
 @SuppressWarnings("unused")
 public enum Quarter
 {

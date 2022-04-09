@@ -5,29 +5,29 @@ public class TimeSpan
 {
     public static TimeSpan all()
     {
-        return new TimeSpan(Time.START_OF_UNIX_TIME, Time.MAXIMUM);
+        return new TimeSpan(Time.START_OF_UNIX_EPOCH, Time.MAXIMUM);
     }
 
     public static TimeSpan future(Duration duration)
     {
         var now = Time.now();
-        return of(now, now.plus(duration));
-    }
-
-    public static TimeSpan of(Time start, Duration duration)
-    {
-        return new TimeSpan(start, start.plus(duration));
-    }
-
-    public static TimeSpan of(Time start, Time end)
-    {
-        return new TimeSpan(start, end);
+        return timeSpan(now, now.plus(duration));
     }
 
     public static TimeSpan past(Duration duration)
     {
         var now = Time.now();
-        return of(now.minus(duration), now);
+        return timeSpan(now.minus(duration), now);
+    }
+
+    public static TimeSpan timeSpan(Time start, Time end)
+    {
+        return new TimeSpan(start, end);
+    }
+
+    public static TimeSpan timeSpan(Time start, Duration duration)
+    {
+        return new TimeSpan(start, start.plus(duration));
     }
 
     private final Time end;

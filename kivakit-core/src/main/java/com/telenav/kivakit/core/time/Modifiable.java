@@ -22,7 +22,7 @@ import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 @UmlClassDiagram(diagram = DiagramTime.class)
-public interface Modifiable
+public interface Modifiable extends ModifiedAt
 {
     default boolean lastModified(Time time)
     {

@@ -1,5 +1,6 @@
 package com.telenav.kivakit.core.time;
 
+import com.telenav.kivakit.core.math.AverageDuration;
 import org.junit.Test;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensureEqual;

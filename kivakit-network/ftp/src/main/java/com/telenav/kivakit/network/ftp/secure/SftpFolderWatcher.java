@@ -47,14 +47,14 @@ import java.util.Map;
 @LexakaiJavadoc(complete = true)
 public class SftpFolderWatcher extends PeriodicCollectionChangeWatcher<NetworkPath>
 {
-    private boolean initialized;
-
     @UmlAggregation
     private final SecureFtpSettings credentials;
 
-    private final SecureFtpNetworkLocation location;
+    private boolean initialized;
 
     private Map<NetworkPath, Time> lastModifiedCache;
+
+    private final SecureFtpNetworkLocation location;
 
     /**
      * Standard constructor
@@ -179,6 +179,6 @@ public class SftpFolderWatcher extends PeriodicCollectionChangeWatcher<NetworkPa
      */
     private Time getTimeLastModified(LsEntry file)
     {
-        return Time.milliseconds(file.getAttrs().getMTime());
+        return Time.epochMilliseconds(file.getAttrs().getMTime());
     }
 }

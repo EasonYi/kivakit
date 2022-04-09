@@ -36,16 +36,7 @@ public interface Sized extends
         Stringable,
         Quantizable
 {
-    default String asCommaSeparatedString()
-    {
-        return String.format("%,d", size());
-    }
-
-    default String asSimpleString()
-    {
-        return Long.toString(size());
-    }
-
+    @Override
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     default String asString(Stringable.Format format)
     {

@@ -24,13 +24,13 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
+import static com.telenav.kivakit.core.time.Duration.INSTANTANEOUS;
 import static com.telenav.kivakit.core.time.Duration.ONE_DAY;
 import static com.telenav.kivakit.core.time.Duration.ONE_HOUR;
 import static com.telenav.kivakit.core.time.Duration.ONE_MINUTE;
 import static com.telenav.kivakit.core.time.Duration.ONE_SECOND;
 import static com.telenav.kivakit.core.time.Duration.Restriction.ALLOW_NEGATIVE;
 import static com.telenav.kivakit.core.time.Duration.Restriction.POSITIVE_ONLY;
-import static com.telenav.kivakit.core.time.Duration.ZERO_DURATION;
 import static com.telenav.kivakit.core.time.Duration.days;
 import static com.telenav.kivakit.core.time.Duration.hours;
 import static com.telenav.kivakit.core.time.Duration.milliseconds;
@@ -135,7 +135,7 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testIsApproximately()
     {
-        ensure(ONE_SECOND.isApproximately(ONE_SECOND, ZERO_DURATION));
+        ensure(ONE_SECOND.isApproximately(ONE_SECOND, INSTANTANEOUS));
         ensure(ONE_SECOND.isApproximately(seconds(1.01), seconds(0.1)));
         ensureFalse(ONE_SECOND.isApproximately(seconds(1.01), seconds(0.0001)));
     }
@@ -143,7 +143,7 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testIsNone()
     {
-        ensure(ZERO_DURATION.isNone());
+        ensure(INSTANTANEOUS.isNone());
         ensureFalse(seconds(0.1).isNone());
         ensureFalse(Duration.milliseconds(1).isNone());
     }
@@ -151,7 +151,7 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testIsSome()
     {
-        ensureFalse(ZERO_DURATION.isSome());
+        ensureFalse(INSTANTANEOUS.isSome());
         ensure(seconds(0.1).isSome());
         ensure(Duration.milliseconds(1).isSome());
     }
@@ -200,7 +200,7 @@ public class DurationTest extends CoreUnitTest
     public void testMinus()
     {
         ensureEqual(seconds(1), seconds(2).minus(seconds(1)));
-        ensureEqual(ZERO_DURATION, seconds(2).minus(seconds(3)));
+        ensureEqual(INSTANTANEOUS, seconds(2).minus(seconds(3)));
         ensureEqual(-1.0, seconds(2).minus(seconds(3), ALLOW_NEGATIVE).asSeconds());
     }
 

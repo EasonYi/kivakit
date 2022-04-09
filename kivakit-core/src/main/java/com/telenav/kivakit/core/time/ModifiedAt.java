@@ -18,6 +18,11 @@
 
 package com.telenav.kivakit.core.time;
 
+/**
+ * Interface for objects supporting a last modification time
+ *
+ * @author jonathanl (shibo)
+ */
 @SuppressWarnings("unused")
 public interface ModifiedAt
 {

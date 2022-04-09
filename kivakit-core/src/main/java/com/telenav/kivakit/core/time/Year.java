@@ -4,7 +4,7 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 import static com.telenav.kivakit.core.time.LocalTime.utcTimeZone;
 
 @SuppressWarnings("unused")
-public class Year extends BaseTime<Year>
+public class Year extends BaseDuration<Year>
 {
     public static Year year(int year)
     {
@@ -17,14 +17,20 @@ public class Year extends BaseTime<Year>
         super(year);
     }
 
-    public Time at(Month month)
+    @Override
+    public long millisecondsPerUnit()
     {
-        return LocalTime.localTime(utcTimeZone(), this, month, Day.dayOfMonth(1), Hour.militaryHour(0), Minute.minute(0), Second.second(0));
+        return 31_557_600_000L;
     }
 
     @Override
     public Year newInstance(long year)
     {
         return year((int) year);
+    }
+
+    public Time withMonth(Month month)
+    {
+        return LocalTime.localTime(utcTimeZone(), this, month, Day.dayOfMonth(1), Hour.militaryHour(0), Minute.minutes(0), Second.seconds(0));
     }
 }

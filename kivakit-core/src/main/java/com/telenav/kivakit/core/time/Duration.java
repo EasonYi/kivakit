@@ -84,13 +84,13 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 public class Duration implements
         Stringable,
         Quantizable,
-        LengthOfTime
+        LengthOfTime<Duration>
 {
     /** Constant for maximum duration. */
     public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE);
 
     /** Constant for no duration. */
-    public static final Duration ZERO_DURATION = milliseconds(0);
+    public static final Duration INSTANTANEOUS = milliseconds(0);
 
     /** Constant for one day. */
     public static final Duration ONE_DAY = days(1);
@@ -321,7 +321,7 @@ public class Duration implements
         var sum = milliseconds() + that.milliseconds();
         if (restriction == POSITIVE_ONLY && sum < 0)
         {
-            return ZERO_DURATION;
+            return INSTANTANEOUS;
         }
         return new Duration(sum, restriction);
     }
@@ -353,7 +353,7 @@ public class Duration implements
 
     @Override
     @Tested
-    public Duration dividedBy(int divisor)
+    public Duration dividedBy(double divisor)
     {
         return milliseconds(milliseconds / divisor);
     }
@@ -410,10 +410,17 @@ public class Duration implements
         return milliseconds(milliseconds * (1.0 + percentage.asUnitValue()));
     }
 
+    @Override
     @Tested
     public Duration maximum(Duration that)
     {
         return isGreaterThan(that) ? this : that;
+    }
+
+    @Override
+    public Duration maximum()
+    {
+        return MAXIMUM;
     }
 
     @Override
@@ -423,10 +430,23 @@ public class Duration implements
         return milliseconds;
     }
 
+    @Override
+    public long millisecondsPerUnit()
+    {
+        return 0;
+    }
+
+    @Override
     @Tested
     public Duration minimum(Duration that)
     {
         return isLessThan(that) ? this : that;
+    }
+
+    @Override
+    public Duration minimum()
+    {
+        return INSTANTANEOUS;
     }
 
     /**
@@ -448,22 +468,22 @@ public class Duration implements
         {
             if (that.isGreaterThan(this))
             {
-                return ZERO_DURATION;
+                return INSTANTANEOUS;
             }
         }
         return new Duration(milliseconds() - that.milliseconds(), restriction);
     }
 
     @Tested
-    public Duration modulus(Duration that)
-    {
-        return milliseconds(milliseconds % that.milliseconds);
-    }
-
-    @Tested
     public Duration nearestHour()
     {
         return hours(Math.round(asHours()));
+    }
+
+    @Override
+    public Duration newInstance(long milliseconds)
+    {
+        return milliseconds(milliseconds);
     }
 
     @Tested

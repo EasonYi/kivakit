@@ -28,7 +28,7 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.Objects;
 
-import static com.telenav.kivakit.core.time.Duration.ZERO_DURATION;
+import static com.telenav.kivakit.core.time.Duration.INSTANTANEOUS;
 import static com.telenav.kivakit.core.time.Duration.parseDuration;
 
 /**
@@ -71,7 +71,7 @@ public class Frequency
 
     public static final Frequency FOUR_TIMES_A_DAY = cyclesPerDay(4);
 
-    public static final Frequency CONTINUOUSLY = every(ZERO_DURATION);
+    public static final Frequency CONTINUOUSLY = every(INSTANTANEOUS);
 
     @Tested
     public static Frequency cyclesPerDay(int times)
@@ -156,11 +156,11 @@ public class Frequency
         @Tested
         public Duration waitTimeBeforeNextCycle()
         {
-            // If there is no cycle lenth,
-            if (cycleLength.isNone())
+            // If there is no cycle length,
+            if (cycleLength.isZero())
             {
                 // then it's always time for the next cycle.
-                return ZERO_DURATION;
+                return INSTANTANEOUS;
             }
 
             // The duration to wait before the next cycle is the cycle length minus

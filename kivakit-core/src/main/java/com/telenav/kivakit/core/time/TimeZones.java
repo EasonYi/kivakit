@@ -74,6 +74,11 @@ public class TimeZones
         return parseZoneId(Listener.none(), identifier) != null;
     }
 
+    static ZoneId localTimeZone()
+    {
+        return ZoneId.systemDefault();
+    }
+
     /**
      * @return The zone id (America/Los Angeles) for the given short display name (PST), or null if there is none
      */

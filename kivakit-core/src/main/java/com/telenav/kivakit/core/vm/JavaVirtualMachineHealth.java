@@ -42,19 +42,19 @@ public class JavaVirtualMachineHealth
 {
     private Bytes freeMemory;
 
+    private ThreadSnapshot lastSnapshot;
+
     private Bytes maximumMemory;
 
-    private Bytes totalMemory;
+    private final Map<String, Integer> messageType = new ConcurrentHashMap<>();
 
     private Count processors;
-
-    private ThreadSnapshot lastSnapshot;
 
     private ThreadSnapshot snapshot;
 
     private Time started;
 
-    private final Map<String, Integer> messageType = new ConcurrentHashMap<>();
+    private Bytes totalMemory;
 
     public Count count(String messageType)
     {
@@ -77,13 +77,13 @@ public class JavaVirtualMachineHealth
     @KivaKitIncludeProperty
     public Duration elapsed()
     {
-        return lastSnapshot == null ? Duration.ZERO_DURATION : snapshot.capturedAt().elapsedSince(lastSnapshot.capturedAt());
+        return lastSnapshot == null ? Duration.INSTANTANEOUS : snapshot.capturedAt().elapsedSince(lastSnapshot.capturedAt());
     }
 
     @KivaKitIncludeProperty
     public Duration elapsedCpuTime()
     {
-        return lastSnapshot == null ? Duration.ZERO_DURATION : snapshot.totalCpuTime().minus(lastSnapshot.totalCpuTime());
+        return lastSnapshot == null ? Duration.INSTANTANEOUS : snapshot.totalCpuTime().minus(lastSnapshot.totalCpuTime());
     }
 
     @KivaKitIncludeProperty

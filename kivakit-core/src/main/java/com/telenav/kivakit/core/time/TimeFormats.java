@@ -25,6 +25,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
+import static com.telenav.kivakit.core.time.ZonedTime.nowInLocalTime;
+
 /**
  * @author jonathanl (shibo)
  */
@@ -39,9 +41,9 @@ public class TimeFormats
             .toFormatter();
 
     public static final DateTimeFormatter KIVAKIT_TIME = builder("h.mma")
-            .parseDefaulting(ChronoField.YEAR, LocalTime.now().year().asInt())
-            .parseDefaulting(ChronoField.MONTH_OF_YEAR, LocalTime.now().month().monthOfYear())
-            .parseDefaulting(ChronoField.DAY_OF_MONTH, LocalTime.now().dayOfMonth().asInt())
+            .parseDefaulting(ChronoField.YEAR, nowInLocalTime().year().asUnits())
+            .parseDefaulting(ChronoField.MONTH_OF_YEAR, nowInLocalTime().month().monthOfYear())
+            .parseDefaulting(ChronoField.DAY_OF_MONTH, nowInLocalTime().dayOfMonth().asUnits())
             .toFormatter();
 
     public static final DateTimeFormatter KIVAKIT_DATE_TIME = builder("yyyy.MM.dd_h.mma").toFormatter();

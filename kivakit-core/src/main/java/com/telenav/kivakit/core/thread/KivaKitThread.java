@@ -222,7 +222,7 @@ public class KivaKitThread extends BaseRepeater implements
     private transient Runnable code;
 
     /** Any initial delay before the thread starts running */
-    private Duration initialDelay = Duration.ZERO_DURATION;
+    private Duration initialDelay = Duration.INSTANTANEOUS;
 
     private boolean initialized;
 

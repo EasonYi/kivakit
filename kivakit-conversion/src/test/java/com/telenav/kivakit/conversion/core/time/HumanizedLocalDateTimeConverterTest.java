@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import static com.telenav.kivakit.core.time.Hour.hourOfDay;
 import static com.telenav.kivakit.core.time.Meridiem.PM;
-import static com.telenav.kivakit.core.time.Minute.minute;
+import static com.telenav.kivakit.core.time.Minute.minutes;
 
 public class HumanizedLocalDateTimeConverterTest extends CoreUnitTest
 {
@@ -38,7 +38,7 @@ public class HumanizedLocalDateTimeConverterTest extends CoreUnitTest
 
         var expected = now.startOfDay()
                 .withHourOfDay(hourOfDay(6, PM))
-                .withMinute(minute(15));
+                .withMinute(minutes(15));
 
         ensureEqual(converter.convert("Today 6.15pm"), expected);
         ensureEqual(converter.unconvert(expected), "Today 6.15PM");

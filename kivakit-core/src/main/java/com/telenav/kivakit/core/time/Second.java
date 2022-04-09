@@ -4,10 +4,16 @@ import com.telenav.kivakit.core.language.primitive.Longs;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 
-@SuppressWarnings("unused")
-public class Second extends BaseTime<Second>
+/**
+ * Represents a duration in the unit of minutes
+ *
+ * @author jonathanl (shibo)
+ */
+public class Second extends BaseDuration<Second>
 {
-    public static Second second(long second)
+    private static final int millisecondsPerSecond = 1_000;
+
+    public static Second seconds(long second)
     {
         ensure(Longs.isBetweenInclusive(second, 0, 59));
         return new Second(second);
@@ -19,21 +25,39 @@ public class Second extends BaseTime<Second>
     }
 
     @Override
+    public Second maximum(Second that)
+    {
+        return isGreaterThan(that) ? this : that;
+    }
+
+    @Override
     public Second maximum()
     {
-        return second(59);
+        return seconds(59);
+    }
+
+    @Override
+    public long millisecondsPerUnit()
+    {
+        return millisecondsPerSecond;
+    }
+
+    @Override
+    public Second minimum(Second that)
+    {
+        return isLessThan(that) ? this : that;
     }
 
     @Override
     public Second minimum()
     {
-        return second(0);
+        return seconds(0);
     }
 
     @Override
-    public Second newInstance(long minute)
+    public Second newInstance(long seconds)
     {
-        return second(minute);
+        return seconds(seconds);
     }
 }
 

@@ -2,6 +2,8 @@ package com.telenav.kivakit.interfaces.time;
 
 import com.telenav.kivakit.interfaces.code.Callback;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTime;
+import com.telenav.kivakit.interfaces.numeric.Maximizable;
+import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
@@ -18,6 +20,18 @@ import java.util.concurrent.locks.Condition;
 
 /**
  * Interface to an object having a length of time, measured in milliseconds.
+ *
+ * <p><b>Creation</b></p>
+ *
+ * <p>
+ * An object that implements this interface must provide implementations of:
+ * </p>
+ *
+ * <ul>
+ *     <li>{@link #milliseconds()} - The number of milliseconds for this length of time</li>
+ *     <li>{@link #newInstance(long)} - Creates instances of the implementing class</li>
+ *     <li>{@link #millisecondsPerUnit()} - The number of milliseconds per unit of the implementing class</li>
+ * </ul>
  *
  * <p><b>Conversion</b></p>
  *
@@ -40,36 +54,52 @@ import java.util.concurrent.locks.Condition;
  *     <li>{@link #minus(LengthOfTime)}</li>
  *     <li>{@link #times(double)}</li>
  *     <li>{@link #dividedBy(double)}</li>
+ *     <li>{@link #newInstanceFromUnits(long)}</li>
+ *     <li>{@link #modulo()}</li>
+ *     <li>{@link #modulus(LengthOfTime)}</li>
+ *     <li>{@link #roundDown(LengthOfTime)}</li>
+ *     <li>{@link #roundUp(LengthOfTime)}</li>
  * </ul>
  *
  * <p><b>Comparison</b></p>
  *
  * <ul>
  *     <li>{@link #compareTo(LengthOfTime)}</li>
- *     <li>{@link #isLessThan(LengthOfTime)}</li>
- *     <li>{@link #isLessThanOrEqualTo(LengthOfTime)}</li>
- *     <li>{@link #isGreaterThan(LengthOfTime)}</li>
- *     <li>{@link #isLessThanOrEqualTo(LengthOfTime)}</li>
- *     <li>{@link #isApproximately(LengthOfTime, LengthOfTime)}</li>
+ *     <li>{@link #isLessThan(Quantizable)}</li>
+ *     <li>{@link #isLessThanOrEqualTo(Quantizable)}</li>
+ *     <li>{@link #isGreaterThan(Quantizable)}</li>
+ *     <li>{@link #isLessThanOrEqualTo(Quantizable)}</li>
+ *     <li>{@link #isApproximately(Quantizable, Quantizable)}</li>
  *     <li>{@link #isZero()}</li>
  *     <li>{@link #isNonZero()}</li>
+ *     <li>{@link #quantum()}</li>
+ * </ul>
+ *
+ * <p><b>Threading</b></p>
+ *
+ * <ul>
+ *     <li>{@link #await(Condition)}</li>
+ *     <li>{@link #sleep()}</li>
+ *     <li>{@link #wait(Object)}</li>
+ *     <li>{@link #waitThen(Callback)}</li>
+ *     <li>{@link #every(Callback)}</li>
  * </ul>
  *
  * @author jonathanl (shibo)
  */
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTime.class)
-public interface LengthOfTime<T extends LengthOfTime<T>> extends
+public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         Quantizable,
+        Minimizable<SubClass>,
+        Maximizable<SubClass>,
         Comparable<LengthOfTime<?>>,
         Stringable
 {
-    double WEEKS_PER_YEAR = 52.177457;
-
     /**
-     * Retrieves the number of days of the current Duration.
+     * Retrieves the number of days for this length of time.
      *
-     * @return Number of days of the current Duration
+     * @return The number of days for this length of time
      */
     default double asDays()
     {
@@ -77,15 +107,18 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Retrieves the number of hours of the current Duration.
+     * Retrieves the number of hours for this length of time
      *
-     * @return number of hours of the current Duration
+     * @return The number of hours for this length of time
      */
     default double asHours()
     {
         return asMinutes() / 60.0;
     }
 
+    /**
+     * Returns a human-readable string for this length of time
+     */
     @NotNull
     default String asHumanReadableString()
     {
@@ -132,7 +165,9 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Returns the number of milliseconds
+     * Retrieves the number of milliseconds for this length of time
+     *
+     * @return The number of milliseconds for this length of time
      */
     default double asMilliseconds()
     {
@@ -140,9 +175,9 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Retrieves the number of minutes of the current Duration.
+     * Retrieves the number of minutes for this length of time
      *
-     * @return number of minutes of the current Duration
+     * @return The number of minutes for this length of time
      */
     default double asMinutes()
     {
@@ -150,9 +185,9 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Retrieves the number of seconds of the current Duration.
+     * Retrieves the number of seconds for this length of time
      *
-     * @return number of seconds of the current Duration
+     * @return The number of seconds for this length of time
      */
     default double asSeconds()
     {
@@ -160,10 +195,7 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Retrieves the String representation of this Duration in days, hours, minutes, seconds or milliseconds, as
-     * appropriate.
-     *
-     * @return a String representation
+     * {@inheritDoc}
      */
     @Override
     @SuppressWarnings("SpellCheckingInspection")
@@ -216,10 +248,15 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
         }
     }
 
+    default int asUnits()
+    {
+        return (int) (milliseconds() / millisecondsPerUnit());
+    }
+
     /**
-     * Retrieves the number of weeks of the current Duration.
+     * Retrieves the number of weeks for this length of time
      *
-     * @return Number of weeks of the current Duration
+     * @return The number of weeks for this length of time
      */
     default double asWeeks()
     {
@@ -227,17 +264,17 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Retrieves the number of years of the current Duration.
+     * Retrieves the approximate number of years for this length of time
      *
-     * @return Number of years of the current Duration
+     * @return The approximate number of years for this length of time
      */
     default double asYears()
     {
-        return asWeeks() / WEEKS_PER_YEAR;
+        return asWeeks() / 52.177457;
     }
 
     /**
-     * Waits for the given {@link Condition} variable to be true
+     * Waits up to this length of time for the given {@link Condition} variable to be true
      *
      * @param condition The condition variable
      */
@@ -262,41 +299,18 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
         return Long.compare(milliseconds(), that.milliseconds());
     }
 
-    default T dividedBy(double value)
+    /**
+     * Returns this length of time divided by the given value
+     */
+    default SubClass dividedBy(double value)
     {
-        return newInstance((long) (milliseconds() / value));
+        return newInstanceFromMilliseconds((long) (milliseconds() / value));
     }
 
     /**
-     * @return Number of milliseconds in this duration
+     * Uses a Java {@link Timer} to call the given callback at a rate of once per this-length-of-time
      */
-    long milliseconds();
-
-    default T minus(LengthOfTime<?> that)
-    {
-        return newInstance(milliseconds() - that.milliseconds());
-    }
-
-    T newInstance(long milliseconds);
-
-    default T plus(LengthOfTime<?> that)
-    {
-        return newInstance(milliseconds() + that.milliseconds());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    default long quantum()
-    {
-        return milliseconds();
-    }
-
-    /**
-     * Calls the given callback at this fixed rate
-     */
-    default void repeat(Callback<Timer> onTimer)
+    default void every(Callback<Timer> onTimer)
     {
         var timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask()
@@ -310,7 +324,118 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Sleeps for the current Duration.
+     * @return Number of milliseconds in this duration
+     */
+    long milliseconds();
+
+    /**
+     * Returns the number of milliseconds per unit of time
+     */
+    long millisecondsPerUnit();
+
+    /**
+     * Returns this length of time minus the given length of time
+     */
+    default SubClass minus(LengthOfTime<?> that)
+    {
+        return newInstanceFromMilliseconds(milliseconds() - that.milliseconds());
+    }
+
+    default SubClass minusUnits(long units)
+    {
+        return plusUnits(-units);
+    }
+
+    /**
+     * Returns the modulo size of this length of time in units. For example, the modulo for military time would be 24.
+     */
+    default int modulo()
+    {
+        return maximum().minus(minimum()).plusUnits(1).asUnits();
+    }
+
+    default SubClass modulus(LengthOfTime<?> that)
+    {
+        return newInstanceFromMilliseconds(milliseconds() % that.milliseconds());
+    }
+
+    /**
+     * @return The nearest length of time to the given length of time
+     */
+    default SubClass nearest(LengthOfTime<?> unit)
+    {
+        return plus(unit.dividedBy(2)).roundDown(unit);
+    }
+
+    /**
+     * Returns an instance of the subclass of this length of time for the given number of milliseconds.
+     *
+     * @param milliseconds The number of milliseconds
+     * @return The subclass instance
+     */
+    SubClass newInstance(long milliseconds);
+
+    default SubClass newInstanceFromMilliseconds(long milliseconds)
+    {
+        return newInstanceFromUnits(milliseconds / millisecondsPerUnit());
+    }
+
+    /**
+     * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
+     */
+    default SubClass newInstanceFromUnits(long units)
+    {
+        var modulo = modulo();
+        var rounded = (units + modulo) % modulo;
+        var offset = minimum().asUnits() + rounded;
+        return newInstance(offset * millisecondsPerUnit());
+    }
+
+    default SubClass next()
+    {
+        return plusUnits(1);
+    }
+
+    /**
+     * Returns this length of time plus the given length of time
+     */
+    default SubClass plus(LengthOfTime<?> that)
+    {
+        return newInstanceFromMilliseconds(milliseconds() + that.milliseconds());
+    }
+
+    default SubClass plusUnits(long units)
+    {
+        return newInstanceFromUnits(asUnits() + units);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default long quantum()
+    {
+        return milliseconds();
+    }
+
+    /**
+     * Returns this length of time rounded down to the nearest whole unit
+     */
+    default SubClass roundDown(LengthOfTime<?> unit)
+    {
+        return newInstanceFromMilliseconds(milliseconds() / unit.milliseconds() * unit.milliseconds());
+    }
+
+    /**
+     * Returns this length of time rounded up to the nearest whole unit
+     */
+    default SubClass roundUp(LengthOfTime<?> unit)
+    {
+        return roundDown(unit).plus(unit);
+    }
+
+    /**
+     * Sleeps for this length of time, ignoring any interruptions
      */
     default void sleep()
     {
@@ -327,9 +452,12 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
         }
     }
 
-    default T times(double value)
+    /**
+     * Returns this length of time times the given value
+     */
+    default SubClass times(double value)
     {
-        return newInstance((long) (milliseconds() * value));
+        return newInstanceFromMilliseconds((long) (milliseconds() * value));
     }
 
     /**
@@ -346,9 +474,9 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
     }
 
     /**
-     * Wait for this duration on the given monitor. Note that a duration of NONE is considered to be a wait time of zero
-     * milliseconds, whereas the underlying Java {@link #wait(long)} considers zero milliseconds to be infinite wait
-     * time.
+     * Wait for this length of time on the given monitor. Note that a duration of 0 milliseconds is considered to be a
+     * wait time of zero milliseconds, whereas the underlying Java {@link #wait(long)} considers zero milliseconds to be
+     * infinite wait time.
      *
      * @param monitor The monitor to wait on
      * @return True if the thread waited, false if it was interrupted
@@ -374,7 +502,12 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
         }
     }
 
-    default void waitThen(Callback<Timer> onTimer)
+    /**
+     * Waits this length of time and then calls the callback
+     *
+     * @param callback The callback
+     */
+    default void waitThen(Callback<Timer> callback)
     {
         var timer = new Timer();
         timer.schedule(new TimerTask()
@@ -382,7 +515,7 @@ public interface LengthOfTime<T extends LengthOfTime<T>> extends
             @Override
             public void run()
             {
-                onTimer.callback(timer);
+                callback.callback(timer);
             }
         }, milliseconds());
     }
