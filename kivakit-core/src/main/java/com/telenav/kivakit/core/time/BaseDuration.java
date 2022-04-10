@@ -1,5 +1,7 @@
 package com.telenav.kivakit.core.time;
 
+import com.telenav.kivakit.core.value.level.Percent;
+import com.telenav.kivakit.interfaces.numeric.Percentage;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
 
 import java.util.Objects;
@@ -17,7 +19,11 @@ import java.util.Objects;
  */
 public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> implements LengthOfTime<SubClass>
 {
-    private final long milliseconds;
+    private long milliseconds;
+
+    protected BaseDuration()
+    {
+    }
 
     protected BaseDuration(long milliseconds)
     {
@@ -26,7 +32,7 @@ public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> impl
 
     public Duration asDuration()
     {
-        return Duration.milliseconds(milliseconds());
+        return Duration.duration(milliseconds());
     }
 
     @Override
@@ -50,5 +56,11 @@ public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> impl
     public long milliseconds()
     {
         return milliseconds;
+    }
+
+    @Override
+    public Percentage percentageOf(final LengthOfTime<?> that)
+    {
+        return Percent.percent((double) milliseconds() / that.milliseconds());
     }
 }

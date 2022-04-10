@@ -55,7 +55,7 @@ import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
  */
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTime.class)
-public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZoned<ZonedTime>
+public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZoned<LocalTime>
 {
     /**
      * Retrieves a <code>Time</code> instance based on the given milliseconds.
@@ -63,9 +63,9 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
-    public static ZonedTime epochMilliseconds(ZoneId zone, long milliseconds)
+    public static LocalTime epochMilliseconds(ZoneId zone, long milliseconds)
     {
-        return new ZonedTime(zone, milliseconds);
+        return new LocalTime(zone, milliseconds);
     }
 
     /**
@@ -74,20 +74,20 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      * @param nanoseconds the <code>Time</code> value in nanoseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
-    public static ZonedTime epochNanoseconds(ZoneId zone, long nanoseconds)
+    public static LocalTime epochNanoseconds(ZoneId zone, long nanoseconds)
     {
-        return new ZonedTime(zone, nanoseconds / 1_000_000);
+        return new LocalTime(zone, nanoseconds / 1_000_000);
     }
 
     /**
      * @return A <code>Time</code> object representing the given number of seconds since START_OF_UNIX_TIME
      */
-    public static ZonedTime epochSeconds(ZoneId zone, double seconds)
+    public static LocalTime epochSeconds(ZoneId zone, double seconds)
     {
         return epochMilliseconds(zone, (long) (seconds * 1000));
     }
 
-    public static ZonedTime localTime(ZoneId zone, LocalDateTime dateTime)
+    public static LocalTime localTime(ZoneId zone, LocalDateTime dateTime)
     {
         return epochMilliseconds(zone, dateTime
                 .atZone(zone)
@@ -95,22 +95,22 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
                 .toEpochMilli());
     }
 
-    public static ZonedTime localTime(ZoneId zone, Year year, Month month, Day dayOfMonth, Hour hour)
+    public static LocalTime localTime(ZoneId zone, Year year, Month month, Day dayOfMonth, Hour hour)
     {
         return localTime(zone, year, month, dayOfMonth, hour, minutes(0), seconds(0));
     }
 
-    public static ZonedTime localTime(ZoneId zone, Year year, Month month, Day dayOfMonth)
+    public static LocalTime localTime(ZoneId zone, Year year, Month month, Day dayOfMonth)
     {
         return localTime(zone, year, month, dayOfMonth, militaryHour(0));
     }
 
-    public static ZonedTime localTime(ZoneId zone, Year year, Month month)
+    public static LocalTime localTime(ZoneId zone, Year year, Month month)
     {
         return localTime(zone, year, month, Day.dayOfMonth(1), militaryHour(0));
     }
 
-    public static ZonedTime localTime(ZoneId zone,
+    public static LocalTime localTime(ZoneId zone,
                                       Year year,
                                       Month month,
                                       Day dayOfMonth,
@@ -139,7 +139,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      *
      * @return the current <code>Time</code>
      */
-    public static ZonedTime now(ZoneId zone)
+    public static LocalTime now(ZoneId zone)
     {
         return epochMilliseconds(zone, System.currentTimeMillis());
     }
@@ -147,7 +147,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     /**
      * @return The current time in the local timezone, as defined by #localTimeZone
      */
-    public static ZonedTime nowInLocalTime()
+    public static LocalTime nowInLocalTime()
     {
         return now(localTimeZone());
     }
@@ -159,14 +159,14 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      *
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      */
-    protected ZonedTime(final ZoneId zone, long milliseconds)
+    protected LocalTime(final ZoneId zone, long milliseconds)
     {
         super(milliseconds);
 
         this.zone = zone;
     }
 
-    protected ZonedTime()
+    protected LocalTime()
     {
     }
 
@@ -208,7 +208,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     }
 
     @Override
-    public ZonedTime asUtc()
+    public LocalTime asUtc()
     {
         return super.asUtc();
     }
@@ -250,7 +250,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     @Override
     public Duration elapsedSince(PointInTime<?, ?> thatTime)
     {
-        return Duration.milliseconds(thatTime.asUtc().minus(asUtc()).asMilliseconds());
+        return Duration.duration(thatTime.asUtc().minus(asUtc()).asMilliseconds());
     }
 
     @Override
@@ -318,7 +318,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     }
 
     @Override
-    public ZonedTime maximum()
+    public LocalTime maximum()
     {
         return newPointInTime(Integer.MAX_VALUE);
     }
@@ -329,7 +329,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     }
 
     @Override
-    public ZonedTime minimum()
+    public LocalTime minimum()
     {
         return newPointInTime(0);
     }
@@ -363,22 +363,22 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     @Override
     public Duration newLengthOfTime(long epochMilliseconds)
     {
-        return Duration.milliseconds(epochMilliseconds);
+        return Duration.duration(epochMilliseconds);
     }
 
     @Override
-    public ZonedTime newPointInTime(long epochMilliseconds)
+    public LocalTime newPointInTime(long epochMilliseconds)
     {
         return epochMilliseconds(timeZone(), epochMilliseconds);
     }
 
     @Override
-    public ZonedTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
+    public LocalTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
     {
         return epochMilliseconds(zone, epochMilliseconds);
     }
 
-    public ZonedTime startOfDay()
+    public LocalTime startOfDay()
     {
         return epochSeconds(timeZone(), javaZonedDate()
                 .withHour(0)
@@ -388,7 +388,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
                 .toEpochSecond());
     }
 
-    public ZonedTime startOfHour()
+    public LocalTime startOfHour()
     {
         return epochSeconds(timeZone(), javaZonedDate()
                 .withMinute(0)
@@ -397,12 +397,12 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
                 .toEpochSecond());
     }
 
-    public ZonedTime startOfNextHour()
+    public LocalTime startOfNextHour()
     {
         return nowInLocalTime().startOfHour().plus(ONE_HOUR);
     }
 
-    public ZonedTime startOfTomorrow()
+    public LocalTime startOfTomorrow()
     {
         return startOfDay().plus(Duration.ONE_DAY);
     }
@@ -436,7 +436,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     /**
      * @return This local time on the given day
      */
-    public ZonedTime withDay(Day day)
+    public LocalTime withDay(Day day)
     {
         switch (day.type())
         {
@@ -458,22 +458,22 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
         }
     }
 
-    public ZonedTime withDayOfWeek(DayOfWeek day)
+    public LocalTime withDayOfWeek(DayOfWeek day)
     {
         return localTime(timeZone(), javaLocalDateTime().with(DAY_OF_WEEK, day.asJava()));
     }
 
-    public ZonedTime withHourOfDay(Hour hour)
+    public LocalTime withHourOfDay(Hour hour)
     {
         return localTime(timeZone(), javaLocalDateTime().with(HOUR_OF_DAY, hour.asMilitaryHour()));
     }
 
-    public ZonedTime withMinute(Minute minute)
+    public LocalTime withMinute(Minute minute)
     {
         return localTime(timeZone(), javaLocalDateTime().with(MINUTE_OF_HOUR, minute.asUnits()));
     }
 
-    public ZonedTime withUnixEpochDay(Day day)
+    public LocalTime withUnixEpochDay(Day day)
     {
         return localTime(timeZone(), javaLocalDateTime().with(EPOCH_DAY, day.asUnits()));
     }

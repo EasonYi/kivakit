@@ -100,6 +100,7 @@ public class Hour extends BaseDuration<Hour>
         return hourOfDay(hour, PM);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     @NoTestRequired
     public enum Type
     {

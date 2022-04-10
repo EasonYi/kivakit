@@ -84,6 +84,16 @@ public interface Quantizable extends DoubleQuantizable
         return Math.abs(quantum() - that.quantum()) <= within.quantum();
     }
 
+    default boolean isBetweenExclusive(Quantizable a, Quantizable b)
+    {
+        return isGreaterThanOrEqualTo(a) && isLessThan(b);
+    }
+
+    default boolean isBetweenInclusive(Quantizable a, Quantizable b)
+    {
+        return isGreaterThanOrEqualTo(a) && isLessThanOrEqualTo(b);
+    }
+
     default boolean isGreaterThan(Quantizable that)
     {
         return quantum() > that.quantum();

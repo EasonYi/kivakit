@@ -5,7 +5,7 @@ package com.telenav.kivakit.interfaces.time;
  *
  * @author jonathanl (shibo)
  */
-public interface Epoched
+public interface Epochal
 {
     /**
      * @return The number of milliseconds since the beginning of the UNIX epoch

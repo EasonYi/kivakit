@@ -22,10 +22,6 @@ import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
-import com.telenav.kivakit.core.value.level.Percent;
-import com.telenav.kivakit.interfaces.numeric.Quantizable;
-import com.telenav.kivakit.interfaces.string.Stringable;
-import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.regex.Pattern;
@@ -81,16 +77,13 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTime.class)
 @Tested
-public class Duration implements
-        Stringable,
-        Quantizable,
-        LengthOfTime<Duration>
+public class Duration extends BaseDuration<Duration>
 {
     /** Constant for maximum duration. */
-    public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE);
+    public static final Duration MAXIMUM = duration(Long.MAX_VALUE);
 
     /** Constant for no duration. */
-    public static final Duration INSTANTANEOUS = milliseconds(0);
+    public static final Duration INSTANTANEOUS = duration(0);
 
     /** Constant for one day. */
     public static final Duration ONE_DAY = days(1);
@@ -135,6 +128,18 @@ public class Duration implements
     }
 
     @Tested
+    public static Duration duration(double milliseconds)
+    {
+        return duration((long) (milliseconds + 0.5));
+    }
+
+    @Tested
+    public static Duration duration(long milliseconds)
+    {
+        return new Duration(milliseconds, POSITIVE_ONLY);
+    }
+
+    @Tested
     public static Duration hours(double hours)
     {
         return minutes(60.0 * hours);
@@ -144,18 +149,6 @@ public class Duration implements
     public static Duration hours(int hours)
     {
         return minutes(60 * hours);
-    }
-
-    @Tested
-    public static Duration milliseconds(double milliseconds)
-    {
-        return milliseconds((long) (milliseconds + 0.5));
-    }
-
-    @Tested
-    public static Duration milliseconds(long milliseconds)
-    {
-        return new Duration(milliseconds, POSITIVE_ONLY);
     }
 
     @Tested
@@ -173,7 +166,7 @@ public class Duration implements
     @Tested
     public static Duration nanoseconds(long nanoseconds)
     {
-        return milliseconds(nanoseconds / 1_000_000.0);
+        return duration(nanoseconds / 1_000_000.0);
     }
 
     @Tested
@@ -192,7 +185,7 @@ public class Duration implements
             var units = matcher.group("units");
             if (isOneOf(units, "milliseconds", "millisecond", "ms"))
             {
-                return Duration.milliseconds(quantity);
+                return Duration.duration(quantity);
             }
             else if (isOneOf(units, "seconds", "second", "s"))
             {
@@ -234,13 +227,13 @@ public class Duration implements
     @Tested
     public static Duration seconds(double seconds)
     {
-        return milliseconds(seconds * 1000.0);
+        return duration(seconds * 1000.0);
     }
 
     @Tested
     public static Duration seconds(int seconds)
     {
-        return milliseconds(seconds * 1000L);
+        return duration(seconds * 1000L);
     }
 
     @Tested
@@ -276,15 +269,12 @@ public class Duration implements
         ALLOW_NEGATIVE
     }
 
-    private final long milliseconds;
-
     /**
      * For reflective construction
      */
     @NoTestRequired
-    public Duration()
+    protected Duration()
     {
-        milliseconds = 0;
     }
 
     /**
@@ -295,12 +285,12 @@ public class Duration implements
     @NoTestRequired
     protected Duration(long milliseconds, Restriction restriction)
     {
+        super(milliseconds);
+
         if (restriction == POSITIVE_ONLY && milliseconds < 0)
         {
             throw new IllegalArgumentException("Negative time not allowed");
         }
-
-        this.milliseconds = milliseconds;
     }
 
     /**
@@ -332,44 +322,6 @@ public class Duration implements
         return Frequency.every(this);
     }
 
-    @Tested
-    public Duration difference(Duration that)
-    {
-        if (isGreaterThan(that))
-        {
-            return minus(that);
-        }
-        else
-        {
-            return that.minus(this);
-        }
-    }
-
-    @Tested
-    public double dividedBy(Duration that)
-    {
-        return (double) milliseconds / that.milliseconds;
-    }
-
-    @Override
-    @Tested
-    public Duration dividedBy(double divisor)
-    {
-        return milliseconds(milliseconds / divisor);
-    }
-
-    @Override
-    @Tested
-    public boolean equals(Object object)
-    {
-        if (object instanceof Duration)
-        {
-            var that = (Duration) object;
-            return milliseconds == that.milliseconds;
-        }
-        return false;
-    }
-
     /**
      * @return A String representation of the time of week represented by this duration, assuming it starts on Monday,
      * 00:00, modulo the length of a week.
@@ -392,48 +344,15 @@ public class Duration implements
     }
 
     @Override
-    @Tested
-    public int hashCode()
-    {
-        return Long.toString(milliseconds).hashCode();
-    }
-
-    @Tested
-    public boolean isMaximum()
-    {
-        return equals(Duration.MAXIMUM);
-    }
-
-    @Tested
-    public Duration longerBy(Percent percentage)
-    {
-        return milliseconds(milliseconds * (1.0 + percentage.asUnitValue()));
-    }
-
-    @Override
-    @Tested
-    public Duration maximum(Duration that)
-    {
-        return isGreaterThan(that) ? this : that;
-    }
-
-    @Override
     public Duration maximum()
     {
         return MAXIMUM;
     }
 
     @Override
-    @Tested
-    public long milliseconds()
-    {
-        return milliseconds;
-    }
-
-    @Override
     public long millisecondsPerUnit()
     {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -477,44 +396,12 @@ public class Duration implements
     @Tested
     public Duration nearestHour()
     {
-        return hours(Math.round(asHours()));
+        return nearest(hours(1));
     }
 
     @Override
     public Duration newInstance(long milliseconds)
     {
-        return milliseconds(milliseconds);
-    }
-
-    @Tested
-    public Percent percentageOf(Duration that)
-    {
-        return Percent.percent(100.0 * milliseconds / that.milliseconds);
-    }
-
-    @Tested
-    public Duration plus(Duration that)
-    {
-        return milliseconds(milliseconds + that.milliseconds);
-    }
-
-    @Tested
-    public Duration shorterBy(Percent percentage)
-    {
-        return milliseconds(milliseconds * (1.0 - percentage.asUnitValue()));
-    }
-
-    @Tested
-    @Override
-    public Duration times(double multiplier)
-    {
-        return milliseconds(milliseconds * multiplier);
-    }
-
-    @Override
-    @NoTestRequired
-    public String toString()
-    {
-        return asString();
+        return duration(milliseconds);
     }
 }

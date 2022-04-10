@@ -1,7 +1,7 @@
 package com.telenav.kivakit.core.time;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
-import static com.telenav.kivakit.core.time.LocalTime.utcTimeZone;
+import static com.telenav.kivakit.interfaces.time.TimeZoned.utc;
 
 @SuppressWarnings("unused")
 public class Year extends BaseDuration<Year>
@@ -18,9 +18,21 @@ public class Year extends BaseDuration<Year>
     }
 
     @Override
+    public Year maximum()
+    {
+        return year(2038);
+    }
+
+    @Override
     public long millisecondsPerUnit()
     {
         return 31_557_600_000L;
+    }
+
+    @Override
+    public Year minimum()
+    {
+        return year(0);
     }
 
     @Override
@@ -29,8 +41,8 @@ public class Year extends BaseDuration<Year>
         return year((int) year);
     }
 
-    public Time withMonth(Month month)
+    public LocalTime withMonth(Month month)
     {
-        return LocalTime.localTime(utcTimeZone(), this, month, Day.dayOfMonth(1), Hour.militaryHour(0), Minute.minutes(0), Second.seconds(0));
+        return LocalTime.localTime(utc(), this, month, Day.dayOfMonth(1));
     }
 }

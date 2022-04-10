@@ -42,4 +42,10 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTi
     {
         return Objects.hash(epochMilliseconds());
     }
+
+    @Override
+    public long milliseconds()
+    {
+        return epochMilliseconds();
+    }
 }

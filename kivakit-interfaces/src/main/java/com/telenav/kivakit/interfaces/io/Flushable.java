@@ -35,16 +35,20 @@ public interface Flushable
     /**
      * Flushes the object waiting not more than the give duration for this to occur.
      *
-     * @param maximumWaitTime The amount of time to wait before giving up on flushing. To achieve a blocking flush,
-     * simply pass in {@link LengthOfTime#MAXIMUM} as the wait time, or call {@link #flush()}.
+     * @param maximumWaitTime The amount of time to wait before giving up on flushing.
      */
-    void flush(LengthOfTime maximumWaitTime);
+    void flush(LengthOfTime<?> maximumWaitTime);
 
     /**
      * Flush the object, waiting until finished doing so.
      */
     default void flush()
     {
-        flush(LengthOfTime.MAXIMUM);
+        flush(maximumWaitTime());
+    }
+
+    default LengthOfTime<?> maximumWaitTime()
+    {
+        throw new UnsupportedOperationException();
     }
 }

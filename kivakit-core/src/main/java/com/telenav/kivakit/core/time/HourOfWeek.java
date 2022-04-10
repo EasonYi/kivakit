@@ -3,35 +3,29 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.value.count.BaseCount;
-import com.telenav.kivakit.interfaces.time.LengthOfTime;
-import com.telenav.kivakit.interfaces.time.PointInTime;
-import com.telenav.kivakit.interfaces.time.TimeZoned;
-import org.jetbrains.annotations.NotNull;
 
-import java.time.ZoneId;
 import java.util.Objects;
-import java.util.TimeZone;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensureBetweenExclusive;
 import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
 
 /**
- * Represents an hour of the week, for example Thursday at 1pm. This class stores its count value in the fields {@link
- * #dayOfWeek()} and {@link #hourOfDay()}, and it overrides {@link #asLong()} to provide a count value to the superclass
- * based on those two fields.
+ * Represents an hour of the week, for example Thursday at 1pm.
  *
  * @author jonathanl (shibo)
  */
 @SuppressWarnings("unused")
-public class HourOfWeek extends BaseTime<HourOfWeek>
+public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
 {
+    private static final long millisecondsPerHour = 60 * 60 * 1_000;
+
     /**
      * Returns an {@link HourOfWeek} for the given ordinal value
      *
      * @param hourOfWeek The hour of the week from 0 to 7 * 24 (168), exclusive.
      */
     @Tested
-    public static HourOfWeek hourOfWeek(int hourOfWeek)
+    public static HourOfWeek hourOfWeek(long hourOfWeek)
     {
         ensureBetweenExclusive(hourOfWeek, 0, 24 * 7, "Hour of week $ is out of range", hourOfWeek);
 
@@ -62,7 +56,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     @Tested
     public static HourOfWeek hourOfWeek(DayOfWeek dayOfWeek, Hour hourOfDay)
     {
-        return hourOfWeek((dayOfWeek.asIso() * 24 + hourOfDay.asInt()));
+        return hourOfWeek((dayOfWeek.asIso() * 24 + hourOfDay.asUnits()));
     }
 
     /** The day of the week used to compute the hour of the week */
@@ -79,7 +73,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     @NoTestRequired
     protected HourOfWeek(DayOfWeek dayOfWeek, Hour hourOfDay)
     {
-        super(dayOfWeek.asMilliseconds() + hourOfDay.asMilliseconds());
+        super(dayOfWeek.milliseconds() + hourOfDay.milliseconds());
 
         this.dayOfWeek = dayOfWeek;
         this.hourOfDay = hourOfDay;
@@ -88,44 +82,6 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     public Time asEpochTime()
     {
         return Time.epochMilliseconds(asMilliseconds());
-    }
-
-    /**
-     * Converts this hour of the week, assumed to be in UTC, to the given time zone.
-     *
-     * @param zone The time zone to offset by
-     * @return The hour of the week in the given time zone
-     */
-    @Override
-    @Tested
-    public HourOfWeek asLocalTime(ZoneId zone)
-    {
-        return offset(zone, false);
-    }
-
-    @Override
-    @Tested
-    public long asLong()
-    {
-        return dayOfWeek.asIso() * 24L + hourOfDay.asInt();
-    }
-
-    /**
-     * Converts this hour of the week, assumed to be in localtime, to UTC.
-     *
-     * @param localZone The time zone for this hour of the week
-     * @return The hour of the week in UTC time
-     */
-    @Tested
-    public HourOfWeek asUtc(ZoneId localZone)
-    {
-        return offset(localZone, true);
-    }
-
-    @Override
-    public int compareTo(@NotNull final Object o)
-    {
-        return 0;
     }
 
     /**
@@ -165,12 +121,6 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     }
 
     @Override
-    public Object maximum(final Object o)
-    {
-        return null;
-    }
-
-    @Override
     @Tested
     public HourOfWeek maximum()
     {
@@ -178,16 +128,9 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     }
 
     @Override
-    public HourOfWeek minimum(LengthOfTime<?> that)
+    public long millisecondsPerUnit()
     {
-        return null;
-    }
-
-    @Override
-    @Tested
-    public HourOfWeek minus(long count)
-    {
-        return wrappedOffset(-count);
+        return millisecondsPerHour;
     }
 
     /**
@@ -201,28 +144,15 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     }
 
     @Override
-    public LengthOfTime newLengthOfTime(final long milliseconds)
+    public Duration newLengthOfTime(long milliseconds)
     {
-        return null;
+        return Duration.duration(milliseconds);
     }
 
     @Override
-    public PointInTime newPointInTime(final long epochMilliseconds)
+    public HourOfWeek newPointInTime(long epochMilliseconds)
     {
         return null;
-    }
-
-    @Override
-    public TimeZoned newZonedPointInTime(final ZoneId zone, final long epochMilliseconds)
-    {
-        return null;
-    }
-
-    @Override
-    @Tested
-    public HourOfWeek plus(long count)
-    {
-        return wrappedOffset(count);
     }
 
     @Override
@@ -230,43 +160,5 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     public String toString()
     {
         return dayOfWeek() + " at " + hourOfDay();
-    }
-
-    /**
-     * Computes the hour of the week in the given timezone.
-     *
-     * @param zone The time zone to use to offset this hour of the week
-     * @return The hour of the week offset by the daylight-savings adjusted offset in hours
-     */
-    private HourOfWeek offset(ZoneId zone, boolean subtract)
-    {
-        var offset = subtract
-                ? -offsetInHours(zone)
-                : offsetInHours(zone);
-
-        return hourOfWeek(wrappedOffset(offset));
-    }
-
-    /**
-     * @param zone The time zone identifier
-     * @return The offset in hours of the identified time zone, using the present moment to determine any daylight
-     * savings adjustment.
-     */
-    private int offsetInHours(final ZoneId zone)
-    {
-        // Get the TimeZone object for the specified zone id,
-        var timeZone = TimeZone.getTimeZone(zone);
-
-        // use that to get the time zone offset in milliseconds (using the DST adjustment for the present moment),
-        var offsetInMilliseconds = timeZone.getOffset(Time.now().asMilliseconds());
-
-        // and convert the offset to hours.
-        return (int) Math.round((double) offsetInMilliseconds / 1_000 / 60 / 60);
-    }
-
-    private HourOfWeek wrappedOffset(long offset)
-    {
-        var maximum = this.maximum().asInt() + 1;
-        return hourOfWeek((int) ((asLong() + offset + maximum) % maximum));
     }
 }

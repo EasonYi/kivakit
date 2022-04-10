@@ -7,7 +7,7 @@ import java.time.ZoneId;
  *
  * @author jonathanl (shibo)
  */
-public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Epoched
+public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Epochal
 {
     static ZoneId localTimeZone()
     {
@@ -23,16 +23,24 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
      * Returns this point in time in the given time zone
      */
     @SuppressWarnings("unchecked")
-    default SubClass asLocalTime(ZoneId zone)
+    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asLocalTime(ZoneId zone)
     {
         if (hasTimeZone())
         {
-            return (SubClass) this;
+            return (ZonedSubClass) this;
         }
         else
         {
             return newZonedPointInTime(timeZone(), epochMilliseconds());
         }
+    }
+
+    /**
+     * Returns this point in time in UTC time based on the given time zone
+     */
+    default SubClass asUtc(ZoneId zone)
+    {
+        return asLocalTime(zone).asUtc();
     }
 
     /**
@@ -56,7 +64,11 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
         return timeZone().equals(utc());
     }
 
-    <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newZonedPointInTime(ZoneId zone, long epochMilliseconds);
+    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newZonedPointInTime(ZoneId zone,
+                                                                                          long epochMilliseconds)
+    {
+        throw new UnsupportedOperationException();
+    }
 
     default ZoneId timeZone()
     {

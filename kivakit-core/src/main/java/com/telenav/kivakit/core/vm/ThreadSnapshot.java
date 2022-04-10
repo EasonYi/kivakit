@@ -40,12 +40,12 @@ import java.util.List;
 @LexakaiJavadoc(complete = true)
 public class ThreadSnapshot
 {
+    /** The time at which this snapshot was captured */
+    private Time capturedAt;
+
     /** The status of each thread */
     @UmlAggregation
     private List<ThreadStatus> threads = new ArrayList<>();
-
-    /** The time at which this snapshot was captured */
-    private Time capturedAt;
 
     public ThreadSnapshot()
     {
@@ -94,7 +94,7 @@ public class ThreadSnapshot
         {
             milliseconds += thread.cpuTime().asMilliseconds();
         }
-        return Duration.milliseconds(milliseconds);
+        return Duration.duration(milliseconds);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ThreadSnapshot
                 if (information != null)
                 {
                     var status = new ThreadStatus();
-                    status.cpuTime = Duration.milliseconds(management.getThreadCpuTime(identifier) / 1_000_000L);
+                    status.cpuTime = Duration.duration(management.getThreadCpuTime(identifier) / 1_000_000L);
                     status.isDaemon = information.isDaemon();
                     status.name = information.getThreadName();
                     status.identifier = information.getThreadId();

@@ -25,7 +25,7 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 import java.time.ZoneId;
 
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
-import static com.telenav.kivakit.core.time.ZonedTime.localTime;
+import static com.telenav.kivakit.core.time.LocalTime.localTime;
 
 /**
  * An immutable <code>Time</code> class that represents a specific point in UNIX time. The underlying representation is
@@ -144,7 +144,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
     @Override
     public Duration newLengthOfTime(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
+        return Duration.duration(milliseconds);
     }
 
     @Override
@@ -155,8 +155,8 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
 
     @Override
     @SuppressWarnings("unchecked")
-    public ZonedTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
+    public LocalTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
     {
-        return ZonedTime.epochMilliseconds(zone, epochMilliseconds);
+        return LocalTime.epochMilliseconds(zone, epochMilliseconds);
     }
 }

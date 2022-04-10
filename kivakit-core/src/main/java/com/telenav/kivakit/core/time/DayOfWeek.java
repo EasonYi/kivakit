@@ -22,17 +22,15 @@ import com.telenav.kivakit.core.language.Hash;
 import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
-import com.telenav.kivakit.core.value.level.Percent;
-import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensureBetweenInclusive;
 import static com.telenav.kivakit.core.ensure.Ensure.ensureNotNull;
-import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 import static com.telenav.kivakit.core.time.DayOfWeek.Standard.ISO;
 import static com.telenav.kivakit.core.time.DayOfWeek.Standard.JAVA;
 import static com.telenav.kivakit.core.time.Duration.days;
+import static com.telenav.kivakit.core.time.Duration.duration;
 import static com.telenav.kivakit.core.time.HourOfWeek.hourOfWeek;
 import static com.telenav.kivakit.interfaces.string.Stringable.Format.USER_LABEL;
 
@@ -42,9 +40,9 @@ import static com.telenav.kivakit.interfaces.string.Stringable.Format.USER_LABEL
  * <p><b>Creation</b></p>
  *
  * <ul>
- *     <li>{@link #dayOfWeek(int, Standard)} - Constructs from a day of the week using the given numbering standard</li>
- *     <li>{@link #isoDayOfWeek(int)} - Constructs from an ISO day of the week (0-6)</li>
- *     <li>{@link #javaDayOfWeek(int)} - Constructs from a Java day of the week (1-7)</li>
+ *     <li>{@link #dayOfWeek(long, Standard)} - Constructs from a day of the week using the given numbering standard</li>
+ *     <li>{@link #isoDayOfWeek(long)} - Constructs from an ISO day of the week (0-6)</li>
+ *     <li>{@link #javaDayOfWeek(long)} - Constructs from a Java day of the week (1-7)</li>
  *     <li>{@link #javaDayOfWeek(java.time.DayOfWeek)} - Constructs from a Java day of the week</li>
  * </ul>
  *
@@ -66,7 +64,7 @@ import static com.telenav.kivakit.interfaces.string.Stringable.Format.USER_LABEL
 @SuppressWarnings("unused") @UmlClassDiagram(diagram = DiagramTime.class)
 @LexakaiJavadoc(complete = true)
 @Tested
-public class DayOfWeek extends BaseTime<DayOfWeek>
+public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
 {
     public static final DayOfWeek MONDAY = isoDayOfWeek(0);
 
@@ -90,7 +88,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
      * @return The day of the week
      */
     @Tested
-    public static DayOfWeek dayOfWeek(int dayOfWeek, Standard standard)
+    public static DayOfWeek dayOfWeek(long dayOfWeek, Standard standard)
     {
         return new DayOfWeek(dayOfWeek, standard);
     }
@@ -102,7 +100,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
      * @return The day of the week
      */
     @Tested
-    public static DayOfWeek isoDayOfWeek(int dayOfWeek)
+    public static DayOfWeek isoDayOfWeek(long dayOfWeek)
     {
         return dayOfWeek(dayOfWeek, ISO);
     }
@@ -126,7 +124,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
      * @return The day of the week
      */
     @Tested
-    public static DayOfWeek javaDayOfWeek(int dayOfWeek)
+    public static DayOfWeek javaDayOfWeek(long dayOfWeek)
     {
         return dayOfWeek(dayOfWeek, JAVA);
     }
@@ -143,12 +141,12 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
         /** Java day of the week numbering is from 1 to 7 */
         JAVA;
 
-        public int asIso(int dayOfWeek)
+        public long asIso(long dayOfWeek)
         {
             return this == ISO ? dayOfWeek : dayOfWeek - 1;
         }
 
-        public int asJava(int dayOfWeek)
+        public long asJava(long dayOfWeek)
         {
             return this == JAVA ? dayOfWeek : dayOfWeek + 1;
         }
@@ -158,7 +156,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
     private final Standard standard;
 
     @NoTestRequired
-    protected DayOfWeek(int dayOfWeek, Standard standard)
+    protected DayOfWeek(long dayOfWeek, Standard standard)
     {
         super(days(standard.asIso(dayOfWeek)).milliseconds());
 
@@ -183,21 +181,21 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
      * @return This day of the week as an ISO-8601 ordinal value
      */
     @Tested
-    public int asIso()
+    public long asIso()
     {
-        return standard.asIso(asInt());
+        return standard.asIso(asUnits());
     }
 
     @Tested
-    public int asJava()
+    public long asJava()
     {
-        return standard.asJava(asInt());
+        return standard.asJava(asUnits());
     }
 
     @Tested
     public java.time.DayOfWeek asJavaDayOfWeek()
     {
-        return java.time.DayOfWeek.of(asJava());
+        return java.time.DayOfWeek.of((int) asJava());
     }
 
     @Override
@@ -218,13 +216,6 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
     public HourOfWeek at(Hour hour)
     {
         return hourOfWeek(this, hour);
-    }
-
-    @Override
-    @NoTestRequired
-    public DayOfWeek dividedBy(long divisor)
-    {
-        return unsupported();
     }
 
     @Override
@@ -249,13 +240,13 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
     @Tested
     public boolean isIso()
     {
-        return standard == ISO;
+        return standard() == ISO;
     }
 
     @Tested
     public boolean isJava()
     {
-        return standard == JAVA;
+        return standard() == JAVA;
     }
 
     @Override
@@ -263,6 +254,12 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
     public DayOfWeek maximum()
     {
         return SUNDAY;
+    }
+
+    @Override
+    public long millisecondsPerUnit()
+    {
+        return 24 * 60 * 60 * 1_000;
     }
 
     @Override
@@ -280,41 +277,20 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
     }
 
     @Override
-    public DayOfWeek next()
+    public Duration newLengthOfTime(long milliseconds)
     {
-        if (this == SUNDAY)
-        {
-            return null;
-        }
-        return super.next();
+        return duration(milliseconds);
     }
 
     @Override
-    @NoTestRequired
-    public DayOfWeek percent(final Percent percentage)
+    public DayOfWeek newPointInTime(long epochMilliseconds)
     {
-        return unsupported();
+        return newInstance(epochMilliseconds / millisecondsPerUnit());
     }
 
-    @Override
-    @NoTestRequired
-    public Percent percentOf(final Quantizable total)
+    public Standard standard()
     {
-        return unsupported();
-    }
-
-    @Override
-    @NoTestRequired
-    public DayOfWeek times(long multiplier)
-    {
-        return unsupported();
-    }
-
-    @Override
-    @NoTestRequired
-    public DayOfWeek times(double multiplier)
-    {
-        return unsupported();
+        return standard;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.telenav.kivakit.interfaces.code.Callback;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTime;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
+import com.telenav.kivakit.interfaces.numeric.Percentage;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
@@ -299,12 +300,29 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return Long.compare(milliseconds(), that.milliseconds());
     }
 
+    default SubClass difference(SubClass that)
+    {
+        if (isGreaterThan(that))
+        {
+            return minus(that);
+        }
+        else
+        {
+            return that.minus(this);
+        }
+    }
+
     /**
      * Returns this length of time divided by the given value
      */
     default SubClass dividedBy(double value)
     {
         return newInstanceFromMilliseconds((long) (milliseconds() / value));
+    }
+
+    default double dividedBy(LengthOfTime<?> that)
+    {
+        return (double) milliseconds() / that.milliseconds();
     }
 
     /**
@@ -323,6 +341,18 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         }, 0L, milliseconds());
     }
 
+    default SubClass longerBy(Percentage percentage)
+    {
+        return newInstance((long) (milliseconds() * (1.0 + percentage.percent())));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    default SubClass maximum(SubClass that)
+    {
+        return isGreaterThan(that) ? (SubClass) this : that;
+    }
+
     /**
      * @return Number of milliseconds in this duration
      */
@@ -332,6 +362,13 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
      * Returns the number of milliseconds per unit of time
      */
     long millisecondsPerUnit();
+
+    @SuppressWarnings("unchecked")
+    @Override
+    default SubClass minimum(SubClass that)
+    {
+        return isLessThan(that) ? (SubClass) this : that;
+    }
 
     /**
      * Returns this length of time minus the given length of time
@@ -396,6 +433,8 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return plusUnits(1);
     }
 
+    Percentage percentageOf(LengthOfTime<?> that);
+
     /**
      * Returns this length of time plus the given length of time
      */
@@ -432,6 +471,11 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
     default SubClass roundUp(LengthOfTime<?> unit)
     {
         return roundDown(unit).plus(unit);
+    }
+
+    default SubClass shorterBy(Percentage percentage)
+    {
+        return newInstance((long) (milliseconds() * (1.0 - percentage.percent())));
     }
 
     /**

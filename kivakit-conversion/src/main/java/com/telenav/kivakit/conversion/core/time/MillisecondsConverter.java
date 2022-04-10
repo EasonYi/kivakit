@@ -28,6 +28,6 @@ public class MillisecondsConverter extends BaseStringConverter<Duration>
         var milliseconds = longConverter.convert(value);
         return milliseconds == null
                 ? null
-                : Duration.milliseconds(milliseconds);
+                : Duration.duration(milliseconds);
     }
 }

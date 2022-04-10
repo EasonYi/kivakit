@@ -54,7 +54,7 @@ public class Rate implements
         Maximizable<Rate>,
         Minimizable<Rate>
 {
-    public static final Rate MAXIMUM = new Rate(Integer.MAX_VALUE, Duration.milliseconds(1));
+    public static final Rate MAXIMUM = new Rate(Integer.MAX_VALUE, Duration.duration(1));
 
     public static Rate perDay(double count)
     {
@@ -81,9 +81,9 @@ public class Rate implements
         return new Rate(count, Duration.ONE_YEAR);
     }
 
-    private final Duration duration;
-
     private final double count;
+
+    private final Duration duration;
 
     public Rate(double count, Duration duration)
     {

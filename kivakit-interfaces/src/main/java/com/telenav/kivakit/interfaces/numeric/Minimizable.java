@@ -34,6 +34,11 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @UmlClassDiagram(diagram = DiagramNumeric.class)
 public interface Minimizable<Value>
 {
+    default boolean isMinimum()
+    {
+        return equals(minimum());
+    }
+
     /**
      * @return The minimum of this value and the given value.
      */

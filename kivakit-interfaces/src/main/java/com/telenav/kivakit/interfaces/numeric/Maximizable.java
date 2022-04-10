@@ -34,13 +34,18 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @UmlClassDiagram(diagram = DiagramNumeric.class)
 public interface Maximizable<Value>
 {
-    /**
-     * @return The maximum of this value and the given value.
-     */
-    Value maximum(Value value);
+    default boolean isMaximum()
+    {
+        return equals(maximum());
+    }
 
     /**
      * Returns the maximum possible Value
      */
     Value maximum();
+
+    /**
+     * @return The maximum of this value and the given value.
+     */
+    Value maximum(Value value);
 }

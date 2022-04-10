@@ -22,6 +22,7 @@ import com.telenav.kivakit.core.language.primitive.Doubles;
 import com.telenav.kivakit.core.lexakai.DiagramCount;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.string.Strip;
+import com.telenav.kivakit.interfaces.numeric.Percentage;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,7 @@ import java.util.Objects;
  */
 @UmlClassDiagram(diagram = DiagramCount.class)
 @LexakaiJavadoc(complete = true)
-public final class Percent implements Comparable<Percent>
+public final class Percent implements Comparable<Percent>, Percentage
 {
     public static final Percent _0 = new Percent(0);
 
@@ -170,6 +171,12 @@ public final class Percent implements Comparable<Percent>
     public Percent minus(Percent that)
     {
         return new Percent(value - that.value);
+    }
+
+    @Override
+    public double percent()
+    {
+        return value();
     }
 
     public Percent plus(Percent that)

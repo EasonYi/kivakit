@@ -137,7 +137,7 @@ public class HourOfWeekSpan
      */
     public boolean includes(Time time)
     {
-        return includes(time.inTimeZone(zoneId()));
+        return includes(LocalTime.epochMilliseconds(zoneId(), time.epochMilliseconds()));
     }
 
     /**

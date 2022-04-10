@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-import static com.telenav.kivakit.core.time.ZonedTime.nowInLocalTime;
+import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
 
 /**
  * @author jonathanl (shibo)

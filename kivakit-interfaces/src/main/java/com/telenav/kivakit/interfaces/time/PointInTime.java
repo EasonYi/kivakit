@@ -80,7 +80,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
         Maximizable<SubClass>,
         Comparable<PointInTime<?, ?>>,
         Stringable,
-        TimeZoned<SubClass>
+        TimeZoned<SubClass>,
+        TimeUnited<SubClass>
 {
     /**
      * Returns the length of time that has elapsed since this point in time. Same as {@link #elapsedSince()}.
@@ -131,6 +132,12 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
         }
     }
 
+    @Override
+    default long asUnits()
+    {
+        return epochMilliseconds() / millisecondsPerUnit();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -138,6 +145,11 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     default int compareTo(PointInTime<?, ?> that)
     {
         return Long.compare(epochMilliseconds(), that.epochMilliseconds());
+    }
+
+    default SubClass decremented()
+    {
+        return minus(newLengthOfTime(millisecondsPerUnit()));
     }
 
     /**
@@ -177,6 +189,11 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      */
     @Override
     long epochMilliseconds();
+
+    default SubClass incremented()
+    {
+        return plus(newLengthOfTime(millisecondsPerUnit()));
+    }
 
     /**
      * @return True if this point in time is after the given point in time
@@ -264,6 +281,12 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     {
         return newPointInTime(Integer.MAX_VALUE);
     }
+
+    /**
+     * Returns the number of milliseconds per unit of time
+     */
+    @Override
+    long millisecondsPerUnit();
 
     /**
      * {@inheritDoc}

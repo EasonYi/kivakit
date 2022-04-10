@@ -32,16 +32,21 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @LexakaiJavadoc(complete = true)
 public interface Stoppable extends Operation
 {
-    /**
-     * Stops this task, waiting no more than the given wait time before giving up.
-     */
-    void stop(LengthOfTime wait);
+    default LengthOfTime<?> maximumWaitTime()
+    {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Stops this task, blocking until the operation is completed
      */
     default void stop()
     {
-        stop(LengthOfTime.MAXIMUM);
+        stop(maximumWaitTime());
     }
+
+    /**
+     * Stops this task, waiting no more than the given wait time before giving up.
+     */
+    void stop(LengthOfTime<?> wait);
 }
