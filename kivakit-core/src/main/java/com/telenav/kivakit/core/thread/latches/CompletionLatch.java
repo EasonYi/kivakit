@@ -88,6 +88,6 @@ public class CompletionLatch
 
     public WakeState waitForCompletion()
     {
-        return waitForCompletion(Duration.MAXIMUM);
+        return waitForCompletion(Duration.FOREVER);
     }
 }

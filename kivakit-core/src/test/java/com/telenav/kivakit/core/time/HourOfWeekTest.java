@@ -11,6 +11,7 @@ import static com.telenav.kivakit.core.time.DayOfWeek.SATURDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.SUNDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.TUESDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.WEDNESDAY;
+import static com.telenav.kivakit.core.time.DayOfWeek.dayOfWeek;
 import static com.telenav.kivakit.core.time.Duration.hours;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.HourOfWeek.hourOfWeek;
@@ -35,12 +36,14 @@ public class HourOfWeekTest extends CoreUnitTest
     public void testConversions()
     {
         // For all days of the week,
-        random().rangeInclusive(MONDAY, SUNDAY).forEach(dayOfWeek ->
+        random().rangeInclusive(MONDAY.asUnits(), SUNDAY.asUnits()).forEach(dayOfWeekCount ->
         {
             // and all hours of the day,
-            random().rangeInclusive(militaryHour(0), militaryHour(23)).forEach(hourOfDay ->
+            random().rangeInclusive(0, 23).forEach(hourOfDayCount ->
             {
                 // create an HourOfWeek,
+                var dayOfWeek = dayOfWeek(dayOfWeekCount.asLong(), DayOfWeek.Standard.ISO);
+                var hourOfDay = militaryHour(hourOfDayCount.asLong());
                 var hourOfWeek = hourOfWeek(dayOfWeek, hourOfDay);
 
                 // and ensure that it can be converted back to each original values.
@@ -56,7 +59,7 @@ public class HourOfWeekTest extends CoreUnitTest
             var hourOfWeek = hourOfWeek(at);
 
             // and ensure that it can be converted to the right day of the week, and hour of the day.
-            ensure(hourOfWeek.hourOfDay().asInt() == at.asInt() % 24);
+            ensure(hourOfWeek.hourOfDay().asUnits() == at.asInt() % 24);
             ensure(hourOfWeek.dayOfWeek().asIso() == at.asInt() / 24);
         });
     }

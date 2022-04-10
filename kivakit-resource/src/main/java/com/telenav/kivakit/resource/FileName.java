@@ -39,6 +39,8 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 import java.time.ZoneId;
 import java.util.regex.Pattern;
 
+import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
+
 /**
  * A file name, with a base name and an {@link Extension}.
  *
@@ -97,7 +99,7 @@ public class FileName implements Named, Comparable<FileName>
 
     public static FileName date()
     {
-        return parseFileName(LOGGER, LocalTime.now().asDateString());
+        return parseFileName(LOGGER, nowInLocalTime().asDateString());
     }
 
     public static FileName date(LocalTime time)
@@ -112,7 +114,7 @@ public class FileName implements Named, Comparable<FileName>
 
     public static FileName dateTime()
     {
-        return dateTime(LocalTime.now());
+        return dateTime(nowInLocalTime());
     }
 
     public static FileName dateTime(LocalTime time)

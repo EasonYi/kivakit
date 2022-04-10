@@ -19,7 +19,7 @@
 package com.telenav.kivakit.conversion.core.time;
 
 import com.telenav.kivakit.core.test.CoreUnitTest;
-import com.telenav.kivakit.core.time.LocalTime;
+import com.telenav.kivakit.core.time.TimeZones;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -30,7 +30,7 @@ public class LocalDateConverterTest extends CoreUnitTest
     @Test
     public void convert()
     {
-        var converter = new LocalDateConverter(this, LocalTime.utcTimeZone());
+        var converter = new LocalDateConverter(this, TimeZones.utc());
 
         var time = converter.convert("2011.07.06");
 

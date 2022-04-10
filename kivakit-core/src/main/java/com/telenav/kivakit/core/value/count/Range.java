@@ -113,6 +113,11 @@ public class Range<Value extends IntegerNumeric<Value>> implements Countable
         return new Range<>(minimum, inclusiveMaximum, INCLUSIVE);
     }
 
+    public static Range<Count> rangeInclusive(long minimum, long inclusiveMaximum)
+    {
+        return rangeInclusive(Count.count(minimum), Count.count(inclusiveMaximum));
+    }
+
     /**
      * The type of upper bound
      */

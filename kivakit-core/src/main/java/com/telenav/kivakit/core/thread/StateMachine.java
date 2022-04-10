@@ -18,11 +18,11 @@
 
 package com.telenav.kivakit.core.thread;
 
-import com.telenav.kivakit.core.messaging.repeaters.BaseRepeater;
 import com.telenav.kivakit.core.lexakai.DiagramThread;
+import com.telenav.kivakit.core.messaging.repeaters.BaseRepeater;
+import com.telenav.kivakit.core.time.Duration;
 import com.telenav.kivakit.interfaces.code.Code;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
-import com.telenav.kivakit.core.time.Duration;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.Objects;
@@ -235,7 +235,7 @@ public final class StateMachine<State> extends BaseRepeater
                                            State waitFor,
                                            Runnable before)
     {
-        return transition(from, to, waitFor, Duration.MAXIMUM, before);
+        return transition(from, to, waitFor, Duration.FOREVER, before);
     }
 
     public void transitionAndWaitForNot(State state)
@@ -285,7 +285,7 @@ public final class StateMachine<State> extends BaseRepeater
      */
     public boolean waitFor(State state)
     {
-        return waitFor(state, Duration.MAXIMUM);
+        return waitFor(state, Duration.FOREVER);
     }
 
     /**
@@ -307,7 +307,7 @@ public final class StateMachine<State> extends BaseRepeater
      */
     public boolean waitFor(Predicate<State> predicate)
     {
-        return waitFor(predicate, Duration.MAXIMUM);
+        return waitFor(predicate, Duration.FOREVER);
     }
 
     /**
@@ -351,7 +351,7 @@ public final class StateMachine<State> extends BaseRepeater
      */
     public boolean waitForNot(State state)
     {
-        return waitForNot(state, Duration.MAXIMUM);
+        return waitForNot(state, Duration.FOREVER);
     }
 
     /**

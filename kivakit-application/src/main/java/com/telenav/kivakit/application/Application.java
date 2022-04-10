@@ -88,11 +88,13 @@ import static com.telenav.kivakit.application.Application.State.READY;
 import static com.telenav.kivakit.application.Application.State.RUNNING;
 import static com.telenav.kivakit.application.Application.State.STOPPED;
 import static com.telenav.kivakit.application.Application.State.STOPPING;
-import static com.telenav.kivakit.commandline.Quantifier.*;
+import static com.telenav.kivakit.commandline.Quantifier.OPTIONAL;
+import static com.telenav.kivakit.commandline.Quantifier.REQUIRED;
 import static com.telenav.kivakit.commandline.SwitchParsers.booleanSwitchParser;
 import static com.telenav.kivakit.core.collections.set.ObjectSet.objectSet;
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 import static com.telenav.kivakit.core.ensure.Ensure.ensureNotNull;
+import static com.telenav.kivakit.core.time.Duration.FOREVER;
 
 /**
  * Base class for KivaKit applications.
@@ -257,7 +259,7 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensureNotNull;
  * @see SwitchParser
  * @see ArgumentParser
  */
-@SuppressWarnings({ "unused", "BooleanMethodIsAlwaysInverted" })
+@SuppressWarnings({ "unused", "BooleanMethodIsAlwaysInverted", "UnusedReturnValue" })
 @UmlClassDiagram(diagram = DiagramApplication.class)
 @LexakaiJavadoc(complete = true)
 public abstract class Application extends BaseComponent implements
@@ -591,7 +593,7 @@ public abstract class Application extends BaseComponent implements
             state.transitionTo(STOPPING);
         }
 
-        BaseLog.logs().forEach(BaseLog::flush);
+        BaseLog.logs().forEach(log -> log.flush(FOREVER));
 
         for (var log : BaseLog.logs())
         {
@@ -665,6 +667,7 @@ public abstract class Application extends BaseComponent implements
     /**
      * @return The application version as specified in the resource "/project.properties"
      */
+    @Override
     public Version version()
     {
         return properties().asVersion("project-version");

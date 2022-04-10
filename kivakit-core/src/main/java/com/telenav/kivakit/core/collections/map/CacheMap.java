@@ -42,15 +42,15 @@ public class CacheMap<Key, Value> extends BaseMap<Key, Value>
     /** The time that each entry was added or updated */
     private final Map<Key, Time> age = new HashMap<>();
 
-    /** The maximum allowed age of an entry */
-    private final Duration maximumEntryAge;
-
     /** True if this map should expire old entries */
     private final boolean expireOldEntries;
 
+    /** The maximum allowed age of an entry */
+    private final Duration maximumEntryAge;
+
     public CacheMap(Maximum cacheSize)
     {
-        this(cacheSize, Duration.MAXIMUM);
+        this(cacheSize, Duration.FOREVER);
     }
 
     /**

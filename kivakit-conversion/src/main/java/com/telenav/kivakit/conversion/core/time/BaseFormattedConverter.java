@@ -80,6 +80,6 @@ public class BaseFormattedConverter extends BaseStringConverter<LocalTime>
     {
         var parsed = formatter().parse(value);
         var time = Instant.from(parsed);
-        return LocalTime.milliseconds(zone, time.toEpochMilli());
+        return LocalTime.epochMilliseconds(zone, time.toEpochMilli());
     }
 }

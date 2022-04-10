@@ -80,7 +80,7 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 public class Duration extends BaseDuration<Duration>
 {
     /** Constant for maximum duration. */
-    public static final Duration MAXIMUM = duration(Long.MAX_VALUE);
+    public static final Duration FOREVER = duration(Long.MAX_VALUE);
 
     /** Constant for no duration. */
     public static final Duration INSTANTANEOUS = duration(0);
@@ -346,7 +346,7 @@ public class Duration extends BaseDuration<Duration>
     @Override
     public Duration maximum()
     {
-        return MAXIMUM;
+        return FOREVER;
     }
 
     @Override
@@ -400,7 +400,7 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @Override
-    public Duration newInstance(long milliseconds)
+    public Duration newLengthOfTime(long milliseconds)
     {
         return duration(milliseconds);
     }

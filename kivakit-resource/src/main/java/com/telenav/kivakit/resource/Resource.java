@@ -276,7 +276,7 @@ public interface Resource extends
 
     default boolean isOlderThan(Resource that)
     {
-        return modifiedAt().isOlderThan(that.modifiedAt());
+        return modifiedAt().isBefore(that.modifiedAt());
     }
 
     /**

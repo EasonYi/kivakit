@@ -37,9 +37,9 @@ public class FileNameTest extends UnitTest
     public void localTimeTest()
     {
         var now = Time.now();
-        var local = now.localTime();
+        var local = now.asLocalTime();
         trace("local = ${debug}", local);
-        var utc = now.utc();
+        var utc = now.asUtc();
         trace("utx = ${debug}", utc);
         ensureEqual(local.asMilliseconds(), utc.asMilliseconds());
     }
@@ -50,7 +50,7 @@ public class FileNameTest extends UnitTest
         var timeZone = ZoneId.of("America/Los_Angeles");
         trace("TimeZone:  ${debug}", timeZone.toString());
 
-        var localTime = LocalTime.milliseconds(timeZone, 1344025281123L);
+        var localTime = LocalTime.epochMilliseconds(timeZone, 1344025281123L);
         trace("LocalTime: ${debug}", localTime.asMilliseconds());
 
         var localMillisecondsConverter = new LocalDateTimeWithMillisecondsConverter(this);
@@ -62,9 +62,9 @@ public class FileNameTest extends UnitTest
         trace("Minutes of day:  ${debug}", localTime.minuteOfDay());
         Assert.assertEquals(801, localTime.minuteOfDay());
         trace("Minutes of Hour: ${debug}", localTime.minuteOfHour());
-        Assert.assertEquals(21, localTime.minuteOfHour().asInt());
+        Assert.assertEquals(21, localTime.minuteOfHour().minutes());
         trace("Day of Year:    ${debug}", localTime.dayOfYear());
-        Assert.assertEquals(216, localTime.dayOfYear().asInt());
+        Assert.assertEquals(216, (long) localTime.dayOfYear().asMinutes());
         trace("Week of Year:    ${debug}", localTime.weekOfYear());
         Assert.assertEquals(30, localTime.weekOfYear());
         trace("Day of Week:    ${debug}", localTime.dayOfWeek());
@@ -80,10 +80,10 @@ public class FileNameTest extends UnitTest
         var timeZone = ZoneId.of("America/Los_Angeles");
         trace("TimeZone:  ${debug}", timeZone.toString());
 
-        var localTime = LocalTime.milliseconds(timeZone, 1344025281123L);
+        var localTime = LocalTime.epochMilliseconds(timeZone, 1344025281123L);
         trace("LocalTime: ${debug}", localTime.asMilliseconds());
 
-        final Time time = localTime.utc();
+        var time = localTime.asUtc();
         trace("Time:      ${debug}", time.asMilliseconds());
 
         /*

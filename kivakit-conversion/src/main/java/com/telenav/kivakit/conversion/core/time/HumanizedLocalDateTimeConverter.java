@@ -22,13 +22,15 @@ import com.telenav.kivakit.conversion.BaseStringConverter;
 import com.telenav.kivakit.conversion.lexakai.DiagramConversionTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.time.LocalTime;
-import com.telenav.kivakit.core.time.Time;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.telenav.kivakit.core.time.Duration.days;
+import static com.telenav.kivakit.core.time.LocalTime.localTimeZone;
+import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
 import static com.telenav.kivakit.core.value.count.Count._7;
 
 /**
@@ -78,7 +80,7 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
         var matcher = HUMANIZED_DATE.matcher(value);
         if (matcher.matches())
         {
-            var localTime = new LocalTimeConverter(Listener.none(), LocalTime.localTimeZone())
+            var localTime = new LocalTimeConverter(Listener.none(), localTimeZone())
                     .convert(matcher.group("time"));
             if (localTime != null)
             {
@@ -87,7 +89,7 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
                 var day = matcher.group("day");
                 var date = matcher.group("date");
 
-                var now = LocalTime.now();
+                var now = nowInLocalTime();
                 if (today != null)
                 {
                     return localTime.withUnixEpochDay(now.dayOfUnixEpoch());
@@ -99,13 +101,13 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
                 if (day != null)
                 {
                     var dayOfWeek = dayOrdinal.get(day.toLowerCase());
-                    var nowDayOfWeek = now.dayOfWeek().asInt();
+                    var nowDayOfWeek = now.dayOfWeek().asDays();
                     var daysAgo = nowDayOfWeek - dayOfWeek;
                     if (daysAgo < 0)
                     {
                         daysAgo += 7;
                     }
-                    return localTime.withUnixEpochDay(now.dayOfUnixEpoch().minus(daysAgo));
+                    return localTime.withUnixEpochDay(now.dayOfUnixEpoch().minus(days(daysAgo)));
                 }
                 if (date != null)
                 {
@@ -122,7 +124,7 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
 
     private String humanizedDate(LocalTime time)
     {
-        var now = Time.now().localTime();
+        var now = nowInLocalTime();
         var nowYear = now.year();
         var nowDayOfYear = now.dayOfYear();
 

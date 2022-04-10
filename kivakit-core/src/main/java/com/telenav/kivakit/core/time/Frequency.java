@@ -51,7 +51,7 @@ import static com.telenav.kivakit.core.time.Duration.parseDuration;
 @Tested
 public class Frequency
 {
-    public static final Frequency ONCE = every(Duration.MAXIMUM);
+    public static final Frequency ONCE = every(Duration.FOREVER);
 
     public static final Frequency EVERY_SECOND = cyclesPerSecond(1);
 

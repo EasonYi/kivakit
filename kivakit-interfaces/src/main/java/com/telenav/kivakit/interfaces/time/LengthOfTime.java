@@ -30,7 +30,7 @@ import java.util.concurrent.locks.Condition;
  *
  * <ul>
  *     <li>{@link #milliseconds()} - The number of milliseconds for this length of time</li>
- *     <li>{@link #newInstance(long)} - Creates instances of the implementing class</li>
+ *     <li>{@link #newLengthOfTime(long)} - Creates instances of the implementing class</li>
  *     <li>{@link #millisecondsPerUnit()} - The number of milliseconds per unit of the implementing class</li>
  * </ul>
  *
@@ -302,6 +302,11 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return Long.compare(milliseconds(), that.milliseconds());
     }
 
+    default SubClass decremented()
+    {
+        return minus(newLengthOfTime(millisecondsPerUnit()));
+    }
+
     default SubClass difference(SubClass that)
     {
         if (isGreaterThan(that))
@@ -343,9 +348,14 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         }, 0L, milliseconds());
     }
 
+    default SubClass incremented()
+    {
+        return plus(newLengthOfTime(millisecondsPerUnit()));
+    }
+
     default SubClass longerBy(Percentage percentage)
     {
-        return newInstance((long) (milliseconds() * (1.0 + percentage.percent())));
+        return newLengthOfTime((long) (milliseconds() * (1.0 + percentage.percent())));
     }
 
     @SuppressWarnings("unchecked")
@@ -410,14 +420,6 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return plus(unit.dividedBy(2)).roundDown(unit);
     }
 
-    /**
-     * Returns an instance of the subclass of this length of time for the given number of milliseconds.
-     *
-     * @param milliseconds The number of milliseconds
-     * @return The subclass instance
-     */
-    SubClass newInstance(long milliseconds);
-
     default SubClass newInstanceFromMilliseconds(long milliseconds)
     {
         return newInstanceFromUnits(milliseconds / millisecondsPerUnit());
@@ -432,8 +434,16 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         var modulo = modulo();
         var rounded = (units + modulo) % modulo;
         var offset = minimum().asUnits() + rounded;
-        return newInstance(offset * millisecondsPerUnit());
+        return newLengthOfTime(offset * millisecondsPerUnit());
     }
+
+    /**
+     * Returns an instance of the subclass of this length of time for the given number of milliseconds.
+     *
+     * @param milliseconds The number of milliseconds
+     * @return The subclass instance
+     */
+    SubClass newLengthOfTime(long milliseconds);
 
     @Override
     default SubClass next()
@@ -484,7 +494,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
 
     default SubClass shorterBy(Percentage percentage)
     {
-        return newInstance((long) (milliseconds() * (1.0 - percentage.percent())));
+        return newLengthOfTime((long) (milliseconds() * (1.0 - percentage.percent())));
     }
 
     /**

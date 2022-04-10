@@ -358,7 +358,7 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
 
     public Minute minuteOfHour()
     {
-        return Minute.minutes(javaLocalDateTime().get(MINUTE_OF_HOUR));
+        return minutes(javaLocalDateTime().get(MINUTE_OF_HOUR));
     }
 
     public Month month()
@@ -391,6 +391,7 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
         return epochMilliseconds(zone, epochMilliseconds);
     }
 
+    @Override
     public LocalTime startOfDay()
     {
         return epochSeconds(timeZone(), javaZonedDate()

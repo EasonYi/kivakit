@@ -36,7 +36,7 @@ public class Year extends BaseDuration<Year>
     }
 
     @Override
-    public Year newInstance(long year)
+    public Year newLengthOfTime(long year)
     {
         return year((int) year);
     }

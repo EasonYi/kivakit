@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.telenav.kivakit.core.ensure.Ensure.fail;
+import static com.telenav.kivakit.core.time.Duration.FOREVER;
 
 /**
  * An implementation of {@link SerializationSession} using {@link Kryo}.
@@ -49,6 +50,7 @@ import static com.telenav.kivakit.core.ensure.Ensure.fail;
  * @see Kryo
  * @see SerializationSession
  */
+@SuppressWarnings("UnusedReturnValue")
 @UmlClassDiagram(diagram = DiagramKryo.class)
 @UmlRelation(diagram = DiagramKryo.class,
              label = "registers",
@@ -105,7 +107,7 @@ public final class KryoSerializationSession extends BaseRepeater implements
     }
 
     @Override
-    public void flush(LengthOfTime maximumWaitTime)
+    public void flush(LengthOfTime<?> maximumWaitTime)
     {
         if (isWriting())
         {
@@ -142,7 +144,7 @@ public final class KryoSerializationSession extends BaseRepeater implements
 
         if (isWriting())
         {
-            flush();
+            flush(FOREVER);
             IO.close(output);
             output = null;
         }
@@ -321,7 +323,7 @@ public final class KryoSerializationSession extends BaseRepeater implements
         version(version);
         write(version);
         write(kryoTypes().name());
-        flush();
+        flush(FOREVER);
     }
 
     private void version(Version version)

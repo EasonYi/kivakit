@@ -54,8 +54,13 @@ public class Minute extends BaseDuration<Minute>
         return minutes(0);
     }
 
+    public long minutes()
+    {
+        return asUnits();
+    }
+
     @Override
-    public Minute newInstance(long minute)
+    public Minute newLengthOfTime(long minute)
     {
         return minutes(minute);
     }

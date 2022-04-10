@@ -55,7 +55,7 @@ public class Second extends BaseDuration<Second>
     }
 
     @Override
-    public Second newInstance(long seconds)
+    public Second newLengthOfTime(long seconds)
     {
         return seconds(seconds);
     }

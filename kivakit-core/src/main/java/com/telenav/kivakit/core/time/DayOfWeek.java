@@ -171,6 +171,11 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
         return Day.dayOfWeek(asIso(), ISO);
     }
 
+    public long asDays()
+    {
+        return asUnits();
+    }
+
     @Tested
     public HourOfWeek asHourOfWeek()
     {

@@ -39,7 +39,7 @@ public class InitializationLatch
 
     public boolean await()
     {
-        return await(Duration.MAXIMUM);
+        return await(Duration.FOREVER);
     }
 
     public boolean await(LengthOfTime<?> duration)

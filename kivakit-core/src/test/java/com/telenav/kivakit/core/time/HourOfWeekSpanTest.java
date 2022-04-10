@@ -116,13 +116,13 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 minutes(0),
                 seconds(0))));
 
-        // Center included: Monday at 3am to Saturday at 11pm in UTC should include all times betweeen
-        rangeInclusive(MONDAY.at(am(3)), SATURDAY.at(pm(11)))
-                .forEach(at -> ensure(utcSpan().includes(at.asEpochTime())));
+        // Center included: Monday at 3am to Saturday at 11pm in UTC should include all times between
+        rangeInclusive(MONDAY.at(am(3)).asHours(), SATURDAY.at(pm(11)).asHours())
+                .forEach(at -> ensure(utcSpan().includes(hourOfWeek(at.asLong()))));
 
         // Center included: Monday at 3am to Saturday at 11pm in UTC should not include times after Saturday at 11pm
-        rangeInclusive(SUNDAY.at(am(1)), SUNDAY.at(pm(11)))
-                .forEach(at -> ensure(!utcSpan().includes(at.asEpochTime())));
+        rangeInclusive(SUNDAY.at(am(1)).asHours(), SUNDAY.at(pm(11)).asHours())
+                .forEach(at -> ensure(!utcSpan().includes(hourOfWeek(at.asLong()))));
 
         //  sat at 3am to tues at 11pm, should include sun at midnight
         ensure(utcSpanWrapping().includes(LocalTime.localTime(utc(),

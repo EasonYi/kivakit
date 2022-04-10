@@ -140,6 +140,11 @@ public class HourOfWeekSpan
         return includes(LocalTime.epochMilliseconds(zoneId(), time.epochMilliseconds()));
     }
 
+    public boolean includes(HourOfWeek hourOfWeek)
+    {
+        return hourOfWeek.isGreaterThanOrEqualTo(startHourOfWeek()) && hourOfWeek.isLessThanOrEqualTo(endHourOfWeek());
+    }
+
     /**
      * @return True if this span is in localtime
      */

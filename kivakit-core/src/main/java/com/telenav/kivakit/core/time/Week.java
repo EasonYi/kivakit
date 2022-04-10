@@ -51,7 +51,7 @@ public class Week extends BaseDuration<Week>
     }
 
     @Override
-    public Week newInstance(long milliseconds)
+    public Week newLengthOfTime(long milliseconds)
     {
         return weeks(milliseconds / millisecondsPerUnit());
     }

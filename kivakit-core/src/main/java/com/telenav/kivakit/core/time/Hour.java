@@ -218,7 +218,7 @@ public class Hour extends BaseDuration<Hour>
         switch (type())
         {
             case HOUR:
-                return newInstance(Long.MAX_VALUE);
+                return newLengthOfTime(Long.MAX_VALUE);
 
             case MILITARY_HOUR:
                 return militaryHour(23);
@@ -273,17 +273,17 @@ public class Hour extends BaseDuration<Hour>
     }
 
     @Override
-    public Hour newInstance(long count)
-    {
-        return militaryHour((int) (count / millisecondsPerHour));
-    }
-
-    @Override
     @Tested
     public Hour newInstanceFromUnits(long units)
     {
         var rounded = (units + 24) % 24;
         return super.newInstanceFromUnits(rounded + 1);
+    }
+
+    @Override
+    public Hour newLengthOfTime(long count)
+    {
+        return militaryHour((int) (count / millisecondsPerHour));
     }
 
     @Override

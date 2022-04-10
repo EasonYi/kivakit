@@ -237,7 +237,7 @@ public class Day extends BaseDuration<Day>
     }
 
     @Override
-    public Day newInstance(long day)
+    public Day newLengthOfTime(long day)
     {
         return day((int) day);
     }

@@ -85,6 +85,11 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
         return Time.epochMilliseconds(asMilliseconds());
     }
 
+    public long asHours()
+    {
+        return asUnits();
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public HourOfWeek asLocalTime()
@@ -157,7 +162,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     @Override
     public HourOfWeek newPointInTime(long epochMilliseconds)
     {
-        return null;
+        return hourOfWeek(epochMilliseconds);
     }
 
     /**

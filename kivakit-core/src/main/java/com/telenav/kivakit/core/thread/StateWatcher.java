@@ -20,9 +20,9 @@ package com.telenav.kivakit.core.thread;
 
 import com.telenav.kivakit.core.lexakai.DiagramThread;
 import com.telenav.kivakit.core.thread.locks.Lock;
+import com.telenav.kivakit.core.time.Duration;
 import com.telenav.kivakit.interfaces.code.Code;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
-import com.telenav.kivakit.core.time.Duration;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -70,17 +70,17 @@ public final class StateWatcher<State>
     @LexakaiJavadoc(complete = true)
     private class Waiter
     {
-        /** The predicate that must be satisfied */
-        final Predicate<State> predicate;
-
-        /** The condition variable to wait on and signal */
-        final Condition condition;
-
         private Waiter(Predicate<State> predicate, Condition condition)
         {
             this.predicate = predicate;
             this.condition = condition;
         }
+
+        /** The predicate that must be satisfied */
+        final Predicate<State> predicate;
+
+        /** The condition variable to wait on and signal */
+        final Condition condition;
     }
 
     /** The most recently reported state */
@@ -127,7 +127,7 @@ public final class StateWatcher<State>
      */
     public WakeState waitFor(Predicate<State> predicate)
     {
-        return waitFor(predicate, Duration.MAXIMUM);
+        return waitFor(predicate, Duration.FOREVER);
     }
 
     /**
@@ -187,7 +187,7 @@ public final class StateWatcher<State>
      */
     public WakeState waitFor(State desired)
     {
-        return waitFor(desired, Duration.MAXIMUM);
+        return waitFor(desired, Duration.FOREVER);
     }
 
     /**
