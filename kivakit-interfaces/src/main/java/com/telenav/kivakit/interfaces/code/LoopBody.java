@@ -22,6 +22,7 @@ import com.telenav.kivakit.interfaces.collection.NextValue;
 import com.telenav.kivakit.interfaces.lexakai.DiagramCode;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
+import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import static java.util.Objects.requireNonNull;
@@ -30,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * A piece of code that can be executed in a loop.
  *
  * <p>
- * Looping is implemented by {@link #forEachExclusive(Minimizable, Minimizable)}, which calls {@link #at(Value)} from
+ * Looping is implemented by {@link #forEachExclusive(Quantizable, Quantizable)}, which calls {@link #at(Value)} from
  * the given minimum value to the given maximum value (exclusive), by increments determined by {@link NextValue#next()}.
  * The loop can terminate before reaching (maximum - 1) if next returns null.
  * </p>
@@ -41,9 +42,10 @@ import static java.util.Objects.requireNonNull;
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramCode.class)
 @FunctionalInterface
-public interface LoopBody<Value extends Minimizable<Value>
+public interface LoopBody<Value extends Quantizable
+        & Minimizable<Value>
         & Maximizable<Value>
-        & Comparable<Value>
+        & Comparable<Quantizable>
         & NextValue<Value>>
 {
     /**

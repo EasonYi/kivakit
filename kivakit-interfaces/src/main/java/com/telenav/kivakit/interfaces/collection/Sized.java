@@ -19,7 +19,7 @@
 package com.telenav.kivakit.interfaces.collection;
 
 import com.telenav.kivakit.interfaces.lexakai.DiagramNumeric;
-import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.numeric.QuantumStringable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
@@ -34,22 +34,8 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @LexakaiJavadoc(complete = true)
 public interface Sized extends
         Stringable,
-        Quantizable
+        QuantumStringable
 {
-    @Override
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    default String asString(Stringable.Format format)
-    {
-        switch (format)
-        {
-            case PROGRAMMATIC:
-                return asSimpleString();
-
-            default:
-                return asCommaSeparatedString();
-        }
-    }
-
     /**
      * Returns true if the {@link #size()} of this object is zero
      *

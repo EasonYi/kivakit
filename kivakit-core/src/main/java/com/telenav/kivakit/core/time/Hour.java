@@ -300,7 +300,7 @@ public class Hour extends BaseDuration<Hour>
         {
             case HOUR:
             case HOUR_OF_WEEK:
-                return asSimpleString();
+                return Long.toString(asUnits());
 
             case HOUR_OF_MERIDIEM:
             case MILITARY_HOUR:

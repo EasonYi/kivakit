@@ -12,7 +12,8 @@ import java.util.Objects;
  *
  * @author jonathanl (shibo)
  */
-@SuppressWarnings("unused") public interface RandomNumeric extends CastTrait
+@SuppressWarnings("unused")
+public interface RandomNumeric extends CastTrait
 {
     default <T extends Number> T random(Class<T> type)
     {

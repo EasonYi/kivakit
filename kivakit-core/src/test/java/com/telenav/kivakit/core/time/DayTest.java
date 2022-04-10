@@ -8,7 +8,7 @@ import java.util.HashMap;
 import static com.telenav.kivakit.core.time.Day.Type.DAY;
 import static com.telenav.kivakit.core.time.Day.Type.DAY_OF_UNIX_EPOCH;
 import static com.telenav.kivakit.core.time.Day.Type.DAY_OF_YEAR;
-import static com.telenav.kivakit.core.time.Day.day;
+import static com.telenav.kivakit.core.time.Day.days;
 import static com.telenav.kivakit.core.time.Day.dayOfMonth;
 import static com.telenav.kivakit.core.time.Day.dayOfUnixEpoch;
 import static com.telenav.kivakit.core.time.Day.dayOfWeek;
@@ -76,8 +76,8 @@ public class DayTest extends CoreUnitTest
     @Test
     public void testCreation()
     {
-        ensureThrows(() -> day(-1));
-        ensureEqual(day(5).type(), DAY);
+        ensureThrows(() -> days(-1));
+        ensureEqual(days(5).type(), DAY);
 
         ensureThrows(() -> dayOfUnixEpoch(-1));
         ensureEqual(dayOfUnixEpoch(0).type(), DAY_OF_UNIX_EPOCH);
@@ -118,10 +118,10 @@ public class DayTest extends CoreUnitTest
     @Test
     public void testEquals()
     {
-        ensureEqual(day(49), (day(49)));
+        ensureEqual(days(49), (days(49)));
         ensureEqual(dayOfWeek(4, JAVA), (dayOfWeek(4, JAVA)));
-        ensureNotEqual(dayOfWeek(4, JAVA), (day(4)));
-        ensureNotEqual(dayOfWeek(4, ISO), (day(4)));
+        ensureNotEqual(dayOfWeek(4, JAVA), (days(4)));
+        ensureNotEqual(dayOfWeek(4, ISO), (days(4)));
 
         var map = new HashMap<Day, Integer>();
 

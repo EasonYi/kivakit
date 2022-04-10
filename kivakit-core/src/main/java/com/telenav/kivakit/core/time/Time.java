@@ -19,14 +19,17 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.lexakai.DiagramTime;
+import com.telenav.kivakit.interfaces.time.PointInTime;
 import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.ZoneId;
 
 import static com.telenav.kivakit.core.time.Duration.duration;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.LocalTime.localTime;
+import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
 
 /**
  * An immutable <code>Time</code> class that represents a specific point in UNIX time. The underlying representation is
@@ -38,9 +41,9 @@ import static com.telenav.kivakit.core.time.LocalTime.localTime;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTime.class)
-public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
+public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, Comparable<PointInTime<?, ?>>
 {
     /** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
     public static final Time START_OF_UNIX_EPOCH = epochMilliseconds(0);
@@ -136,17 +139,21 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public LocalTime asLocalTime()
     {
-        return asLocalTime(LocalTime.localTimeZone());
+        return asLocalTime(localTimeZone());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public LocalTime asLocalTime(ZoneId zone)
     {
         return LocalTime.epochMilliseconds(zone, epochMilliseconds());
+    }
+
+    @Override
+    public int compareTo(@NotNull PointInTime<?, ?> that)
+    {
+        return Long.compare(epochMilliseconds(), that.epochMilliseconds());
     }
 
     @Override

@@ -30,6 +30,7 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeSuperTypes;
  *
  * @author jonathanl (shibo)
  */
+@SuppressWarnings("SpellCheckingInspection")
 @UmlRelation(label = "formats with", referent = Stringable.Format.class)
 @UmlClassDiagram(diagram = DiagramString.class)
 public interface Stringable extends StringSource

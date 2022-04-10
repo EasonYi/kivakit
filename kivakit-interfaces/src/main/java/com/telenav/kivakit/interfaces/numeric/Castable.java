@@ -5,8 +5,14 @@ package com.telenav.kivakit.interfaces.numeric;
  *
  * @author jonathanl (shibo)
  */
+@SuppressWarnings("SpellCheckingInspection")
 public interface Castable extends CastTrait
 {
+    default <T extends Number> T as(Class<T> type)
+    {
+        return cast(this, type);
+    }
+
     default byte asByte()
     {
         return (byte) asLong();
@@ -40,10 +46,5 @@ public interface Castable extends CastTrait
     default short asShort()
     {
         return (short) asLong();
-    }
-
-    default <T extends Number> T as(Class<T> type)
-    {
-        return cast(this, type);
     }
 }

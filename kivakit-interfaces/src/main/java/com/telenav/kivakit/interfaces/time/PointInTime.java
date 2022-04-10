@@ -4,6 +4,7 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTime;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -59,7 +60,7 @@ import java.time.Instant;
  * <p><b>Comparison</b></p>
  *
  * <ul>
- *     <li>{@link #compareTo(PointInTime)}</li>
+ *     <li>{@link #compareTo(Quantizable)}</li>
  *     <li>{@link #isLessThan(Quantizable)}</li>
  *     <li>{@link #isLessThanOrEqualTo(Quantizable)}</li>
  *     <li>{@link #isGreaterThan(Quantizable)}</li>
@@ -75,10 +76,9 @@ import java.time.Instant;
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTime.class)
 public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTimeSubClass>, LengthOfTimeSubClass extends LengthOfTime<LengthOfTimeSubClass>> extends
-        Quantizable,
+        QuantumComparable<PointInTime<?, ?>>,
         Minimizable<SubClass>,
         Maximizable<SubClass>,
-        Comparable<PointInTime<?, ?>>,
         Stringable,
         TimeZoned<SubClass>,
         TimeUnited<SubClass>
@@ -86,7 +86,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * Returns the length of time that has elapsed since this point in time. Same as {@link #elapsedSince()}.
      */
-    default LengthOfTime<?> age()
+    default LengthOfTimeSubClass age()
     {
         return elapsedSince();
     }
@@ -136,15 +136,6 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     default long asUnits()
     {
         return epochMilliseconds() / millisecondsPerUnit();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    default int compareTo(PointInTime<?, ?> that)
-    {
-        return Long.compare(epochMilliseconds(), that.epochMilliseconds());
     }
 
     default SubClass decremented()
@@ -214,7 +205,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is at or before the given point in time
      */
-    default boolean isAtOrBefore(PointInTime<?, ?> that)
+    default boolean isAtOrBefore(SubClass that)
     {
         return isLessThan(that);
     }
@@ -222,7 +213,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is before the given point in time
      */
-    default boolean isBefore(PointInTime<?, ?> that)
+    default boolean isBefore(SubClass that)
     {
         return isLessThanOrEqualTo(that);
     }
@@ -230,7 +221,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is older than the given age
      */
-    default boolean isOlderThan(LengthOfTime<?> age)
+    default boolean isOlderThan(LengthOfTimeSubClass age)
     {
         return age().isGreaterThan(age);
     }
@@ -238,7 +229,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is older or equal to than the given age
      */
-    default boolean isOlderThanOrEqualTo(LengthOfTime<?> duration)
+    default boolean isOlderThanOrEqualTo(LengthOfTimeSubClass duration)
     {
         return age().isGreaterThanOrEqualTo(duration);
     }
@@ -246,7 +237,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is younger than the given age
      */
-    default boolean isYoungerThan(LengthOfTime<?> age)
+    default boolean isYoungerThan(LengthOfTimeSubClass age)
     {
         return age().isLessThan(age);
     }
@@ -254,7 +245,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is younger than or equal to the given age
      */
-    default boolean isYoungerThanOrEqualTo(LengthOfTime<?> age)
+    default boolean isYoungerThanOrEqualTo(LengthOfTimeSubClass age)
     {
         return age().isLessThanOrEqualTo(age);
     }
@@ -371,13 +362,19 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
         return roundDown(unit).plus(unit);
     }
 
+    @SuppressWarnings("unchecked")
+    default SubClass subclass()
+    {
+        return (SubClass) this;
+    }
+
     /**
      * The amount of time between now and the given point in time. If this point in time is in the past, returns a zero
      * length of time.
      */
-    default LengthOfTimeSubClass until(PointInTime<?, ?> that)
+    default LengthOfTimeSubClass until(SubClass that)
     {
-        if (that.isAfter(this))
+        if (that.isAfter(subclass()))
         {
             return newLengthOfTime(that.epochMilliseconds() - epochMilliseconds());
         }

@@ -19,8 +19,6 @@
 package com.telenav.kivakit.core.value.count;
 
 import com.telenav.kivakit.core.lexakai.DiagramCount;
-import com.telenav.kivakit.core.value.level.Percent;
-import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
@@ -33,9 +31,7 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
  * @author jonathanl (shibo)
  */
 @UmlClassDiagram(diagram = DiagramCount.class)
-public class MutableCount implements
-        Countable,
-        Comparable<MutableCount>
+public class MutableCount extends BaseCount<MutableCount>
 {
     private long count;
 
@@ -51,16 +47,7 @@ public class MutableCount implements
         this.count = count;
     }
 
-    public Count asCount()
-    {
-        return Count.count(count);
-    }
-
-    public int asInt()
-    {
-        return (int) count;
-    }
-
+    @Override
     public long asLong()
     {
         return count;
@@ -71,44 +58,10 @@ public class MutableCount implements
         count = 0;
     }
 
-    @Override
-    public int compareTo(MutableCount that)
-    {
-        return (int) (asLong() - that.asLong());
-    }
-
-    @Override
-    public Count count()
-    {
-        return Count.count(asLong());
-    }
-
     public long decrement()
     {
         assert count > 0;
         return count--;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        if (object instanceof MutableCount)
-        {
-            var that = (MutableCount) object;
-            return asLong() == that.asLong();
-        }
-        return false;
-    }
-
-    public long get()
-    {
-        return count;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Long.hashCode(get());
     }
 
     public long increment()
@@ -118,66 +71,36 @@ public class MutableCount implements
     }
 
     @Override
-    public boolean isGreaterThan(Quantizable that)
-    {
-        return asLong() > that.quantum();
-    }
-
-    @Override
-    public boolean isLessThan(Quantizable that)
-    {
-        return asLong() < that.quantum();
-    }
-
-    @Override
     public boolean isZero()
     {
         return asLong() == 0L;
     }
 
-    public long minus(long that)
+    @Override
+    public MutableCount minus(long that)
     {
         count -= that;
         assert count >= 0;
-        return count;
+        return this;
     }
 
-    public Percent percentOf(Count total)
+    @Override
+    public MutableCount newInstance(long count)
     {
-        if (total.isZero())
-        {
-            return Percent._0;
-        }
-        return Percent.percent(asLong() * 100.0 / total.asLong());
+        return new MutableCount(count);
     }
 
-    public long plus(long that)
+    @Override
+    public MutableCount plus(long that)
     {
         count += that;
         assert count >= 0;
-        return count;
-    }
-
-    public long plus(Quantizable that)
-    {
-        return plus(that.quantum());
+        return this;
     }
 
     public void set(long count)
     {
         assert count >= 0;
         this.count = count;
-    }
-
-    @Override
-    public int size()
-    {
-        return asInt();
-    }
-
-    @Override
-    public String toString()
-    {
-        return asCount().asCommaSeparatedString();
     }
 }

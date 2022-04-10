@@ -1,3 +1,4 @@
+@SuppressWarnings("JavaRequiresAutoModule")
 open module kivakit.interfaces
 {
     // Annotations
@@ -13,6 +14,7 @@ open module kivakit.interfaces
     exports com.telenav.kivakit.interfaces.io;
     exports com.telenav.kivakit.interfaces.lifecycle;
     exports com.telenav.kivakit.interfaces.loading;
+    exports com.telenav.kivakit.interfaces.language;
     exports com.telenav.kivakit.interfaces.messaging;
     exports com.telenav.kivakit.interfaces.model;
     exports com.telenav.kivakit.interfaces.naming;

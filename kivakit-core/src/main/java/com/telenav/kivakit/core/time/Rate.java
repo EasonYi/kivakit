@@ -21,7 +21,7 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
-import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -49,8 +49,8 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @UmlClassDiagram(diagram = DiagramTime.class)
 @LexakaiJavadoc(complete = true)
 public class Rate implements
+        QuantumComparable<Rate>,
         Comparable<Rate>,
-        Quantizable,
         Maximizable<Rate>,
         Minimizable<Rate>
 {

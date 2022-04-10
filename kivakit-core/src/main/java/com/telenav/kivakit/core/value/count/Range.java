@@ -28,6 +28,8 @@ import com.telenav.kivakit.interfaces.collection.NextValue;
 import com.telenav.kivakit.interfaces.numeric.IntegerNumeric;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
+import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.function.Consumer;
@@ -83,7 +85,9 @@ import static com.telenav.kivakit.core.value.count.Range.UpperBound.INCLUSIVE;
  */
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramCount.class)
-public class Range<Value extends IntegerNumeric<Value>> implements Countable
+public class Range<Value extends IntegerNumeric<Value> & QuantumComparable<Quantizable> & Quantizable & Comparable<Quantizable>> implements
+        Countable,
+        QuantumComparable<Value>
 {
     /**
      * @return The range of all counts, from 0 to {@link Count#MAXIMUM}
@@ -97,8 +101,9 @@ public class Range<Value extends IntegerNumeric<Value>> implements Countable
      * Constructs a range that excludes the given maximum value.
      */
     @Tested
-    public static <Value extends IntegerNumeric<Value>> Range<Value> rangeExclusive(Value minimum,
-                                                                                    Value exclusiveMaximum)
+    public static <Value extends IntegerNumeric<Value> & QuantumComparable<Quantizable> & Comparable<Quantizable> & NextValue<Value>> Range<Value> rangeExclusive(
+            Value minimum,
+            Value exclusiveMaximum)
     {
         return new Range<>(minimum, exclusiveMaximum, EXCLUSIVE);
     }
@@ -107,8 +112,9 @@ public class Range<Value extends IntegerNumeric<Value>> implements Countable
      * Constructs a range that includes the given maximum value.
      */
     @Tested
-    public static <Value extends IntegerNumeric<Value>> Range<Value> rangeInclusive(Value minimum,
-                                                                                    Value inclusiveMaximum)
+    public static <Value extends IntegerNumeric<Value> & QuantumComparable<Quantizable> & Comparable<Quantizable> & NextValue<Value>> Range<Value> rangeInclusive(
+            Value minimum,
+            Value inclusiveMaximum)
     {
         return new Range<>(minimum, inclusiveMaximum, INCLUSIVE);
     }

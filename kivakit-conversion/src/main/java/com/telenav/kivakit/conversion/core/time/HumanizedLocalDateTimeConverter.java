@@ -21,6 +21,7 @@ package com.telenav.kivakit.conversion.core.time;
 import com.telenav.kivakit.conversion.BaseStringConverter;
 import com.telenav.kivakit.conversion.lexakai.DiagramConversionTime;
 import com.telenav.kivakit.core.messaging.Listener;
+import com.telenav.kivakit.core.time.Day;
 import com.telenav.kivakit.core.time.LocalTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -28,10 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.telenav.kivakit.core.time.Duration.days;
+import static com.telenav.kivakit.core.time.Day.days;
 import static com.telenav.kivakit.core.time.LocalTime.localTimeZone;
 import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
-import static com.telenav.kivakit.core.value.count.Count._7;
 
 /**
  * @author jonathanl (shibo)
@@ -138,7 +138,7 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
             {
                 return "Yesterday";
             }
-            if (nowDayOfYear.minus(time.dayOfYear()).isLessThanOrEqualTo(_7))
+            if (nowDayOfYear.minus(time.dayOfYear()).isLessThanOrEqualTo(Day.days(7)))
             {
                 return time.dayOfWeek().toString();
             }

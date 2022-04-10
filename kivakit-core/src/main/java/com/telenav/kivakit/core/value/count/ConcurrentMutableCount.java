@@ -128,7 +128,6 @@ public class ConcurrentMutableCount implements Countable
         return asInt() < that.asInt();
     }
 
-    @Override
     public boolean isZero()
     {
         return asInt() == 0;

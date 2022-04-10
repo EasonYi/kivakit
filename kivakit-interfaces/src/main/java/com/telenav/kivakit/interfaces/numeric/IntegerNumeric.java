@@ -9,9 +9,8 @@ import com.telenav.kivakit.interfaces.factory.MapFactory;
  * @param <Value> The integer type
  * @author jonathanl (shibo)
  */
-public interface IntegerNumeric<Value> extends
+public interface IntegerNumeric<Value extends Quantizable> extends
         Arithmetic<Value>,
-        Comparable<Value>,
         Maximizable<Value>,
         Minimizable<Value>,
         NextValue<Value>,

@@ -53,7 +53,7 @@ import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
  * @author Jonathan Locke
  * @since 1.2.6
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTime.class)
 public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZoned<LocalTime>
 {
@@ -250,7 +250,7 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     @Override
     public Duration elapsedSince(PointInTime<?, ?> thatTime)
     {
-        return Duration.duration(thatTime.asUtc().minus(asUtc()).asMilliseconds());
+        return (Duration) thatTime.asUtc().minus(asUtc());
     }
 
     @Override
@@ -385,7 +385,6 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public LocalTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
     {
         return epochMilliseconds(zone, epochMilliseconds);

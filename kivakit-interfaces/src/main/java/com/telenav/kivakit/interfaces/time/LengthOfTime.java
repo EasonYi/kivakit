@@ -6,6 +6,7 @@ import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.kivakit.interfaces.numeric.Percentage;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import org.jetbrains.annotations.NotNull;
@@ -91,10 +92,10 @@ import java.util.concurrent.locks.Condition;
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTime.class)
 public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
-        Quantizable,
+        QuantumComparable<LengthOfTime<?>>,
+        Comparable<LengthOfTime<?>>,
         Minimizable<SubClass>,
         Maximizable<SubClass>,
-        Comparable<LengthOfTime<?>>,
         TimeUnited<SubClass>,
         Stringable
 {
@@ -293,13 +294,10 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     default int compareTo(LengthOfTime<?> that)
     {
-        return Long.compare(milliseconds(), that.milliseconds());
+        return Long.compare(quantum(), that.quantum());
     }
 
     default SubClass decremented()

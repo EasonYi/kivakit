@@ -36,25 +36,8 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
  *
  * <p>
  * Examples of quantizable objects include objects that are {@link Indexed}, {@link Identifiable} or {@link LongKeyed}.
- * In addition, most objects representing counts are quantizable, including time objects (where the count is the number
- * of milliseconds since the start of the UNIX epoch).
+ * In addition, most objects representing counting or time are quantizable.
  * </p>
- *
- * <p><b>Comparisons</b></p>
- *
- * <p>
- * Quantizable values can also be compared in several ways:
- * </p>
- *
- * <ul>
- *     <li>{@link #isApproximately(Quantizable, Quantizable)}</li>
- *     <li>{@link #isGreaterThan(Quantizable)}</li>
- *     <li>{@link #isGreaterThanOrEqualTo(Quantizable)}</li>
- *     <li>{@link #isLessThan(Quantizable)}</li>
- *     <li>{@link #isLessThanOrEqualTo(Quantizable)}</li>
- *     <li>{@link #isNonZero()}</li>
- *     <li>{@link #isZero()}</li>
- * </ul>
  *
  * @author jonathanl (shibo)
  */
@@ -63,65 +46,17 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 @UmlClassDiagram(diagram = DiagramNumeric.class)
 public interface Quantizable extends DoubleQuantizable
 {
-    default String asCommaSeparatedString()
-    {
-        return String.format("%,d", quantum());
-    }
-
-    default String asSimpleString()
-    {
-        return Long.toString(quantum());
-    }
-
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * All {@link Quantizable} objects are {@link DoubleQuantizable}
+     * </p>
+     */
     @Override
     default double doubleQuantum()
     {
         return quantum();
-    }
-
-    default boolean isApproximately(Quantizable that, Quantizable within)
-    {
-        return Math.abs(quantum() - that.quantum()) <= within.quantum();
-    }
-
-    default boolean isBetweenExclusive(Quantizable a, Quantizable b)
-    {
-        return isGreaterThanOrEqualTo(a) && isLessThan(b);
-    }
-
-    default boolean isBetweenInclusive(Quantizable a, Quantizable b)
-    {
-        return isGreaterThanOrEqualTo(a) && isLessThanOrEqualTo(b);
-    }
-
-    default boolean isGreaterThan(Quantizable that)
-    {
-        return quantum() > that.quantum();
-    }
-
-    default boolean isGreaterThanOrEqualTo(Quantizable that)
-    {
-        return quantum() >= that.quantum();
-    }
-
-    default boolean isLessThan(Quantizable that)
-    {
-        return quantum() < that.quantum();
-    }
-
-    default boolean isLessThanOrEqualTo(Quantizable that)
-    {
-        return quantum() <= that.quantum();
-    }
-
-    default boolean isNonZero()
-    {
-        return quantum() != 0;
-    }
-
-    default boolean isZero()
-    {
-        return quantum() == 0;
     }
 
     /**

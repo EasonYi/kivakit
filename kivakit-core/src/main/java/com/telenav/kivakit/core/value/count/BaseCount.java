@@ -5,10 +5,12 @@ import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.core.language.primitive.Primes;
 import com.telenav.kivakit.core.value.level.Percent;
 import com.telenav.kivakit.interfaces.code.FilteredLoopBody;
-import com.telenav.kivakit.interfaces.code.FilteredLoopBody.FilterAction;
 import com.telenav.kivakit.interfaces.code.LoopBody;
+import com.telenav.kivakit.interfaces.language.SubClassed;
 import com.telenav.kivakit.interfaces.numeric.IntegerNumeric;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
+import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
+import com.telenav.kivakit.interfaces.numeric.QuantumStringable;
 import com.telenav.kivakit.interfaces.value.Source;
 
 import java.util.function.Consumer;
@@ -95,7 +97,7 @@ import static com.telenav.kivakit.core.value.count.Estimate.estimate;
  * <p><b>Comparison</b></p>
  *
  * <ul>
- *     <li>{@link #compareTo(SubClass)} - {@link Comparable#compareTo(Object)} implementation</li>
+ *     <li>{@link #compareTo(Quantizable)} - {@link Comparable#compareTo(Object)} implementation</li>
  *     <li>{@link #isLessThan(Quantizable)} - True if this count is less than the given quantum</li>
  *     <li>{@link #isGreaterThan(Quantizable)} - True if this count is greater than the given quantum</li>
  *     <li>{@link #isLessThanOrEqualTo(Quantizable)} - True if this count is less than or equal to the given quantum</li>
@@ -201,9 +203,13 @@ import static com.telenav.kivakit.core.value.count.Estimate.estimate;
  * @see Minimum
  */
 @SuppressWarnings("unused")
-public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
+public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubClass> & SubClassed<SubClass> & Comparable<Quantizable> & QuantumComparable<Quantizable> & Quantizable> implements
         IntegerNumeric<SubClass>,
         Countable,
+        Comparable<Quantizable>,
+        SubClassed<SubClass>,
+        QuantumComparable<Quantizable>,
+        QuantumStringable,
         Source<Long>
 {
     /** The underlying primitive cardinal number */
@@ -268,9 +274,9 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(SubClass that)
+    public int compareTo(Quantizable that)
     {
-        return Long.compare(asLong(), that.asLong());
+        return Long.compare(asLong(), that.quantum());
     }
 
     /**
@@ -322,7 +328,7 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
 
     public void forEach(Consumer<SubClass> consumer)
     {
-        for (var value = minimum(); value.isLessThan(this); value = value.next())
+        for (var value = minimum(); value.isLessThan(subClass()); value = value.next())
         {
             consumer.accept(value);
         }
@@ -410,34 +416,12 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
     }
 
     @Override
-    public boolean isGreaterThan(Quantizable that)
-    {
-        return asLong() > that.quantum();
-    }
-
-    @Override
-    public boolean isGreaterThanOrEqualTo(Quantizable that)
-    {
-        return asLong() >= that.quantum();
-    }
-
-    @Override
-    public boolean isLessThan(Quantizable that)
-    {
-        return asLong() < that.quantum();
-    }
-
-    @Override
-    public boolean isLessThanOrEqualTo(Quantizable that)
-    {
-        return asLong() <= that.quantum();
-    }
-
     public boolean isMaximum()
     {
         return asLong() == maximum().asLong();
     }
 
+    @Override
     public boolean isMinimum()
     {
         return asLong() == 0;
@@ -457,8 +441,7 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
 
     public void loop(LoopBody<SubClass> body)
     {
-        var maximum = this;
-        for (var at = minimum(); at.isLessThan(maximum); at = at.next())
+        for (var at = minimum(); at.isLessThan(subClass()); at = at.next())
         {
             body.at(at);
         }
@@ -466,11 +449,11 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
 
     public void loop(FilteredLoopBody<SubClass> body)
     {
-        var maximum = this;
+        var maximum = subClass();
         for (var at = minimum(); at.isLessThan(maximum); at = at.next())
         {
 
-            if (body.at(at) == FilterAction.REJECT)
+            if (body.at(at) == FilteredLoopBody.FilterAction.REJECT)
             {
                 maximum = maximum.incremented();
             }
@@ -487,7 +470,7 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
 
     public void loopInclusive(LoopBody<SubClass> code)
     {
-        for (var at = minimum(); at.isLessThanOrEqualTo(this); at = at.next())
+        for (var at = minimum(); at.isLessThanOrEqualTo(subClass()); at = at.next())
         {
             code.at(at);
         }
@@ -661,7 +644,7 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
 
     public Percent percentOf(Quantizable total)
     {
-        if (total.isZero())
+        if (total.quantum() == 0)
         {
             return Percent._0;
         }
@@ -767,23 +750,17 @@ public abstract class BaseCount<SubClass extends BaseCount<SubClass>> implements
 
     public Range<SubClass> toExclusive(SubClass maximum)
     {
-        return Range.rangeExclusive(asSubclassType(), maximum);
+        return Range.rangeExclusive(subClass(), maximum);
     }
 
     public Range<SubClass> toInclusive(SubClass maximum)
     {
-        return Range.rangeInclusive(asSubclassType(), maximum);
+        return Range.rangeInclusive(subClass(), maximum);
     }
 
     @Override
     public String toString()
     {
-        return asCommaSeparatedString();
-    }
-
-    @SuppressWarnings("unchecked")
-    private SubClass asSubclassType()
-    {
-        return (SubClass) this;
+        return Longs.commaSeparated(quantum());
     }
 }

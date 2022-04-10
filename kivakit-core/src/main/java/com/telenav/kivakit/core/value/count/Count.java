@@ -119,7 +119,6 @@ import java.util.function.Consumer;
  * <p><b>Comparison</b></p>
  *
  * <ul>
- *     <li>{@link #compareTo(Count)}  - {@link Comparable#compareTo(Object)} implementation</li>
  *     <li>{@link #isLessThan(Quantizable)} - True if this count is less than the given quantum</li>
  *     <li>{@link #isGreaterThan(Quantizable)} - True if this count is greater than the given quantum</li>
  *     <li>{@link #isLessThanOrEqualTo(Quantizable)} - True if this count is less than or equal to the given quantum</li>

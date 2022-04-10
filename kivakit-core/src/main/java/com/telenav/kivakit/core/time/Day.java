@@ -30,15 +30,6 @@ import static java.lang.Integer.MAX_VALUE;
 public class Day extends BaseDuration<Day>
 {
     /**
-     * @return An absolute day from 0 to n
-     */
-    @Tested
-    public static Day day(long day)
-    {
-        return new Day(DAY, null, day);
-    }
-
-    /**
      * @return A day since the start of a month, from 1 to 31
      */
     @Tested
@@ -72,6 +63,15 @@ public class Day extends BaseDuration<Day>
     public static Day dayOfYear(long day)
     {
         return new Day(DAY_OF_YEAR, null, day);
+    }
+
+    /**
+     * @return An absolute day from 0 to n
+     */
+    @Tested
+    public static Day days(long day)
+    {
+        return new Day(DAY, null, day);
     }
 
     /**
@@ -239,7 +239,7 @@ public class Day extends BaseDuration<Day>
     @Override
     public Day newLengthOfTime(long day)
     {
-        return day((int) day);
+        return days((int) day);
     }
 
     @NoTestRequired

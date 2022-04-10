@@ -15,7 +15,7 @@ import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
  *
  * @author jonathanl (shibo)
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "unchecked" })
 public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
 {
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
@@ -91,14 +91,12 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public HourOfWeek asLocalTime()
     {
         return asLocalTime(LocalTime.localTimeZone());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public HourOfWeek asLocalTime(ZoneId zone)
     {
         return LocalTime.epochMilliseconds(zone, milliseconds()).hourOfWeek();
