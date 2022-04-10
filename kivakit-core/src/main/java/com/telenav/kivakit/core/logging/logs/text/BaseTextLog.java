@@ -19,10 +19,10 @@
 package com.telenav.kivakit.core.logging.logs.text;
 
 import com.telenav.kivakit.core.collections.map.VariableMap;
-import com.telenav.kivakit.core.logging.logs.text.formatters.ColumnarLogFormatter;
+import com.telenav.kivakit.core.lexakai.DiagramLogs;
 import com.telenav.kivakit.core.logging.LogEntry;
 import com.telenav.kivakit.core.logging.logs.BaseLog;
-import com.telenav.kivakit.core.lexakai.DiagramLogs;
+import com.telenav.kivakit.core.logging.logs.text.formatters.ColumnarLogFormatter;
 import com.telenav.kivakit.core.string.Formatter;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
@@ -32,6 +32,7 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
 import static com.telenav.kivakit.core.ensure.Ensure.fail;
 
+@SuppressWarnings("SameParameterValue")
 @UmlClassDiagram(diagram = DiagramLogs.class)
 @UmlRelation(label = "formats entries with", referent = LogFormatter.class)
 public abstract class BaseTextLog extends BaseLog

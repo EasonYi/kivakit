@@ -19,9 +19,9 @@
 package com.telenav.kivakit.core.logging.logs.text.formatters;
 
 import com.telenav.kivakit.core.language.Classes;
+import com.telenav.kivakit.core.lexakai.DiagramLogs;
 import com.telenav.kivakit.core.logging.LogEntry;
 import com.telenav.kivakit.core.logging.logs.text.LogFormatter;
-import com.telenav.kivakit.core.lexakai.DiagramLogs;
 import com.telenav.kivakit.core.string.Formatter;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -31,7 +31,7 @@ public class SimpleLogFormatter implements LogFormatter
     @Override
     public String format(LogEntry entry, Formatter.Format format)
     {
-        return entry.message().created().utc() + " " + entry.context() + " "
+        return entry.message().created().asUtc() + " " + entry.context() + " "
                 + Classes.simpleName(entry.message().getClass()) + " " + entry.threadName() + ": "
                 + entry.formattedMessage(format);
     }

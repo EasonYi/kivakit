@@ -118,12 +118,12 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
                                       Minute minute,
                                       Second second)
     {
-        return localTime(zone, LocalDateTime.of(year.asUnits(),
+        return localTime(zone, LocalDateTime.of((int) year.asUnits(),
                 month.monthOfYear(),
-                dayOfMonth.asUnits(),
+                (int) dayOfMonth.asUnits(),
                 hour.asMilitaryHour(),
-                minute.asUnits(),
-                second.asUnits()));
+                (int) minute.asUnits(),
+                (int) second.asUnits()));
     }
 
     /**
@@ -329,6 +329,12 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     }
 
     @Override
+    public long millisecondsPerUnit()
+    {
+        return 1;
+    }
+
+    @Override
     public LocalTime minimum()
     {
         return newPointInTime(0);
@@ -373,6 +379,13 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     }
 
     @Override
+    public LocalTime newTimeUnitedInstance(long milliseconds)
+    {
+        return epochMilliseconds(timeZone(), milliseconds);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public LocalTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
     {
         return epochMilliseconds(zone, epochMilliseconds);

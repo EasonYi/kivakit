@@ -6,10 +6,11 @@ import com.telenav.kivakit.core.language.primitive.Booleans;
 import com.telenav.kivakit.core.os.OperatingSystem;
 import com.telenav.kivakit.core.project.Build;
 import com.telenav.kivakit.core.project.Project;
-import com.telenav.kivakit.core.time.LocalTime;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
 
 /**
  * Provides access to system properties, environment variables and project properties
@@ -58,7 +59,7 @@ public class Properties
             properties.putIfNotNull("build-name", build.name());
             properties.putIfNotNull("build-date", build.formattedDate());
             properties.putIfNotNull("build-number", Integer.toString(build.number()));
-            properties.put("date-and-time", LocalTime.now().asDateTimeString());
+            properties.put("date-and-time", nowInLocalTime().asDateTimeString());
 
             properties = properties.expanded();
 

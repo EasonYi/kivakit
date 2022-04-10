@@ -270,13 +270,6 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     }
 
     @Override
-    @NoTestRequired
-    public DayOfWeek newInstance(long ordinal)
-    {
-        return dayOfWeek((int) ordinal, standard);
-    }
-
-    @Override
     public Duration newLengthOfTime(long milliseconds)
     {
         return duration(milliseconds);
@@ -285,7 +278,14 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     @Override
     public DayOfWeek newPointInTime(long epochMilliseconds)
     {
-        return newInstance(epochMilliseconds / millisecondsPerUnit());
+        return newTimeUnitedInstance(epochMilliseconds / millisecondsPerUnit());
+    }
+
+    @Override
+    @NoTestRequired
+    public DayOfWeek newTimeUnitedInstance(long ordinal)
+    {
+        return dayOfWeek((int) ordinal, standard);
     }
 
     public Standard standard()

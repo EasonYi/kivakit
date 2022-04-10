@@ -18,8 +18,9 @@
 
 package com.telenav.kivakit.core.thread.latches;
 
-import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.kivakit.core.lexakai.DiagramThread;
+import com.telenav.kivakit.core.time.Duration;
+import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.concurrent.CountDownLatch;
@@ -38,10 +39,10 @@ public class InitializationLatch
 
     public boolean await()
     {
-        return await(LengthOfTime.MAXIMUM);
+        return await(Duration.MAXIMUM);
     }
 
-    public boolean await(LengthOfTime duration)
+    public boolean await(LengthOfTime<?> duration)
     {
         try
         {

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
+import static com.telenav.kivakit.core.time.Duration.hours;
 import static com.telenav.kivakit.core.time.Hour.am;
 import static com.telenav.kivakit.core.time.Hour.hour;
 import static com.telenav.kivakit.core.time.Hour.midnight;
@@ -21,6 +22,7 @@ import static com.telenav.kivakit.core.value.count.Range.rangeInclusive;
  *
  * @author jonathanl (shibo)
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class HourTest extends CoreUnitTest
 {
     @Test
@@ -176,7 +178,7 @@ public class HourTest extends CoreUnitTest
     {
         ensureThrows(() -> hour(-1));
 
-        ensureEqual(hour(8000).asInt(), 8000);
+        ensureEqual(hour(8000).asUnits(), 8000L);
     }
 
     @Test
@@ -218,7 +220,7 @@ public class HourTest extends CoreUnitTest
 
         for (var hour = 0; hour < 24; hour++)
         {
-            ensureEqual(militaryHour(hour).asInt(), hour);
+            ensureEqual(militaryHour(hour).asUnits(), hour);
             ensureEqual(militaryHour(hour).asMilitaryHour(), hour);
         }
     }
@@ -232,8 +234,8 @@ public class HourTest extends CoreUnitTest
     @Test
     public void testMinus()
     {
-        ensureEqual(pm(8).minus(7), pm(1));
-        ensureEqual(am(3).minus(6), pm(9));
+        ensureEqual(pm(8).minus(hours(7)), pm(1));
+        ensureEqual(am(3).minus(hours(6)), pm(9));
     }
 
     @Test
@@ -246,8 +248,8 @@ public class HourTest extends CoreUnitTest
     @Test
     public void testPlus()
     {
-        ensureEqual(am(8).plus(5), pm(1));
-        ensureEqual(pm(9).plus(6), am(3));
+        ensureEqual(am(8).plus(hours(5)), pm(1));
+        ensureEqual(pm(9).plus(hours(6)), am(3));
     }
 
     @Test

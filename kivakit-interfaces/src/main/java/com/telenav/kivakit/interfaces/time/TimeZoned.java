@@ -35,6 +35,11 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
         }
     }
 
+    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asLocalTime()
+    {
+        return asLocalTime(localTimeZone());
+    }
+
     /**
      * Returns this point in time in UTC time based on the given time zone
      */

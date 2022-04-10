@@ -19,15 +19,15 @@
 package com.telenav.kivakit.core.logging.logs.text.formatters;
 
 import com.telenav.kivakit.core.collections.list.StringList;
-import com.telenav.kivakit.core.value.count.Maximum;
+import com.telenav.kivakit.core.lexakai.DiagramLogs;
 import com.telenav.kivakit.core.logging.LogEntry;
 import com.telenav.kivakit.core.logging.logs.text.LogFormatter;
-import com.telenav.kivakit.core.lexakai.DiagramLogs;
 import com.telenav.kivakit.core.string.AsciiArt;
 import com.telenav.kivakit.core.string.Formatter;
 import com.telenav.kivakit.core.string.Strings;
-import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.kivakit.core.time.Time;
+import com.telenav.kivakit.core.value.count.Maximum;
+import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -220,7 +220,7 @@ public class ColumnarLogFormatter implements LogFormatter
         }
         else
         {
-            line.add(timeColumn, message.created().utc().toString());
+            line.add(timeColumn, message.created().asUtc().toString());
         }
         line.add(threadColumn, entry.threadName());
         line.add(contextColumn, entry.context().typeName());

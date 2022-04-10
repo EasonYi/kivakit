@@ -38,17 +38,4 @@ public interface Flushable
      * @param maximumWaitTime The amount of time to wait before giving up on flushing.
      */
     void flush(LengthOfTime<?> maximumWaitTime);
-
-    /**
-     * Flush the object, waiting until finished doing so.
-     */
-    default void flush()
-    {
-        flush(maximumWaitTime());
-    }
-
-    default LengthOfTime<?> maximumWaitTime()
-    {
-        throw new UnsupportedOperationException();
-    }
 }

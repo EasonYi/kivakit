@@ -95,6 +95,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         Minimizable<SubClass>,
         Maximizable<SubClass>,
         Comparable<LengthOfTime<?>>,
+        TimeUnited<SubClass>,
         Stringable
 {
     /**
@@ -249,7 +250,8 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         }
     }
 
-    default int asUnits()
+    @Override
+    default long asUnits()
     {
         return (int) (milliseconds() / millisecondsPerUnit());
     }
@@ -356,11 +358,13 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
     /**
      * @return Number of milliseconds in this duration
      */
+    @Override
     long milliseconds();
 
     /**
      * Returns the number of milliseconds per unit of time
      */
+    @Override
     long millisecondsPerUnit();
 
     @SuppressWarnings("unchecked")
@@ -378,6 +382,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return newInstanceFromMilliseconds(milliseconds() - that.milliseconds());
     }
 
+    @Override
     default SubClass minusUnits(long units)
     {
         return plusUnits(-units);
@@ -386,7 +391,8 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
     /**
      * Returns the modulo size of this length of time in units. For example, the modulo for military time would be 24.
      */
-    default int modulo()
+    @Override
+    default long modulo()
     {
         return maximum().minus(minimum()).plusUnits(1).asUnits();
     }
@@ -420,6 +426,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
     /**
      * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
      */
+    @Override
     default SubClass newInstanceFromUnits(long units)
     {
         var modulo = modulo();
@@ -428,6 +435,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return newInstance(offset * millisecondsPerUnit());
     }
 
+    @Override
     default SubClass next()
     {
         return plusUnits(1);
@@ -443,6 +451,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return newInstanceFromMilliseconds(milliseconds() + that.milliseconds());
     }
 
+    @Override
     default SubClass plusUnits(long units)
     {
         return newInstanceFromUnits(asUnits() + units);

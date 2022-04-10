@@ -35,10 +35,10 @@ import static com.telenav.kivakit.core.time.DayOfWeek.WEDNESDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.dayOfWeek;
 import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
 import static com.telenav.kivakit.core.time.DayOfWeek.javaDayOfWeek;
+import static com.telenav.kivakit.core.time.Duration.days;
 import static com.telenav.kivakit.core.value.count.Count._1;
 import static com.telenav.kivakit.core.value.count.Count._7;
 import static com.telenav.kivakit.core.value.count.Range.rangeInclusive;
-import static com.telenav.kivakit.core.value.level.Percent.percent;
 
 /**
  * Unit test for {@link DayOfWeek}
@@ -51,13 +51,8 @@ public class DayOfWeekTest extends CoreUnitTest
     @Test
     public void testArithmetic()
     {
-        ensureEqual(TUESDAY, MONDAY.plus(1));
-        ensureEqual(MONDAY, TUESDAY.minus(1));
-
-        ensureThrows(() -> TUESDAY.times(5));
-        ensureThrows(() -> TUESDAY.times(5.5));
-        ensureThrows(() -> TUESDAY.percent(percent(5)));
-        ensureThrows(() -> TUESDAY.percentOf(WEDNESDAY));
+        ensureEqual(TUESDAY, MONDAY.plus(days(1)));
+        ensureEqual(MONDAY, TUESDAY.minus(days(1)));
     }
 
     @Test

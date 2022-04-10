@@ -59,7 +59,10 @@ import static com.telenav.kivakit.core.vm.ShutdownHook.Order.LAST;
  */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 @UmlClassDiagram(diagram = DiagramLogs.class)
-public abstract class BaseLog implements Startable, Stoppable, Log
+public abstract class BaseLog implements
+        Startable,
+        Stoppable,
+        Log
 {
     private static volatile boolean isAsynchronous;
 
@@ -96,8 +99,6 @@ public abstract class BaseLog implements Startable, Stoppable, Log
     private final AtomicBoolean started = new AtomicBoolean();
 
     private RepeatingThread thread;
-
-    final StateWatcher<Boolean> queueEmpty = new StateWatcher<>(true);
 
     protected BaseLog()
     {
@@ -155,7 +156,7 @@ public abstract class BaseLog implements Startable, Stoppable, Log
     }
 
     @Override
-    public void flush(LengthOfTime maximumWaitTime)
+    public void flush(LengthOfTime<?> maximumWaitTime)
     {
         if (thread != null)
         {
@@ -305,7 +306,7 @@ public abstract class BaseLog implements Startable, Stoppable, Log
     }
 
     @Override
-    public void stop(LengthOfTime wait)
+    public void stop(LengthOfTime<?> wait)
     {
         close();
         flush(wait);
@@ -383,4 +384,6 @@ public abstract class BaseLog implements Startable, Stoppable, Log
         }
         return success;
     }
+
+    final StateWatcher<Boolean> queueEmpty = new StateWatcher<>(true);
 }

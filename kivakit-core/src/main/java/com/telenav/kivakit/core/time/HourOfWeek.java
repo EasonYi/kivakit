@@ -4,6 +4,7 @@ import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.value.count.BaseCount;
 
+import java.time.ZoneId;
 import java.util.Objects;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensureBetweenExclusive;
@@ -84,6 +85,20 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
         return Time.epochMilliseconds(asMilliseconds());
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public HourOfWeek asLocalTime()
+    {
+        return asLocalTime(LocalTime.localTimeZone());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public HourOfWeek asLocalTime(ZoneId zone)
+    {
+        return LocalTime.epochMilliseconds(zone, milliseconds()).hourOfWeek();
+    }
+
     /**
      * @return The day of the week
      */
@@ -133,16 +148,6 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
         return millisecondsPerHour;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NoTestRequired
-    public HourOfWeek newInstance(long count)
-    {
-        return hourOfWeek((int) count);
-    }
-
     @Override
     public Duration newLengthOfTime(long milliseconds)
     {
@@ -153,6 +158,16 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     public HourOfWeek newPointInTime(long epochMilliseconds)
     {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NoTestRequired
+    public HourOfWeek newTimeUnitedInstance(long count)
+    {
+        return hourOfWeek((int) count);
     }
 
     @Override

@@ -179,7 +179,7 @@ public abstract class EmailSender extends BaseRepeater implements Startable, Sto
     }
 
     @Override
-    public void flush(LengthOfTime maximumWaitTime)
+    public void flush(LengthOfTime<?> maximumWaitTime)
     {
         trace("Flushing queue within ${debug}", maximumWaitTime);
         queueEmpty.waitForCompletion();
@@ -228,7 +228,7 @@ public abstract class EmailSender extends BaseRepeater implements Startable, Sto
     }
 
     @Override
-    public void stop(LengthOfTime maximumWaitTime)
+    public void stop(LengthOfTime<?> maximumWaitTime)
     {
         // Don't accept any more entries
         close();

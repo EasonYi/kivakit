@@ -59,6 +59,12 @@ public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> impl
     }
 
     @Override
+    public SubClass newTimeUnitedInstance(long milliseconds)
+    {
+        return newInstance(milliseconds);
+    }
+
+    @Override
     public Percentage percentageOf(final LengthOfTime<?> that)
     {
         return Percent.percent((double) milliseconds() / that.milliseconds());

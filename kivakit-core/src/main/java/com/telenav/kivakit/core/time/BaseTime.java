@@ -5,6 +5,8 @@ import com.telenav.kivakit.interfaces.time.PointInTime;
 
 import java.util.Objects;
 
+import static com.telenav.kivakit.core.time.Duration.days;
+
 public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTimeSubClass>, LengthOfTimeSubClass extends LengthOfTime<LengthOfTimeSubClass>>
         implements PointInTime<SubClass, LengthOfTimeSubClass>
 {
@@ -18,6 +20,11 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTi
     protected BaseTime(long epochMilliseconds)
     {
         this.epochMilliseconds = epochMilliseconds;
+    }
+
+    public SubClass endOfDay()
+    {
+        return roundUp(days(1));
     }
 
     @Override
@@ -47,5 +54,16 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTi
     public long milliseconds()
     {
         return epochMilliseconds();
+    }
+
+    @Override
+    public SubClass newTimeUnitedInstance(long milliseconds)
+    {
+        return newPointInTime(milliseconds);
+    }
+
+    public SubClass startOfDay()
+    {
+        return roundDown(days(1));
     }
 }

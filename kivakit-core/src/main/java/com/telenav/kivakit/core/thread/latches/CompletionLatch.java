@@ -18,10 +18,11 @@
 
 package com.telenav.kivakit.core.thread.latches;
 
-import com.telenav.kivakit.interfaces.time.LengthOfTime;
-import com.telenav.kivakit.core.value.count.Count;
 import com.telenav.kivakit.core.lexakai.DiagramThread;
 import com.telenav.kivakit.core.thread.WakeState;
+import com.telenav.kivakit.core.time.Duration;
+import com.telenav.kivakit.core.value.count.Count;
+import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.associations.UmlRelation;
 
@@ -73,7 +74,7 @@ public class CompletionLatch
     }
 
     @UmlRelation(label = "waits until")
-    public WakeState waitForCompletion(LengthOfTime duration)
+    public WakeState waitForCompletion(LengthOfTime<?> duration)
     {
         try
         {
@@ -87,6 +88,6 @@ public class CompletionLatch
 
     public WakeState waitForCompletion()
     {
-        return waitForCompletion(LengthOfTime.MAXIMUM);
+        return waitForCompletion(Duration.MAXIMUM);
     }
 }

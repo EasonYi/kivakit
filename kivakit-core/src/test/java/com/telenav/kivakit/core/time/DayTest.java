@@ -107,12 +107,12 @@ public class DayTest extends CoreUnitTest
         ensureThrows(() -> dayOfMonth(0));
         ensureThrows(() -> dayOfMonth(32));
 
-        ensureEqual(dayOfMonth(1).asInt(), 1);
-        ensureEqual(dayOfMonth(3).asInt(), 3);
-        ensureEqual(dayOfMonth(28).asInt(), 28);
-        ensureEqual(dayOfMonth(29).asInt(), 29);
-        ensureEqual(dayOfMonth(30).asInt(), 30);
-        ensureEqual(dayOfMonth(31).asInt(), 31);
+        ensureEqual(dayOfMonth(1).asUnits(), 1L);
+        ensureEqual(dayOfMonth(3).asUnits(), 3L);
+        ensureEqual(dayOfMonth(28).asUnits(), 28L);
+        ensureEqual(dayOfMonth(29).asUnits(), 29L);
+        ensureEqual(dayOfMonth(30).asUnits(), 30L);
+        ensureEqual(dayOfMonth(31).asUnits(), 31L);
     }
 
     @Test

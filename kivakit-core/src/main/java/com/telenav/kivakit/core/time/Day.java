@@ -1,6 +1,6 @@
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.language.primitive.Ints;
+import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.time.DayOfWeek.Standard;
@@ -136,15 +136,15 @@ public class Day extends BaseDuration<Day>
             case DAY:
             case DAY_OF_UNIX_EPOCH:
             case DAY_OF_YEAR:
-                return asUnits();
+                return (int) asUnits();
 
             case DAY_OF_WEEK:
-                return standard == JAVA
+                return (int) (standard == JAVA
                         ? asUnits() - 1
-                        : asUnits();
+                        : asUnits());
 
             case DAY_OF_MONTH:
-                return asUnits() - 1;
+                return (int) (asUnits() - 1);
 
             default:
                 return unsupported();
@@ -182,24 +182,24 @@ public class Day extends BaseDuration<Day>
                 return asUnits() >= 0;
 
             case DAY_OF_MONTH:
-                return Ints.isBetweenInclusive(asUnits(), 1, 31);
+                return Longs.isBetweenInclusive(asUnits(), 1, 31);
 
             case DAY_OF_WEEK:
                 if (standard() == ISO)
                 {
-                    return Ints.isBetweenInclusive(asUnits(), 0, 6);
+                    return Longs.isBetweenInclusive(asUnits(), 0, 6);
                 }
                 if (standard() == JAVA)
                 {
-                    return Ints.isBetweenInclusive(asUnits(), 1, 7);
+                    return Longs.isBetweenInclusive(asUnits(), 1, 7);
                 }
                 return unsupported();
 
             case DAY_OF_YEAR:
-                return Ints.isBetweenInclusive(asUnits(), 0, 365);
+                return Longs.isBetweenInclusive(asUnits(), 0, 365);
 
             case DAY_OF_UNIX_EPOCH:
-                return Ints.isBetweenInclusive(asUnits(), 0, MAX_VALUE);
+                return Longs.isBetweenInclusive(asUnits(), 0, MAX_VALUE);
 
             default:
                 return unsupported();

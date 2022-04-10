@@ -24,6 +24,7 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.time.ZoneId;
 
+import static com.telenav.kivakit.core.time.Duration.duration;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.LocalTime.localTime;
 
@@ -129,10 +130,35 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
     {
     }
 
+    public Duration asDuration()
+    {
+        return duration(milliseconds());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public LocalTime asLocalTime()
+    {
+        return asLocalTime(LocalTime.localTimeZone());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public LocalTime asLocalTime(ZoneId zone)
+    {
+        return LocalTime.epochMilliseconds(zone, epochMilliseconds());
+    }
+
     @Override
     public Time maximum()
     {
         return MAXIMUM;
+    }
+
+    @Override
+    public long millisecondsPerUnit()
+    {
+        return 1;
     }
 
     @Override
@@ -144,7 +170,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>
     @Override
     public Duration newLengthOfTime(long milliseconds)
     {
-        return Duration.duration(milliseconds);
+        return duration(milliseconds);
     }
 
     @Override

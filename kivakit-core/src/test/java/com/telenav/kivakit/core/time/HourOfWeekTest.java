@@ -11,6 +11,7 @@ import static com.telenav.kivakit.core.time.DayOfWeek.SATURDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.SUNDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.TUESDAY;
 import static com.telenav.kivakit.core.time.DayOfWeek.WEDNESDAY;
+import static com.telenav.kivakit.core.time.Duration.hours;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.HourOfWeek.hourOfWeek;
 import static com.telenav.kivakit.core.value.count.Count._100;
@@ -26,8 +27,8 @@ public class HourOfWeekTest extends CoreUnitTest
     @Test
     public void testAsLong()
     {
-        ensureEqual(TUESDAY.asHourOfWeek().asLong(), 24L);
-        ensureEqual(FRIDAY.asHourOfWeek().asLong(), 24L * 4);
+        ensureEqual(TUESDAY.asHourOfWeek().asUnits(), 24L);
+        ensureEqual(FRIDAY.asHourOfWeek().asUnits(), 24L * 4);
     }
 
     @Test
@@ -64,8 +65,8 @@ public class HourOfWeekTest extends CoreUnitTest
     public void testCreate()
     {
         // Check valid construction
-        ensure(hourOfWeek(5).asInt() == 5);
-        ensure(hourOfWeek(_2).asInt() == 2);
+        ensure(hourOfWeek(5).asUnits() == 5);
+        ensure(hourOfWeek(_2).asUnits() == 2);
 
         _100.loop(() ->
         {
@@ -125,29 +126,29 @@ public class HourOfWeekTest extends CoreUnitTest
     @Test
     public void testMaximum()
     {
-        ensure(hourOfWeek(0).maximum().asInt() == 167);
+        ensure(hourOfWeek(0).maximum().asUnits() == 167L);
     }
 
     @Test
     public void testMinimum()
     {
-        ensure(hourOfWeek(0).minimum().asInt() == 0);
+        ensure(hourOfWeek(0).minimum().asUnits() == 0L);
     }
 
     @Test
     public void testMinus()
     {
-        ensureEqual(hourOfWeek(7).minus(24).dayOfWeek(), SUNDAY);
-        ensureEqual(hourOfWeek(24 * 6).minus(7).dayOfWeek(), SATURDAY);
-        ensureEqual(hourOfWeek(24 * 6).minus(24 + 7).dayOfWeek(), FRIDAY);
+        ensureEqual(hourOfWeek(7).minus(hours(24)).dayOfWeek(), SUNDAY);
+        ensureEqual(hourOfWeek(24 * 6).minus(hours(7)).dayOfWeek(), SATURDAY);
+        ensureEqual(hourOfWeek(24 * 6).minus(hours(24 + 7)).dayOfWeek(), FRIDAY);
     }
 
     @Test
     public void testPlus()
     {
-        ensureEqual(hourOfWeek(7).plus(24).dayOfWeek(), TUESDAY);
-        ensureEqual(hourOfWeek(24 * 6).plus(7).dayOfWeek(), SUNDAY);
-        ensureEqual(hourOfWeek(24 * 6).plus(24 + 7).dayOfWeek(), MONDAY);
+        ensureEqual(hourOfWeek(7).plus(hours(24)).dayOfWeek(), TUESDAY);
+        ensureEqual(hourOfWeek(24 * 6).plus(hours(7)).dayOfWeek(), SUNDAY);
+        ensureEqual(hourOfWeek(24 * 6).plus(hours(24 + 7)).dayOfWeek(), MONDAY);
     }
 
     @Test

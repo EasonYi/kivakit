@@ -143,17 +143,17 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testIsNone()
     {
-        ensure(INSTANTANEOUS.isNone());
-        ensureFalse(seconds(0.1).isNone());
-        ensureFalse(Duration.duration(1).isNone());
+        ensure(INSTANTANEOUS.isZero());
+        ensureFalse(seconds(0.1).isZero());
+        ensureFalse(Duration.duration(1).isZero());
     }
 
     @Test
     public void testIsSome()
     {
-        ensureFalse(INSTANTANEOUS.isSome());
-        ensure(seconds(0.1).isSome());
-        ensure(Duration.duration(1).isSome());
+        ensureFalse(INSTANTANEOUS.isNonZero());
+        ensure(seconds(0.1).isNonZero());
+        ensure(Duration.duration(1).isNonZero());
     }
 
     @Test

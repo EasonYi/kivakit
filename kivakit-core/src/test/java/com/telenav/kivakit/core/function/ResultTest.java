@@ -1,6 +1,7 @@
 package com.telenav.kivakit.core.function;
 
-import com.telenav.kivakit.core.messaging.repeaters.BaseRepeater;import com.telenav.kivakit.core.test.CoreUnitTest;
+import com.telenav.kivakit.core.messaging.repeaters.BaseRepeater;
+import com.telenav.kivakit.core.test.CoreUnitTest;
 import com.telenav.kivakit.core.time.Time;
 import com.telenav.kivakit.interfaces.code.Code;
 import org.junit.Test;
@@ -16,6 +17,7 @@ public class ResultTest extends CoreUnitTest implements ResultTrait
             this.succeed = succeed;
         }
 
+        @Override
         public String run()
         {
             if (succeed)
@@ -70,7 +72,7 @@ public class ResultTest extends CoreUnitTest implements ResultTrait
 
     private Integer a()
     {
-        if (Time.now().asSeconds() % 2 == 0)
+        if (Time.now().asDuration().asSeconds() % 2 == 0)
         {
             return null;
         }
