@@ -80,6 +80,7 @@ import java.util.function.Predicate;
  * @author jonathanl (shibo)
  * @see StateWatcher
  */
+@SuppressWarnings("UnusedReturnValue")
 @UmlClassDiagram(diagram = DiagramThread.class)
 public final class StateMachine<State> extends BaseRepeater
 {
@@ -295,7 +296,7 @@ public final class StateMachine<State> extends BaseRepeater
      * @param maximumWait The maximum amount of time to wait
      * @return True if the state was achieved, false if the operation timed out
      */
-    public boolean waitFor(State state, LengthOfTime maximumWait)
+    public boolean waitFor(State state, LengthOfTime<?> maximumWait)
     {
         return waitFor(ignored -> is(state), maximumWait);
     }
@@ -317,7 +318,7 @@ public final class StateMachine<State> extends BaseRepeater
      * @param maximumWait The maximum amount of time to wait
      * @return True if the state was achieved, false if the operation timed out
      */
-    public boolean waitFor(Predicate<State> predicate, LengthOfTime maximumWait)
+    public boolean waitFor(Predicate<State> predicate, LengthOfTime<?> maximumWait)
     {
         return waitFor(predicate, maximumWait, () ->
         {
@@ -333,7 +334,7 @@ public final class StateMachine<State> extends BaseRepeater
      * might interrupt another thread, for example.
      * @return True if the state was achieved, false if the operation timed out
      */
-    public boolean waitFor(Predicate<State> predicate, LengthOfTime maximumWait, Runnable beforeWaiting)
+    public boolean waitFor(Predicate<State> predicate, LengthOfTime<?> maximumWait, Runnable beforeWaiting)
     {
         return whileLocked(() ->
         {
@@ -361,7 +362,7 @@ public final class StateMachine<State> extends BaseRepeater
      * @param maximumWait The maximum amount of time to wait
      * @return True if the desired state was achieved, false if the operation timed out
      */
-    public boolean waitForNot(State state, LengthOfTime maximumWait)
+    public boolean waitForNot(State state, LengthOfTime<?> maximumWait)
     {
         return waitFor(ignored -> !is(state), maximumWait);
     }

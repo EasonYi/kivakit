@@ -369,7 +369,7 @@ public class BroadcastingProgressReporter extends Multicaster implements Progres
             feedback(toString(Count.count(at)));
         }
 
-        var elapsed = lastReportedAt.elapsedSince().maximum(Duration.duration(1));
+        var elapsed = lastReportedAt.elapsedSince().maximum(Duration.milliseconds(1));
 
         // While we're going too fast
         while (elapsed.isLessThan(REPORT_FASTEST))

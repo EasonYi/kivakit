@@ -383,7 +383,15 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
 
     public SubClass inRangeExclusive(long value)
     {
-        return inRangeInclusive(value - 1);
+        if (value >= maximum().asLong())
+        {
+            return null;
+        }
+        if (value < 0)
+        {
+            return null;
+        }
+        return newInstance(value);
     }
 
     public SubClass inRangeInclusive(long value)
@@ -639,7 +647,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
 
     public SubClass percent(Percent percentage)
     {
-        return inRangeExclusive((long) (asLong() * percentage.asUnitValue()));
+        return inRangeExclusive((long) (asLong() * percentage.unitValue()));
     }
 
     public Percent percentOf(Quantizable total)
@@ -745,7 +753,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
 
     public SubClass times(Percent percentage)
     {
-        return times(percentage.asUnitValue());
+        return times(percentage.unitValue());
     }
 
     public Range<SubClass> toExclusive(SubClass maximum)

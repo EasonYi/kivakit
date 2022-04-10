@@ -39,7 +39,7 @@ public class FolderPrunerTest extends UnitTest
 
         // Start folder pruner
         var removed = new CompletionLatch();
-        FolderPruner pruner = new FolderPruner(folder, Duration.duration(1).asFrequency())
+        FolderPruner pruner = new FolderPruner(folder, Duration.milliseconds(1).asFrequency())
         {
             @Override
             protected void onFileRemoved(File file)
@@ -48,7 +48,7 @@ public class FolderPrunerTest extends UnitTest
             }
         };
         pruner.capacity(Bytes.bytes(4));
-        pruner.minimumAge(Duration.INSTANTANEOUS);
+        pruner.maximumAge(Duration.INSTANTANEOUS);
         pruner.minimumUsableDiskSpace(Percent._0);
         pruner.start();
 
@@ -75,7 +75,7 @@ public class FolderPrunerTest extends UnitTest
             var folder = folder("disk-space-test");
             var file = folder.file("temp1");
             file.writer().save("test");
-            FolderPruner pruner = new FolderPruner(folder, Duration.duration(25).asFrequency())
+            FolderPruner pruner = new FolderPruner(folder, Duration.milliseconds(25).asFrequency())
             {
                 @Override
                 protected void onFileRemoved(File file)
@@ -83,7 +83,7 @@ public class FolderPrunerTest extends UnitTest
                 }
             };
             pruner.minimumUsableDiskSpace(Percent.percent(100));
-            pruner.minimumAge(Duration.INSTANTANEOUS);
+            pruner.maximumAge(Duration.INSTANTANEOUS);
             pruner.start();
             Duration.seconds(0.25).sleep();
             ensureFalse(file.exists());

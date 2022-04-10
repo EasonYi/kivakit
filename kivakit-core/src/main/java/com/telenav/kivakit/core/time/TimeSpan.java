@@ -50,7 +50,7 @@ public class TimeSpan
 
     public Duration duration()
     {
-        return end.elapsedSince(start);
+        return end.durationBefore(start);
     }
 
     public Time end()

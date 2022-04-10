@@ -29,13 +29,15 @@ import static java.lang.Integer.MAX_VALUE;
 @Tested
 public class Day extends BaseDuration<Day>
 {
+    private static final int millisecondsPerDay = 24 * 60 * 60 * 1_000;
+
     /**
      * @return A day since the start of a month, from 1 to 31
      */
     @Tested
     public static Day dayOfMonth(long day)
     {
-        return new Day(DAY_OF_MONTH, null, day);
+        return new Day(DAY_OF_MONTH, ISO, day);
     }
 
     /**
@@ -44,7 +46,7 @@ public class Day extends BaseDuration<Day>
     @Tested
     public static Day dayOfUnixEpoch(long day)
     {
-        return new Day(DAY_OF_UNIX_EPOCH, null, day);
+        return new Day(DAY_OF_UNIX_EPOCH, ISO, day);
     }
 
     /**
@@ -62,7 +64,7 @@ public class Day extends BaseDuration<Day>
     @Tested
     public static Day dayOfYear(long day)
     {
-        return new Day(DAY_OF_YEAR, null, day);
+        return new Day(DAY_OF_YEAR, ISO, day);
     }
 
     /**
@@ -71,7 +73,7 @@ public class Day extends BaseDuration<Day>
     @Tested
     public static Day days(long day)
     {
-        return new Day(DAY, null, day);
+        return new Day(DAY, ISO, day);
     }
 
     /**
@@ -104,7 +106,7 @@ public class Day extends BaseDuration<Day>
     @NoTestRequired
     protected Day(Type type, Standard standard, long day)
     {
-        super(day);
+        super(day * millisecondsPerDay);
 
         this.type = type;
         this.standard = standard;
@@ -221,7 +223,7 @@ public class Day extends BaseDuration<Day>
     @Override
     public long millisecondsPerUnit()
     {
-        return 24 * 60 * 60 * 1_000;
+        return millisecondsPerDay;
     }
 
     @Override
@@ -246,6 +248,23 @@ public class Day extends BaseDuration<Day>
     public Standard standard()
     {
         return standard;
+    }
+
+    @Override
+    public String toString()
+    {
+        switch (type())
+        {
+            case DAY_OF_WEEK:
+                return asDayOfWeek().toString();
+
+            case DAY:
+            case DAY_OF_YEAR:
+            case DAY_OF_UNIX_EPOCH:
+            case DAY_OF_MONTH:
+            default:
+                return "day " + asDays();
+        }
     }
 
     @Tested

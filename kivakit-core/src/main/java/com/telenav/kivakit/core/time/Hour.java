@@ -1,6 +1,6 @@
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.language.primitive.Ints;
+import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
@@ -59,15 +59,15 @@ public class Hour extends BaseDuration<Hour>
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
 
     @Tested
-    public static Hour am(long hour)
+    public static Hour am(long meridiemHour)
     {
-        return hourOfDay(hour, AM);
+        return hourOfDay(meridiemHour, AM);
     }
 
     @Tested
-    public static Hour hour(long hour)
+    public static Hour hour(long militaryHour)
     {
-        return new Hour(HOUR, NO_MERIDIEM, hour);
+        return new Hour(HOUR, NO_MERIDIEM, militaryHour);
     }
 
     @Tested
@@ -95,9 +95,9 @@ public class Hour extends BaseDuration<Hour>
     }
 
     @Tested
-    public static Hour pm(long hour)
+    public static Hour pm(long meridiemHour)
     {
-        return hourOfDay(hour, PM);
+        return hourOfDay(meridiemHour, PM);
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -121,14 +121,14 @@ public class Hour extends BaseDuration<Hour>
         }
 
         @Tested
-        int ensureInRange(int hour)
+        long ensureInRange(long hour)
         {
-            ensure(Ints.isBetweenExclusive(hour, minimum, maximumExclusive), "Hour not valid: $", hour);
+            ensure(Longs.isBetweenExclusive(hour, minimum, maximumExclusive), "Hour not valid: $", hour);
             return hour;
         }
 
         @Tested
-        int militaryHour(Meridiem meridiem, int hour)
+        long militaryHour(Meridiem meridiem, long hour)
         {
             ensureInRange(hour);
 
@@ -140,15 +140,18 @@ public class Hour extends BaseDuration<Hour>
         }
     }
 
+    private final Meridiem meridiem;
+
     /** The type of hour being modeled */
     private final Type type;
 
     @Tested
     protected Hour(Type type, Meridiem meridiem, long hour)
     {
-        super(type.militaryHour(meridiem, (int) hour) * millisecondsPerHour);
+        super(type.militaryHour(meridiem, hour) * millisecondsPerHour);
 
         this.type = ensureNotNull(type);
+        this.meridiem = ensureNotNull(meridiem);
     }
 
     @NoTestRequired
@@ -161,7 +164,7 @@ public class Hour extends BaseDuration<Hour>
      * Returns this hour of the day on a 12-hour AM/PM clock
      */
     @Tested
-    public int asMeridiemHour()
+    public long asMeridiemHour()
     {
         return meridiemHour(asMilitaryHour());
     }
@@ -221,10 +224,8 @@ public class Hour extends BaseDuration<Hour>
                 return newLengthOfTime(Long.MAX_VALUE);
 
             case MILITARY_HOUR:
-                return militaryHour(23);
-
             case HOUR_OF_MERIDIEM:
-                return hour(12);
+                return militaryHour(23);
 
             case HOUR_OF_WEEK:
                 return hour(7 * 24 - 1);
@@ -239,25 +240,13 @@ public class Hour extends BaseDuration<Hour>
      */
     public Meridiem meridiem()
     {
-        switch (type)
-        {
-            case HOUR_OF_MERIDIEM:
-            case MILITARY_HOUR:
-                return Meridiem.meridiem(asMilitaryHour());
-
-            case HOUR:
-            case HOUR_OF_WEEK:
-                return NO_MERIDIEM;
-
-            default:
-                return unsupported();
-        }
+        return meridiem;
     }
 
     @Override
     public long millisecondsPerUnit()
     {
-        return 60 * 60 * 1_000;
+        return millisecondsPerHour;
     }
 
     @Override
@@ -281,9 +270,16 @@ public class Hour extends BaseDuration<Hour>
     }
 
     @Override
-    public Hour newLengthOfTime(long count)
+    public Hour newLengthOfTime(long milliseconds)
     {
-        return militaryHour((int) (count / millisecondsPerHour));
+        long militaryHour = (milliseconds / millisecondsPerUnit() + 24) % 24;
+
+        if (isMeridiem())
+        {
+            return hourOfDay(militaryHour % 12, Meridiem.meridiem(militaryHour));
+        }
+
+        return militaryHour(militaryHour);
     }
 
     @Override
@@ -300,13 +296,11 @@ public class Hour extends BaseDuration<Hour>
         {
             case HOUR:
             case HOUR_OF_WEEK:
+            case MILITARY_HOUR:
                 return Long.toString(asUnits());
 
             case HOUR_OF_MERIDIEM:
-            case MILITARY_HOUR:
-            {
                 return asMeridiemHour() + meridiem().name().toLowerCase();
-            }
 
             default:
                 return unsupported();

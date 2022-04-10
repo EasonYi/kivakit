@@ -7,6 +7,7 @@ import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 
@@ -46,7 +47,7 @@ import java.time.Instant;
  * <ul>
  *     <li>{@link #age()}</li>
  *     <li>{@link #elapsedSince()}</li>
- *     <li>{@link #elapsedSince(PointInTime)}</li>
+ *     <li>{@link #durationBefore(PointInTime)}</li>
  *     <li>{@link #isAfter(PointInTime)}</li>
  *     <li>{@link #isAtOrAfter(PointInTime)}</li>
  *     <li>{@link #isBefore(PointInTime)}</li>
@@ -60,7 +61,7 @@ import java.time.Instant;
  * <p><b>Comparison</b></p>
  *
  * <ul>
- *     <li>{@link #compareTo(Quantizable)}</li>
+ *     <li>{@link #compareTo(PointInTime)}</li>
  *     <li>{@link #isLessThan(Quantizable)}</li>
  *     <li>{@link #isLessThanOrEqualTo(Quantizable)}</li>
  *     <li>{@link #isGreaterThan(Quantizable)}</li>
@@ -77,11 +78,13 @@ import java.time.Instant;
 @UmlClassDiagram(diagram = DiagramTime.class)
 public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTimeSubClass>, LengthOfTimeSubClass extends LengthOfTime<LengthOfTimeSubClass>> extends
         QuantumComparable<PointInTime<?, ?>>,
+        Comparable<PointInTime<?, ?>>,
         Minimizable<SubClass>,
         Maximizable<SubClass>,
         Stringable,
         TimeZoned<SubClass>,
-        TimeUnited<SubClass>
+        TimeUnited<SubClass>,
+        Milliseconds
 {
     /**
      * Returns the length of time that has elapsed since this point in time. Same as {@link #elapsedSince()}.
@@ -138,6 +141,12 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
         return epochMilliseconds() / millisecondsPerUnit();
     }
 
+    @Override
+    default int compareTo(@NotNull PointInTime<?, ?> that)
+    {
+        return Long.compare(milliseconds(), that.milliseconds());
+    }
+
     default SubClass decremented()
     {
         return minus(newLengthOfTime(millisecondsPerUnit()));
@@ -152,33 +161,33 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     }
 
     /**
-     * Returns the length of time that has elapsed since this point in time. If this point in time is in the future,
-     * returns a zero length of time.
+     * Returns the length of time that has elapsed between this point in time and the given point in time in the future
      */
-    default LengthOfTimeSubClass elapsedSince()
+    default LengthOfTimeSubClass durationBefore(PointInTime<?, ?> future)
     {
-        return elapsedSince(newPointInTime(System.currentTimeMillis()));
-    }
-
-    /**
-     * Returns the length of time that has elapsed between the given point in time and this point in time
-     */
-    default LengthOfTimeSubClass elapsedSince(PointInTime<?, ?> that)
-    {
-        // If this time is after the given time,
-        if (isAtOrAfter(that))
+        // If this time is before the given time,
+        if (isLessThan(future))
         {
             // then we can subtract to get the duration.
-            return newLengthOfTime(epochMilliseconds() - that.epochMilliseconds());
+            return newLengthOfTime(future.epochMilliseconds() - epochMilliseconds());
         }
 
         return newLengthOfTime(0);
     }
 
     /**
+     * Returns the length of time that has elapsed since this point in time. If this point in time is in the future,
+     * returns a zero length of time.
+     */
+    default LengthOfTimeSubClass elapsedSince()
+    {
+        var now = newPointInTime(System.currentTimeMillis());
+        return durationBefore(now);
+    }
+
+    /**
      * @return Number of milliseconds since the start of the UNIX epoch for this point in time
      */
-    @Override
     long epochMilliseconds();
 
     default SubClass incremented()
@@ -207,7 +216,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      */
     default boolean isAtOrBefore(SubClass that)
     {
-        return isLessThan(that);
+        return isLessThanOrEqualTo(that);
     }
 
     /**
@@ -310,7 +319,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      */
     default SubClass minus(LengthOfTime<?> that)
     {
-        return newPointInTime(epochMilliseconds() - that.milliseconds());
+        return newInstanceInRange(epochMilliseconds() - that.milliseconds());
     }
 
     /**
@@ -327,6 +336,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      * @param epochMilliseconds The number of milliseconds
      * @return The subclass instance
      */
+    @Override
     SubClass newPointInTime(long epochMilliseconds);
 
     /**
@@ -334,7 +344,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      */
     default SubClass plus(LengthOfTime<?> that)
     {
-        return newPointInTime(epochMilliseconds() + that.milliseconds());
+        return newInstanceInRange(epochMilliseconds() + that.milliseconds());
     }
 
     /**
@@ -351,7 +361,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      */
     default SubClass roundDown(LengthOfTime<?> unit)
     {
-        return newPointInTime(epochMilliseconds() / unit.milliseconds() * unit.milliseconds());
+        return newInstanceInRange(epochMilliseconds() / unit.milliseconds() * unit.milliseconds());
     }
 
     /**

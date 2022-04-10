@@ -57,7 +57,7 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTi
     }
 
     @Override
-    public SubClass newTimeUnitedInstance(long milliseconds)
+    public SubClass newInstance(long milliseconds)
     {
         return newPointInTime(milliseconds);
     }

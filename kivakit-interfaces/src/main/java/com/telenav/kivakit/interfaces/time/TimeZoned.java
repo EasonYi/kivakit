@@ -1,13 +1,14 @@
 package com.telenav.kivakit.interfaces.time;
 
 import java.time.ZoneId;
+import java.util.TimeZone;
 
 /**
  * Interface to an object that has a time zone.
  *
  * @author jonathanl (shibo)
  */
-public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Epochal
+public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Milliseconds
 {
     static ZoneId localTimeZone()
     {
@@ -31,7 +32,7 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
         }
         else
         {
-            return newZonedPointInTime(timeZone(), epochMilliseconds());
+            return newLocalPointInTime(timeZone(), milliseconds());
         }
     }
 
@@ -45,7 +46,9 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
      */
     default SubClass asUtc(ZoneId zone)
     {
-        return asLocalTime(zone).asUtc();
+        var offset = TimeZone.getTimeZone(zone).getOffset(milliseconds());
+        var milliseconds = milliseconds() - offset;
+        return newPointInTime(milliseconds);
     }
 
     /**
@@ -53,7 +56,7 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
      */
     default SubClass asUtc()
     {
-        return asLocalTime(utc());
+        return asUtc(timeZone());
     }
 
     /**
@@ -69,11 +72,13 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Ep
         return timeZone().equals(utc());
     }
 
-    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newZonedPointInTime(ZoneId zone,
+    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newLocalPointInTime(ZoneId zone,
                                                                                           long epochMilliseconds)
     {
         throw new UnsupportedOperationException();
     }
+
+    SubClass newPointInTime(long milliseconds);
 
     default ZoneId timeZone()
     {

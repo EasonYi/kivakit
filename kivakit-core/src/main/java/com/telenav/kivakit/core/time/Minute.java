@@ -21,7 +21,7 @@ public class Minute extends BaseDuration<Minute>
 
     protected Minute(long minute)
     {
-        super(minute * 60 * 1_000);
+        super(minute * millisecondsPerMinute);
     }
 
     @Override

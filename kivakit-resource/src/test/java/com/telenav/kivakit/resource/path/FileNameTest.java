@@ -64,7 +64,7 @@ public class FileNameTest extends UnitTest
         trace("Minutes of Hour: ${debug}", localTime.minuteOfHour());
         Assert.assertEquals(21, localTime.minuteOfHour().minutes());
         trace("Day of Year:    ${debug}", localTime.dayOfYear());
-        Assert.assertEquals(216, (long) localTime.dayOfYear().asMinutes());
+        Assert.assertEquals(216, localTime.dayOfYear().asUnits());
         trace("Week of Year:    ${debug}", localTime.weekOfYear());
         Assert.assertEquals(30, localTime.weekOfYear());
         trace("Day of Week:    ${debug}", localTime.dayOfWeek());

@@ -18,7 +18,7 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.language.primitive.Ints;
+import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
@@ -31,8 +31,9 @@ import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
  * world.
  *
  * <p>
- * The meridiem value for a military hour can be obtained with {@link #meridiem(int)}, and the meridiem hour with {@link
- * #meridiemHour(int)}. The method {@link #asMilitaryHour(int)} can convert from a meridiem hour back to military time.
+ * The meridiem value for a military hour can be obtained with {@link #meridiem(long)}, and the meridiem hour with
+ * {@link #meridiemHour(long)}. The method {@link #asMilitaryHour(long)} can convert from a meridiem hour back to
+ * military time.
  * </p>
  *
  * @author jonathanl (shibo)
@@ -53,16 +54,16 @@ public enum Meridiem
     /**
      * Returns the Meridiem for the given military (0-23) hour.
      */
-    public static Meridiem meridiem(int militaryHour)
+    public static Meridiem meridiem(long militaryHour)
     {
-        ensure(Ints.isBetweenInclusive(militaryHour, 0, 23));
+        ensure(Longs.isBetweenInclusive(militaryHour, 0, 23));
 
         return militaryHour < 12 ? AM : PM;
     }
 
-    public static int meridiemHour(int militaryHour)
+    public static long meridiemHour(long militaryHour)
     {
-        ensure(Ints.isBetweenInclusive(militaryHour, 0, 23));
+        ensure(Longs.isBetweenInclusive(militaryHour, 0, 23));
 
         if (militaryHour == 0 || militaryHour == 12)
         {
@@ -74,9 +75,9 @@ public enum Meridiem
                 : militaryHour - 12;
     }
 
-    int asMilitaryHour(int meridiemHour)
+    long asMilitaryHour(long meridiemHour)
     {
-        ensure(Ints.isBetweenInclusive(meridiemHour, 1, 12));
+        ensure(Longs.isBetweenInclusive(meridiemHour, 1, 12));
 
         switch (this)
         {

@@ -23,8 +23,8 @@ import com.telenav.kivakit.core.progress.ProgressReporter;
 import com.telenav.kivakit.core.time.Duration;
 import com.telenav.kivakit.core.value.level.Percent;
 import com.telenav.kivakit.resource.CopyMode;
-import com.telenav.kivakit.resource.Resource;
 import com.telenav.kivakit.resource.FileName;
+import com.telenav.kivakit.resource.Resource;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
@@ -128,7 +128,7 @@ public class FileCache extends BaseRepeater
         // Start folder pruner
         var pruner = new FolderPruner(cacheFolder, EVERY_30_SECONDS);
         pruner.minimumUsableDiskSpace(Percent.percent(10));
-        pruner.minimumAge(Duration.days(30));
+        pruner.maximumAge(Duration.days(30));
         pruner.start();
     }
 }

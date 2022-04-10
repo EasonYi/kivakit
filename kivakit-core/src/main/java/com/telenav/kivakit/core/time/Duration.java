@@ -80,10 +80,10 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 public class Duration extends BaseDuration<Duration>
 {
     /** Constant for maximum duration. */
-    public static final Duration FOREVER = duration(Long.MAX_VALUE);
+    public static final Duration FOREVER = milliseconds(Long.MAX_VALUE);
 
     /** Constant for no duration. */
-    public static final Duration INSTANTANEOUS = duration(0);
+    public static final Duration INSTANTANEOUS = milliseconds(0);
 
     /** Constant for one day. */
     public static final Duration ONE_DAY = days(1);
@@ -128,18 +128,6 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @Tested
-    public static Duration duration(double milliseconds)
-    {
-        return duration((long) (milliseconds + 0.5));
-    }
-
-    @Tested
-    public static Duration duration(long milliseconds)
-    {
-        return new Duration(milliseconds, POSITIVE_ONLY);
-    }
-
-    @Tested
     public static Duration hours(double hours)
     {
         return minutes(60.0 * hours);
@@ -149,6 +137,18 @@ public class Duration extends BaseDuration<Duration>
     public static Duration hours(int hours)
     {
         return minutes(60 * hours);
+    }
+
+    @Tested
+    public static Duration milliseconds(double milliseconds)
+    {
+        return milliseconds((long) (milliseconds + 0.5));
+    }
+
+    @Tested
+    public static Duration milliseconds(long milliseconds)
+    {
+        return new Duration(milliseconds, POSITIVE_ONLY);
     }
 
     @Tested
@@ -166,7 +166,7 @@ public class Duration extends BaseDuration<Duration>
     @Tested
     public static Duration nanoseconds(long nanoseconds)
     {
-        return duration(nanoseconds / 1_000_000.0);
+        return milliseconds(nanoseconds / 1_000_000.0);
     }
 
     @Tested
@@ -185,7 +185,7 @@ public class Duration extends BaseDuration<Duration>
             var units = matcher.group("units");
             if (isOneOf(units, "milliseconds", "millisecond", "ms"))
             {
-                return Duration.duration(quantity);
+                return Duration.milliseconds(quantity);
             }
             else if (isOneOf(units, "seconds", "second", "s"))
             {
@@ -227,13 +227,13 @@ public class Duration extends BaseDuration<Duration>
     @Tested
     public static Duration seconds(double seconds)
     {
-        return duration(seconds * 1000.0);
+        return milliseconds(seconds * 1000.0);
     }
 
     @Tested
     public static Duration seconds(int seconds)
     {
-        return duration(seconds * 1000L);
+        return milliseconds(seconds * 1000L);
     }
 
     @Tested
@@ -402,6 +402,12 @@ public class Duration extends BaseDuration<Duration>
     @Override
     public Duration newLengthOfTime(long milliseconds)
     {
-        return duration(milliseconds);
+        return milliseconds(milliseconds);
+    }
+
+    @Override
+    public String toString()
+    {
+        return asHumanReadableString();
     }
 }

@@ -28,9 +28,9 @@ public class DurationConverterTest extends CoreUnitTest
         ensureEqual(converter.convert("1 second"), Duration.seconds(1));
         ensureEqual(converter.convert("5s"), Duration.seconds(5));
 
-        ensureEqual(converter.convert("5 milliseconds"), Duration.duration(5));
-        ensureEqual(converter.convert("1 millisecond"), Duration.duration(1));
-        ensureEqual(converter.convert("5ms"), Duration.duration(5));
+        ensureEqual(converter.convert("5 milliseconds"), Duration.milliseconds(5));
+        ensureEqual(converter.convert("1 millisecond"), Duration.milliseconds(1));
+        ensureEqual(converter.convert("5ms"), Duration.milliseconds(5));
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.telenav.kivakit.core.value.count.BaseCount;
 
 import java.time.ZoneId;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensureBetweenExclusive;
 import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
@@ -20,18 +21,20 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
 {
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
 
+    public static final int hoursPerWeek = 7 * 24;
+
     /**
      * Returns an {@link HourOfWeek} for the given ordinal value
      *
-     * @param hourOfWeek The hour of the week from 0 to 7 * 24 (168), exclusive.
+     * @param militaryHourOfWeek The hour of the week from 0 to 7 * 24 (168), exclusive.
      */
     @Tested
-    public static HourOfWeek hourOfWeek(long hourOfWeek)
+    public static HourOfWeek hourOfWeek(long militaryHourOfWeek)
     {
-        ensureBetweenExclusive(hourOfWeek, 0, 24 * 7, "Hour of week $ is out of range", hourOfWeek);
+        ensureBetweenExclusive(militaryHourOfWeek, 0, 24 * 7, "Hour of week $ is out of range", militaryHourOfWeek);
 
-        var dayOfWeek = hourOfWeek / 24;
-        var hourOfDay = hourOfWeek % 24;
+        var dayOfWeek = militaryHourOfWeek / 24;
+        var hourOfDay = militaryHourOfWeek % 24;
 
         return new HourOfWeek(isoDayOfWeek(dayOfWeek), Hour.militaryHour(hourOfDay));
     }
@@ -99,7 +102,14 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     @Override
     public HourOfWeek asLocalTime(ZoneId zone)
     {
-        return LocalTime.epochMilliseconds(zone, milliseconds()).hourOfWeek();
+        var modulo = modulo();
+        return HourOfWeek.hourOfWeek((asHours() + offsetInHours(zone) + modulo) % modulo);
+    }
+
+    @Override
+    public HourOfWeek asUtc(ZoneId zone)
+    {
+        return HourOfWeek.hourOfWeek(asHours() - offsetInHours(zone));
     }
 
     /**
@@ -142,7 +152,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     @Tested
     public HourOfWeek maximum()
     {
-        return hourOfWeek(7 * 24 - 1);
+        return hourOfWeek(hoursPerWeek - 1);
     }
 
     @Override
@@ -151,26 +161,26 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
         return millisecondsPerHour;
     }
 
-    @Override
-    public Duration newLengthOfTime(long milliseconds)
-    {
-        return Duration.duration(milliseconds);
-    }
-
-    @Override
-    public HourOfWeek newPointInTime(long epochMilliseconds)
-    {
-        return hourOfWeek(epochMilliseconds);
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     @NoTestRequired
-    public HourOfWeek newTimeUnitedInstance(long count)
+    public HourOfWeek newInstance(long milliseconds)
     {
-        return hourOfWeek((int) count);
+        return hourOfWeek((int) milliseconds / millisecondsPerUnit());
+    }
+
+    @Override
+    public Duration newLengthOfTime(long milliseconds)
+    {
+        return Duration.milliseconds(milliseconds);
+    }
+
+    @Override
+    public HourOfWeek newPointInTime(long epochMilliseconds)
+    {
+        return hourOfWeek(epochMilliseconds / millisecondsPerUnit());
     }
 
     @Override
@@ -178,5 +188,10 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     public String toString()
     {
         return dayOfWeek() + " at " + hourOfDay();
+    }
+
+    private long offsetInHours(ZoneId zone)
+    {
+        return TimeZone.getTimeZone(zone).getRawOffset() / millisecondsPerHour;
     }
 }

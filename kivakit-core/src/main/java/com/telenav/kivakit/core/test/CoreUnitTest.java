@@ -189,14 +189,9 @@ public abstract class CoreUnitTest extends TestWatcher implements
         ALLOW_REPEATS
     }
 
-    @Rule
-    public UnitTestWatcher watcher = new UnitTestWatcher(this);
-
     private final ConsoleWriter console = new ConsoleWriter();
 
     private final ThreadLocal<RandomValueFactory> randomValueFactory = ThreadLocal.withInitial(this::newRandomValueFactory);
-
-    protected int index;
 
     protected CoreUnitTest()
     {
@@ -294,6 +289,16 @@ public abstract class CoreUnitTest extends TestWatcher implements
     protected boolean ensureClose(Duration given, Duration expected)
     {
         return given.isApproximately(expected, Duration.seconds(0.5));
+    }
+
+    protected void ensureEqual(Long given, Integer expected)
+    {
+        ensureEqual(given, expected != null ? expected.longValue() : null);
+    }
+
+    protected void ensureEqual(Integer given, Long expected)
+    {
+        ensureEqual(given != null ? given.longValue() : null, expected);
     }
 
     protected <T> void ensureEqual(T given, T expected)
@@ -431,4 +436,9 @@ public abstract class CoreUnitTest extends TestWatcher implements
     {
         return randomValueFactory.get();
     }
+
+    @Rule
+    public UnitTestWatcher watcher = new UnitTestWatcher(this);
+
+    protected int index;
 }

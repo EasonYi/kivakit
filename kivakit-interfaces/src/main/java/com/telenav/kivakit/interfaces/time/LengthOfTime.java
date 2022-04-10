@@ -302,7 +302,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
 
     default SubClass decremented()
     {
-        return minus(newLengthOfTime(millisecondsPerUnit()));
+        return minus(oneUnit());
     }
 
     default SubClass difference(SubClass that)
@@ -322,7 +322,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
      */
     default SubClass dividedBy(double value)
     {
-        return newInstanceFromMilliseconds((long) (milliseconds() / value));
+        return newLengthOfTime((long) (milliseconds() / value));
     }
 
     default double dividedBy(LengthOfTime<?> that)
@@ -348,12 +348,12 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
 
     default SubClass incremented()
     {
-        return plus(newLengthOfTime(millisecondsPerUnit()));
+        return plus(oneUnit());
     }
 
     default SubClass longerBy(Percentage percentage)
     {
-        return newLengthOfTime((long) (milliseconds() * (1.0 + percentage.percent())));
+        return newLengthOfTime((long) (milliseconds() * (1.0 + percentage.unitValue())));
     }
 
     @SuppressWarnings("unchecked")
@@ -387,7 +387,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
      */
     default SubClass minus(LengthOfTime<?> that)
     {
-        return newInstanceFromMilliseconds(milliseconds() - that.milliseconds());
+        return newLengthOfTime(milliseconds() - that.milliseconds());
     }
 
     @Override
@@ -402,12 +402,14 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
     @Override
     default long modulo()
     {
-        return maximum().minus(minimum()).plusUnits(1).asUnits();
+        var maximum = maximum().asUnits();
+        var minimum = minimum().asUnits();
+        return maximum - minimum + 1;
     }
 
     default SubClass modulus(LengthOfTime<?> that)
     {
-        return newInstanceFromMilliseconds(milliseconds() % that.milliseconds());
+        return newLengthOfTime(milliseconds() % that.milliseconds());
     }
 
     /**
@@ -416,23 +418,6 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
     default SubClass nearest(LengthOfTime<?> unit)
     {
         return plus(unit.dividedBy(2)).roundDown(unit);
-    }
-
-    default SubClass newInstanceFromMilliseconds(long milliseconds)
-    {
-        return newInstanceFromUnits(milliseconds / millisecondsPerUnit());
-    }
-
-    /**
-     * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
-     */
-    @Override
-    default SubClass newInstanceFromUnits(long units)
-    {
-        var modulo = modulo();
-        var rounded = (units + modulo) % modulo;
-        var offset = minimum().asUnits() + rounded;
-        return newLengthOfTime(offset * millisecondsPerUnit());
     }
 
     /**
@@ -449,6 +434,11 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
         return plusUnits(1);
     }
 
+    default SubClass oneUnit()
+    {
+        return newLengthOfTime(millisecondsPerUnit());
+    }
+
     Percentage percentageOf(LengthOfTime<?> that);
 
     /**
@@ -456,7 +446,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
      */
     default SubClass plus(LengthOfTime<?> that)
     {
-        return newInstanceFromMilliseconds(milliseconds() + that.milliseconds());
+        return newLengthOfTime(milliseconds() + that.milliseconds());
     }
 
     @Override
@@ -479,7 +469,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
      */
     default SubClass roundDown(LengthOfTime<?> unit)
     {
-        return newInstanceFromMilliseconds(milliseconds() / unit.milliseconds() * unit.milliseconds());
+        return newLengthOfTime(milliseconds() / unit.milliseconds() * unit.milliseconds());
     }
 
     /**
@@ -492,7 +482,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
 
     default SubClass shorterBy(Percentage percentage)
     {
-        return newLengthOfTime((long) (milliseconds() * (1.0 - percentage.percent())));
+        return newLengthOfTime((long) (milliseconds() * (1.0 - percentage.unitValue())));
     }
 
     /**
@@ -518,7 +508,7 @@ public interface LengthOfTime<SubClass extends LengthOfTime<SubClass>> extends
      */
     default SubClass times(double value)
     {
-        return newInstanceFromMilliseconds((long) (milliseconds() * value));
+        return newLengthOfTime((long) (milliseconds() * value));
     }
 
     /**

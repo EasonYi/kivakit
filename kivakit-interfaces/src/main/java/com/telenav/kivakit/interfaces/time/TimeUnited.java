@@ -35,23 +35,36 @@ public interface TimeUnited<SubClass extends TimeUnited<SubClass>> extends
     }
 
     /**
-     * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
-     */
-    default SubClass newInstanceFromUnits(long units)
-    {
-        var modulo = modulo();
-        var rounded = (units + modulo) % modulo;
-        var offset = units(minimum()) + rounded;
-        return newTimeUnitedInstance(offset * millisecondsPerUnit());
-    }
-
-    /**
      * Returns an instance of the subclass of this length of time for the given number of milliseconds.
      *
      * @param milliseconds The number of milliseconds
      * @return The subclass instance
      */
-    SubClass newTimeUnitedInstance(long milliseconds);
+    SubClass newInstance(long milliseconds);
+
+    /**
+     * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
+     */
+    default SubClass newInstanceFromUnits(long units)
+    {
+        return newInstanceInRange(units * millisecondsPerUnit());
+    }
+
+    default SubClass newInstanceInRange(long milliseconds)
+    {
+        var modulo = modulo();
+        var units = milliseconds / millisecondsPerUnit();
+        if (units < 0)
+        {
+            units = -units;
+            units = (modulo - (units % modulo));
+        }
+        else
+        {
+            units = units % modulo;
+        }
+        return newInstance(minimum().milliseconds() + (units * millisecondsPerUnit()));
+    }
 
     default SubClass next()
     {

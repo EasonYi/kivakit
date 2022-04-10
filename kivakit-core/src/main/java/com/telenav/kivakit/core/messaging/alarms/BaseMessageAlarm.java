@@ -1,8 +1,8 @@
 package com.telenav.kivakit.core.messaging.alarms;
 
-import com.telenav.kivakit.core.messaging.Message;
 import com.telenav.kivakit.core.messaging.Broadcaster;
 import com.telenav.kivakit.core.messaging.Listener;
+import com.telenav.kivakit.core.messaging.Message;
 import com.telenav.kivakit.core.messaging.Repeater;
 import com.telenav.kivakit.core.messaging.messages.status.Problem;
 import com.telenav.kivakit.core.time.Duration;
@@ -205,6 +205,6 @@ public abstract class BaseMessageAlarm implements MessageAlarm
         }
 
         // Return the next allowed trigger time
-        return triggerCycle.next();
+        return triggerCycle.nextCycleAt();
     }
 }

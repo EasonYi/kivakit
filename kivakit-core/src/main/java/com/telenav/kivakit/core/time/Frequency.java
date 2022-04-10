@@ -148,7 +148,7 @@ public class Frequency
         }
 
         @Tested
-        public Time next()
+        public Time nextCycleAt()
         {
             return Time.now().plus(waitTimeBeforeNextCycle());
         }

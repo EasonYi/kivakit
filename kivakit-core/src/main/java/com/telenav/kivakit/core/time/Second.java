@@ -21,7 +21,7 @@ public class Second extends BaseDuration<Second>
 
     protected Second(long second)
     {
-        super(second * 1_000L);
+        super(second * millisecondsPerSecond);
     }
 
     @Override

@@ -37,7 +37,7 @@ import com.telenav.lexakai.annotations.associations.UmlRelation;
  * <p><b>Expiration Criteria</b></p>
  *
  * <p>
- * The minimum age of surviving files can be set with {@link #minimumAge(Duration)}. Files will also be pruned (from
+ * The minimum age of surviving files can be set with {@link #maximumAge(Duration)}. Files will also be pruned (from
  * oldest to newest) if disk space falls below {@link #minimumUsableDiskSpace(Percent)} or when the folder's total size
  * exceeds {@link #capacity(Bytes)}.
  * </p>
@@ -51,27 +51,27 @@ public class FolderPruner
 {
     private static final Logger LOGGER = LoggerFactory.newLogger();
 
+    /** The maximum folder capacity */
+    private volatile Bytes capacity = Bytes.MAXIMUM;
+
     /** Matcher to restrict files that can be pruned */
     private volatile Matcher<File> matcher = Matcher.matchAll();
-
-    /** The minimum percentage of usable disk space that must be maintained on the folder's disk. */
-    private volatile Percent minimumUsableDiskSpace = Percent.percent(15);
 
     /** The minimum age for a file to be pruned */
     private volatile Duration minimumAge = Duration.weeks(2);
 
-    /** The maximum folder capacity */
-    private volatile Bytes capacity = Bytes.MAXIMUM;
-
-    /** The pruner thread */
-    private final RepeatingThread thread;
+    /** The minimum percentage of usable disk space that must be maintained on the folder's disk. */
+    private volatile Percent minimumUsableDiskSpace = Percent.percent(15);
 
     /** True if this pruner is running */
     private volatile boolean running;
 
+    /** The pruner thread */
+    private final RepeatingThread thread;
+
     public FolderPruner(Folder folder, Frequency frequency)
     {
-        thread = new RepeatingThread(LOGGER, getClass().getSimpleName(), frequency)
+        thread = new RepeatingThread(LOGGER, "FolderPruner", frequency)
         {
             @Override
             protected void onRun()
@@ -93,7 +93,7 @@ public class FolderPruner
                                 || size.isGreaterThan(capacity()))
                         {
                             // and the file is old enough to remove and we can remove it
-                            if (age(file).isGreaterThan(minimumAge()) && canRemove(file, files))
+                            if (age(file).isGreaterThan(maximumAge()) && canRemove(file, files))
                             {
                                 // then remove the file and adjust the folder size
                                 onFileRemoved(file);
@@ -129,7 +129,7 @@ public class FolderPruner
         this.matcher = matcher;
     }
 
-    public void minimumAge(Duration minimumAge)
+    public void maximumAge(Duration minimumAge)
     {
         this.minimumAge = minimumAge;
     }
@@ -141,7 +141,7 @@ public class FolderPruner
 
     public void start()
     {
-        thread.start();
+        thread.startSynchronously();
         running = true;
     }
 
@@ -157,7 +157,7 @@ public class FolderPruner
      */
     protected Duration age(File file)
     {
-        return file.modifiedAt().elapsedSince();
+        return file.modifiedAt().age();
     }
 
     /**
@@ -181,7 +181,7 @@ public class FolderPruner
         return matcher;
     }
 
-    protected Duration minimumAge()
+    protected Duration maximumAge()
     {
         return minimumAge;
     }

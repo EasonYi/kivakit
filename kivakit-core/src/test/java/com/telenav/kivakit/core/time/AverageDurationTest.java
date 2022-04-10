@@ -20,7 +20,7 @@ public class AverageDurationTest
         average.add(minutes(30));
         average.add(minutes(15));
         average.add(minutes(45));
-        ensureEqual(average.averageDuration().asMilliseconds(), 30);
+        ensureEqual(average.averageDuration(), minutes(30));
         ensureEqual(average.average(), minutes(30).asMilliseconds());
         ensureEqual(average.samples(), 3);
         ensureEqual(average.maximum(), minutes(45).asMilliseconds());

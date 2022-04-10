@@ -7,7 +7,7 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 @SuppressWarnings("unused")
 public class Week extends BaseDuration<Week>
 {
-    private static final long millisecondsPerUnit = 7 * 24 * 60 * 60 * 1_000;
+    private static final long millisecondsPerWeek = 7 * 24 * 60 * 60 * 1_000;
 
     public static Week weeks(long weeks)
     {
@@ -17,7 +17,7 @@ public class Week extends BaseDuration<Week>
 
     protected Week(long weeks)
     {
-        super(weeks * millisecondsPerUnit);
+        super(weeks * millisecondsPerWeek);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Week extends BaseDuration<Week>
     @Override
     public long millisecondsPerUnit()
     {
-        return millisecondsPerUnit;
+        return millisecondsPerWeek;
     }
 
     @Override

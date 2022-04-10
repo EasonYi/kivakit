@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.ZoneId;
 
-import static com.telenav.kivakit.core.time.Duration.duration;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.LocalTime.localTime;
 import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
@@ -135,7 +134,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
 
     public Duration asDuration()
     {
-        return duration(milliseconds());
+        return Duration.milliseconds(milliseconds());
     }
 
     @Override
@@ -148,6 +147,23 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     public LocalTime asLocalTime(ZoneId zone)
     {
         return LocalTime.epochMilliseconds(zone, epochMilliseconds());
+    }
+
+    @Override
+    public String asString(Format format)
+    {
+        switch (format)
+        {
+            case PROGRAMMATIC:
+                return Long.toString(milliseconds());
+
+            case DEBUG:
+                return asString() + " (" + milliseconds() + ")";
+
+            case TEXT:
+            default:
+                return asLocalTime().toString();
+        }
     }
 
     @Override
@@ -177,7 +193,14 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     @Override
     public Duration newLengthOfTime(long milliseconds)
     {
-        return duration(milliseconds);
+        return Duration.milliseconds(milliseconds);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public LocalTime newLocalPointInTime(ZoneId zone, long epochMilliseconds)
+    {
+        return LocalTime.epochMilliseconds(zone, epochMilliseconds);
     }
 
     @Override
@@ -187,9 +210,8 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public LocalTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
+    public String toString()
     {
-        return LocalTime.epochMilliseconds(zone, epochMilliseconds);
+        return asString();
     }
 }

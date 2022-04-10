@@ -26,6 +26,7 @@ import com.telenav.kivakit.core.logging.LoggerFactory;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.messaging.Repeater;
 import com.telenav.kivakit.core.messaging.repeaters.BaseRepeater;
+import com.telenav.kivakit.core.string.Strings;
 import com.telenav.kivakit.core.time.Duration;
 import com.telenav.kivakit.core.time.Frequency;
 import com.telenav.kivakit.core.time.Time;
@@ -255,6 +256,10 @@ public class KivaKitThread extends BaseRepeater implements
     public KivaKitThread(String name)
     {
         super(name("Kiva-" + name));
+        if (Strings.isEmpty(name))
+        {
+            throw new IllegalStateException("Thread name invalid: " + name);
+        }
         thread = new Thread(this, objectName());
         thread.setDaemon(true);
     }
@@ -431,7 +436,7 @@ public class KivaKitThread extends BaseRepeater implements
      * Attempt to stop this thread, waiting for the maximum specified time for it to exit
      */
     @Override
-    public void stop(LengthOfTime maximumWait)
+    public void stop(LengthOfTime<?> maximumWait)
     {
         whileLocked(() ->
         {
@@ -456,7 +461,7 @@ public class KivaKitThread extends BaseRepeater implements
     /**
      * Wait for this thread to achieve the given states
      */
-    public void waitFor(State state, LengthOfTime maximumWait)
+    public void waitFor(State state, LengthOfTime<?> maximumWait)
     {
         trace("Wait for $", state);
         state().waitFor(state, maximumWait);

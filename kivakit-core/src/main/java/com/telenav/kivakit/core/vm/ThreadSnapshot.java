@@ -94,7 +94,7 @@ public class ThreadSnapshot
         {
             milliseconds += thread.cpuTime().asMilliseconds();
         }
-        return Duration.duration(milliseconds);
+        return Duration.milliseconds(milliseconds);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ThreadSnapshot
                 if (information != null)
                 {
                     var status = new ThreadStatus();
-                    status.cpuTime = Duration.duration(management.getThreadCpuTime(identifier) / 1_000_000L);
+                    status.cpuTime = Duration.milliseconds(management.getThreadCpuTime(identifier) / 1_000_000L);
                     status.isDaemon = information.isDaemon();
                     status.name = information.getThreadName();
                     status.identifier = information.getThreadId();

@@ -32,8 +32,8 @@ import static com.telenav.kivakit.core.time.Duration.ONE_SECOND;
 import static com.telenav.kivakit.core.time.Duration.Restriction.ALLOW_NEGATIVE;
 import static com.telenav.kivakit.core.time.Duration.Restriction.POSITIVE_ONLY;
 import static com.telenav.kivakit.core.time.Duration.days;
-import static com.telenav.kivakit.core.time.Duration.duration;
 import static com.telenav.kivakit.core.time.Duration.hours;
+import static com.telenav.kivakit.core.time.Duration.milliseconds;
 import static com.telenav.kivakit.core.time.Duration.minutes;
 import static com.telenav.kivakit.core.time.Duration.nanoseconds;
 import static com.telenav.kivakit.core.time.Duration.parseDuration;
@@ -71,7 +71,7 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testConstruction()
     {
-        ensureEqual(60.0, Duration.duration(60).asMilliseconds());
+        ensureEqual(60.0, Duration.milliseconds(60).asMilliseconds());
         ensureEqual(1.0, nanoseconds(600_000).asMilliseconds());
         ensureEqual(0.0, nanoseconds(400_000).asMilliseconds());
         ensureEqual(60.0, seconds(60).asSeconds());
@@ -145,7 +145,7 @@ public class DurationTest extends CoreUnitTest
     {
         ensure(INSTANTANEOUS.isZero());
         ensureFalse(seconds(0.1).isZero());
-        ensureFalse(Duration.duration(1).isZero());
+        ensureFalse(Duration.milliseconds(1).isZero());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class DurationTest extends CoreUnitTest
     {
         ensureFalse(INSTANTANEOUS.isNonZero());
         ensure(seconds(0.1).isNonZero());
-        ensure(Duration.duration(1).isNonZero());
+        ensure(Duration.milliseconds(1).isNonZero());
     }
 
     @Test
@@ -228,14 +228,14 @@ public class DurationTest extends CoreUnitTest
         ensureThrows(() -> parseDuration("mambo"));
         ensureThrows(() -> parseDuration("5.4mambo"));
 
-        ensureEqual(parseDuration("1 ms"), Duration.duration(1));
-        ensureEqual(parseDuration("2 ms"), Duration.duration(2));
-        ensureEqual(parseDuration("1ms"), Duration.duration(1));
-        ensureEqual(parseDuration("2ms"), Duration.duration(2));
-        ensureEqual(parseDuration("1 millisecond"), Duration.duration(1));
-        ensureEqual(parseDuration("2 milliseconds"), Duration.duration(2));
-        ensureEqual(parseDuration("1.5 millisecond"), duration(1.5));
-        ensureEqual(parseDuration("2.5 milliseconds"), duration(2.5));
+        ensureEqual(parseDuration("1 ms"), Duration.milliseconds(1));
+        ensureEqual(parseDuration("2 ms"), Duration.milliseconds(2));
+        ensureEqual(parseDuration("1ms"), Duration.milliseconds(1));
+        ensureEqual(parseDuration("2ms"), Duration.milliseconds(2));
+        ensureEqual(parseDuration("1 millisecond"), Duration.milliseconds(1));
+        ensureEqual(parseDuration("2 milliseconds"), Duration.milliseconds(2));
+        ensureEqual(parseDuration("1.5 millisecond"), milliseconds(1.5));
+        ensureEqual(parseDuration("2.5 milliseconds"), milliseconds(2.5));
 
         ensureEqual(parseDuration("1s"), seconds(1));
         ensureEqual(parseDuration("2s"), seconds(2));

@@ -248,8 +248,9 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     }
 
     @Override
-    public Duration elapsedSince(PointInTime<?, ?> thatTime)
+    public Duration durationBefore(PointInTime<?, ?> thatTime)
     {
+        var milliseconds = thatTime.asUtc().epochMilliseconds() - asUtc().epochMilliseconds();
         return (Duration) thatTime.asUtc().minus(asUtc());
     }
 
@@ -367,27 +368,27 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     }
 
     @Override
+    public LocalTime newInstance(long milliseconds)
+    {
+        return epochMilliseconds(timeZone(), milliseconds);
+    }
+
+    @Override
     public Duration newLengthOfTime(long epochMilliseconds)
     {
-        return Duration.duration(epochMilliseconds);
+        return Duration.milliseconds(epochMilliseconds);
+    }
+
+    @Override
+    public LocalTime newLocalPointInTime(ZoneId zone, long epochMilliseconds)
+    {
+        return epochMilliseconds(zone, epochMilliseconds);
     }
 
     @Override
     public LocalTime newPointInTime(long epochMilliseconds)
     {
         return epochMilliseconds(timeZone(), epochMilliseconds);
-    }
-
-    @Override
-    public LocalTime newTimeUnitedInstance(long milliseconds)
-    {
-        return epochMilliseconds(timeZone(), milliseconds);
-    }
-
-    @Override
-    public LocalTime newZonedPointInTime(ZoneId zone, long epochMilliseconds)
-    {
-        return epochMilliseconds(zone, epochMilliseconds);
     }
 
     @Override
@@ -429,12 +430,12 @@ public class LocalTime extends BaseTime<LocalTime, Duration> implements TimeZone
     @Override
     public String toString()
     {
-        return year()
+        return year().asUnits()
                 + "." + String.format("%02d", month().monthOfYear())
                 + "." + String.format("%02d", dayOfMonth().asUnits())
                 + "_" + String.format("%02d", hourOfDay().asMeridiemHour())
                 + "." + String.format("%02d", minute().asUnits())
-                + meridiem()
+                + (meridiem() == Meridiem.NO_MERIDIEM ? "Z" : meridiem())
                 + "_" + TimeZones.shortDisplayName(timeZone());
     }
 

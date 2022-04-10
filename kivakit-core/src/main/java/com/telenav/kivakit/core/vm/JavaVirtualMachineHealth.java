@@ -77,7 +77,7 @@ public class JavaVirtualMachineHealth
     @KivaKitIncludeProperty
     public Duration elapsed()
     {
-        return lastSnapshot == null ? Duration.INSTANTANEOUS : snapshot.capturedAt().elapsedSince(lastSnapshot.capturedAt());
+        return lastSnapshot == null ? Duration.INSTANTANEOUS : snapshot.capturedAt().durationBefore(lastSnapshot.capturedAt());
     }
 
     @KivaKitIncludeProperty
@@ -108,7 +108,7 @@ public class JavaVirtualMachineHealth
     @KivaKitIncludeProperty
     public double memoryUse()
     {
-        return usedMemory().percentOf(maximumMemory).asZeroToOne();
+        return usedMemory().percentOf(maximumMemory).unitValue();
     }
 
     @KivaKitIncludeProperty

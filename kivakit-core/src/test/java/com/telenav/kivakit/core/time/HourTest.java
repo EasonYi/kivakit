@@ -52,18 +52,18 @@ public class HourTest extends CoreUnitTest
         ensureThrows(() -> hour(24).asMeridiemHour());
         ensureThrows(() -> hour(1024).asMeridiemHour());
 
-        ensureEqual(am(12).asMeridiemHour(), 12);
-        ensureEqual(am(1).asMeridiemHour(), 1);
-        ensureEqual(am(2).asMeridiemHour(), 2);
-        ensureEqual(am(3).asMeridiemHour(), 3);
-        ensureEqual(am(4).asMeridiemHour(), 4);
-        ensureEqual(am(5).asMeridiemHour(), 5);
-        ensureEqual(am(6).asMeridiemHour(), 6);
-        ensureEqual(am(7).asMeridiemHour(), 7);
-        ensureEqual(am(8).asMeridiemHour(), 8);
-        ensureEqual(am(9).asMeridiemHour(), 9);
-        ensureEqual(am(10).asMeridiemHour(), 10);
-        ensureEqual(am(11).asMeridiemHour(), 11);
+        ensureEqual(am(12).asMeridiemHour(), 12L);
+        ensureEqual(am(1).asMeridiemHour(), 1L);
+        ensureEqual(am(2).asMeridiemHour(), 2L);
+        ensureEqual(am(3).asMeridiemHour(), 3L);
+        ensureEqual(am(4).asMeridiemHour(), 4L);
+        ensureEqual(am(5).asMeridiemHour(), 5L);
+        ensureEqual(am(6).asMeridiemHour(), 6L);
+        ensureEqual(am(7).asMeridiemHour(), 7L);
+        ensureEqual(am(8).asMeridiemHour(), 8L);
+        ensureEqual(am(9).asMeridiemHour(), 9L);
+        ensureEqual(am(10).asMeridiemHour(), 10L);
+        ensureEqual(am(11).asMeridiemHour(), 11L);
 
         ensureEqual(pm(12).asMeridiemHour(), 12);
         ensureEqual(pm(1).asMeridiemHour(), 1);
@@ -261,14 +261,17 @@ public class HourTest extends CoreUnitTest
     @Test
     public void testToString()
     {
+        ensureThrows(() -> militaryHour(24));
+
         ensureEqual(pm(8).toString(), "8pm");
         ensureEqual(pm(12).toString(), "12pm");
         ensureEqual(pm(1).toString(), "1pm");
         ensureEqual(am(8).toString(), "8am");
         ensureEqual(am(12).toString(), "12am");
-        ensureEqual(militaryHour(0).toString(), "12am");
-        ensureEqual(militaryHour(1).toString(), "1am");
-        ensureEqual(militaryHour(12).toString(), "12pm");
-        ensureEqual(militaryHour(13).toString(), "1pm");
+        ensureEqual(militaryHour(0).toString(), "0");
+        ensureEqual(militaryHour(1).toString(), "1");
+        ensureEqual(militaryHour(12).toString(), "12");
+        ensureEqual(militaryHour(13).toString(), "13");
+        ensureEqual(militaryHour(23).toString(), "23");
     }
 }

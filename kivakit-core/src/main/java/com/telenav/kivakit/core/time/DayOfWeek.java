@@ -29,8 +29,6 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensureBetweenInclusive;
 import static com.telenav.kivakit.core.ensure.Ensure.ensureNotNull;
 import static com.telenav.kivakit.core.time.DayOfWeek.Standard.ISO;
 import static com.telenav.kivakit.core.time.DayOfWeek.Standard.JAVA;
-import static com.telenav.kivakit.core.time.Duration.days;
-import static com.telenav.kivakit.core.time.Duration.duration;
 import static com.telenav.kivakit.core.time.HourOfWeek.hourOfWeek;
 import static com.telenav.kivakit.interfaces.string.Stringable.Format.USER_LABEL;
 
@@ -80,6 +78,8 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
 
     public static final DayOfWeek SUNDAY = isoDayOfWeek(6);
 
+    private static final int millisecondsPerDay = 24 * 60 * 60 * 1_000;
+
     /**
      * Returns the day of the week under the given standard
      *
@@ -126,6 +126,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     @Tested
     public static DayOfWeek javaDayOfWeek(long dayOfWeek)
     {
+        ensureBetweenInclusive(dayOfWeek, 1, 7);
         return dayOfWeek(dayOfWeek, JAVA);
     }
 
@@ -139,17 +140,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
         ISO,
 
         /** Java day of the week numbering is from 1 to 7 */
-        JAVA;
-
-        public long asIso(long dayOfWeek)
-        {
-            return this == ISO ? dayOfWeek : dayOfWeek - 1;
-        }
-
-        public long asJava(long dayOfWeek)
-        {
-            return this == JAVA ? dayOfWeek : dayOfWeek + 1;
-        }
+        JAVA
     }
 
     /** The day of the week numbering standard */
@@ -158,7 +149,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     @NoTestRequired
     protected DayOfWeek(long dayOfWeek, Standard standard)
     {
-        super(days(standard.asIso(dayOfWeek)).milliseconds());
+        super(dayOfWeek * millisecondsPerDay);
 
         this.standard = ensureNotNull(standard);
 
@@ -188,13 +179,13 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     @Tested
     public long asIso()
     {
-        return standard.asIso(asUnits());
+        return standard == ISO ? asUnits() : asUnits() - 1;
     }
 
     @Tested
     public long asJava()
     {
-        return standard.asJava(asUnits());
+        return standard == JAVA ? asUnits() : asUnits() + 1;
     }
 
     @Tested
@@ -206,7 +197,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     @Override
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @NoTestRequired
-    public String asString(final Format format)
+    public String asString(Format format)
     {
         switch (format)
         {
@@ -225,7 +216,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
 
     @Override
     @Tested
-    public boolean equals(final Object object)
+    public boolean equals(Object object)
     {
         if (object instanceof DayOfWeek)
         {
@@ -264,7 +255,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     @Override
     public long millisecondsPerUnit()
     {
-        return 24 * 60 * 60 * 1_000;
+        return millisecondsPerDay;
     }
 
     @Override
@@ -275,22 +266,22 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     }
 
     @Override
+    @NoTestRequired
+    public DayOfWeek newInstance(long milliseconds)
+    {
+        return dayOfWeek(milliseconds / millisecondsPerDay, standard);
+    }
+
+    @Override
     public Duration newLengthOfTime(long milliseconds)
     {
-        return duration(milliseconds);
+        return Duration.milliseconds(milliseconds);
     }
 
     @Override
     public DayOfWeek newPointInTime(long epochMilliseconds)
     {
-        return newTimeUnitedInstance(epochMilliseconds / millisecondsPerUnit());
-    }
-
-    @Override
-    @NoTestRequired
-    public DayOfWeek newTimeUnitedInstance(long ordinal)
-    {
-        return dayOfWeek((int) ordinal, standard);
+        return newInstance(epochMilliseconds / millisecondsPerUnit());
     }
 
     public Standard standard()
