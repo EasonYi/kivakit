@@ -26,14 +26,22 @@ import static com.telenav.kivakit.core.time.DayOfWeek.javaDayOfWeek;
 import static java.lang.Integer.MAX_VALUE;
 
 /**
- * Represents a day of some {@link Type}, such as a day of the week, month or year.
+ * Represents the day of a point in time, including:
+ *
+ * <ul>
+ *     <li>DAY</li>
+ *     <li>DAY_OF_UNIX_EPOCH</li>
+ *     <li>DAY_OF_MONTH</li>
+ *     <li>DAY_OF_WEEK</li>
+ *     <li>DAY_OF_YEAR</li>
+ * </ul>
  *
  * @author jonathanl (shibo)
  */
 @SuppressWarnings("unused")
 @Tested
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public class Day extends BaseDuration<Day>
+public class Day extends BaseTime<Day>
 {
     private static final int millisecondsPerDay = 24 * 60 * 60 * 1_000;
 
@@ -110,11 +118,11 @@ public class Day extends BaseDuration<Day>
         DAY_OF_YEAR
     }
 
-    private final Standard standard;
+    private Standard standard;
 
     /** The type of day this is */
     @UmlAggregation(label = "is of type")
-    private final Type type;
+    private Type type;
 
     @NoTestRequired
     @UmlExcludeMember
@@ -167,6 +175,11 @@ public class Day extends BaseDuration<Day>
             default:
                 return unsupported();
         }
+    }
+
+    public long day()
+    {
+        return asUnits();
     }
 
     @Override
@@ -262,9 +275,18 @@ public class Day extends BaseDuration<Day>
 
     @Override
     @UmlExcludeMember
-    public Day newDuration(long day)
+    public Duration newDuration(long milliseconds)
     {
-        return days((int) day);
+        return Duration.milliseconds(milliseconds);
+    }
+
+    @Override
+    public Day newTime(long epochMilliseconds)
+    {
+        var day = Day.days(units(epochMilliseconds));
+        day.standard = this.standard;
+        day.type = this.type;
+        return day;
     }
 
     @NoTestRequired
@@ -287,7 +309,7 @@ public class Day extends BaseDuration<Day>
             case DAY_OF_UNIX_EPOCH:
             case DAY_OF_MONTH:
             default:
-                return "day " + asDays();
+                return "day " + day();
         }
     }
 

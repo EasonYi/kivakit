@@ -104,7 +104,6 @@ public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration 
         Epochal,
         Clocked
 {
-
     /**
      * Returns the length of time that has elapsed since this point in time. Same as {@link #elapsedSince()}.
      */

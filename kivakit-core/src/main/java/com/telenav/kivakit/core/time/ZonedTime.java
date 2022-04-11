@@ -52,11 +52,14 @@ import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
 
 /**
- * An immutable <code>Time</code> class that represents a specific point in UNIX time. The underlying representation is
- * a <code>long</code> value which holds a number of milliseconds since January 1, 1970, 0:00 GMT. To represent a
- * duration of time, such as "6 seconds", use the
+ * Represents a specific point in time in a given time zone.
+ *
+ * <p>
+ * The underlying representation is a <code>long</code> value which holds a number of milliseconds since January 1,
+ * 1970, 0:00 GMT. To represent a duration of time, such as "6 seconds", use the
  * <code>Duration</code> class. To represent a time period with a start and end time, use the
  * <code>TimeSpan</code> class.
+ * </p>
  *
  * @author Jonathan Locke
  * @since 1.2.6

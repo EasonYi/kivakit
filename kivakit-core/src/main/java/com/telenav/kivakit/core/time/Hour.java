@@ -25,7 +25,14 @@ import static com.telenav.kivakit.core.time.Meridiem.PM;
 import static com.telenav.kivakit.core.time.Meridiem.meridiemHour;
 
 /**
- * Represents an hour of the day.
+ * Represents the hour of a point in time, including:
+ *
+ * <ul>
+ *     <li>HOUR - an arbitrary hour</li>
+ *     <li>HOUR_OF_MERIDIEM - an AM or PM hour</li>
+ *     <li>MILITARY_HOUR - an hour from 0 to 23</li>
+ *     <li>HOUR_OF_WEEK - an hour from the start of the week (monday)</li>
+ * </ul>
  *
  * <p><b>Creation</b></p>
  *
@@ -60,7 +67,7 @@ import static com.telenav.kivakit.core.time.Meridiem.meridiemHour;
  */
 @SuppressWarnings({ "unused", "SpellCheckingInspection" })
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public class Hour extends BaseDuration<Hour>
+public class Hour extends BaseTime<Hour>
 {
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
 
@@ -217,6 +224,11 @@ public class Hour extends BaseDuration<Hour>
         return Objects.hash(quantum());
     }
 
+    public long hour()
+    {
+        return asUnits();
+    }
+
     @Tested
     @UmlMethodGroup("conversion")
     public boolean isMeridiem()
@@ -245,7 +257,7 @@ public class Hour extends BaseDuration<Hour>
         switch (type())
         {
             case HOUR:
-                return newDuration(Long.MAX_VALUE);
+                return hour(Long.MAX_VALUE);
 
             case MILITARY_HOUR:
             case HOUR_OF_MERIDIEM:
@@ -291,16 +303,15 @@ public class Hour extends BaseDuration<Hour>
 
     @Override
     @UmlExcludeMember
-    public Hour newDuration(long milliseconds)
+    public Duration newDuration(long milliseconds)
     {
-        long militaryHour = (milliseconds / millisecondsPerUnit() + 24) % 24;
+        return Duration.milliseconds(milliseconds);
+    }
 
-        if (isMeridiem())
-        {
-            return hourOfDay(militaryHour % 12, Meridiem.meridiem(militaryHour));
-        }
-
-        return militaryHour(militaryHour);
+    @Override
+    public Hour newTime(long epochMilliseconds)
+    {
+        return Hour.hour(units(epochMilliseconds));
     }
 
     @Override
@@ -332,7 +343,7 @@ public class Hour extends BaseDuration<Hour>
             case HOUR_OF_WEEK:
             case MILITARY_HOUR:
             default:
-                return "hour" + asUnits();
+                return "hour" + hour();
         }
     }
 

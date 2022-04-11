@@ -9,7 +9,7 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 
 /**
- * Represents a duration in the unit of minutes
+ * Represents the minute of a point in time.
  *
  * @author jonathanl (shibo)
  */

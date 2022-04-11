@@ -7,6 +7,11 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 
+/**
+ * Represents the week of a point in time.
+ *
+ * @author jonathanl (shibo)
+ */
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
 public class Week extends BaseTime<Week>

@@ -31,7 +31,6 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
  * </p>
  *
  * <ul>
- *     <li>{@link #compareTo(Quantizable)}</li>
  *     <li>{@link #isApproximately(Value, Value)}</li>
  *     <li>{@link #isBetweenExclusive(Quantizable, Quantizable)}</li>
  *     <li>{@link #isBetweenInclusive(Quantizable, Quantizable)}</li>

@@ -1,5 +1,6 @@
 package com.telenav.kivakit.interfaces.time;
 
+import com.telenav.kivakit.interfaces.collection.NextValue;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
@@ -28,6 +29,7 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 public interface TimeUnits<TimeOrDuration extends TimeUnits<TimeOrDuration>> extends
         Minimizable<TimeOrDuration>,
         Maximizable<TimeOrDuration>,
+        NextValue<TimeOrDuration>,
         Milliseconds
 {
     default long asUnits()
@@ -91,6 +93,7 @@ public interface TimeUnits<TimeOrDuration extends TimeUnits<TimeOrDuration>> ext
         return newTimeOrDuration(minimum().milliseconds() + (units * millisecondsPerUnit()));
     }
 
+    @Override
     default TimeOrDuration next()
     {
         return plusUnits(1);

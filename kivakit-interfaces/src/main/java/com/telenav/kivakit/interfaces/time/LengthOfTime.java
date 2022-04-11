@@ -1,7 +1,9 @@
 package com.telenav.kivakit.interfaces.time;
 
 import com.telenav.kivakit.interfaces.code.Callback;
+import com.telenav.kivakit.interfaces.collection.NextValue;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.kivakit.interfaces.numeric.Arithmetic;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.kivakit.interfaces.numeric.Percentage;
@@ -123,8 +125,10 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
         QuantumComparable<LengthOfTime<?>>,
         Comparable<LengthOfTime<?>>,
         Minimizable<Duration>,
+        Arithmetic<Duration>,
         Maximizable<Duration>,
         TimeUnits<Duration>,
+        NextValue<Duration>,
         Stringable
 {
     /**
