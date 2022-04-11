@@ -23,6 +23,6 @@ import com.telenav.lexakai.annotations.diagrams.UmlDiagramIdentifier;
 /**
  * @author jonathanl (shibo)
  */
-public class DiagramTime implements UmlDiagramIdentifier
+public class DiagramTimeDuration implements UmlDiagramIdentifier
 {
 }

@@ -21,6 +21,7 @@ package com.telenav.kivakit.core.messaging.messages;
 import com.telenav.kivakit.core.collections.map.NameMap;
 import com.telenav.kivakit.core.language.Hash;
 import com.telenav.kivakit.core.language.Objects;
+import com.telenav.kivakit.core.lexakai.DiagramMessageType;
 import com.telenav.kivakit.core.logging.Log;
 import com.telenav.kivakit.core.logging.Logger;
 import com.telenav.kivakit.core.messaging.Listener;
@@ -39,7 +40,6 @@ import com.telenav.kivakit.core.messaging.messages.status.Problem;
 import com.telenav.kivakit.core.messaging.messages.status.Trace;
 import com.telenav.kivakit.core.messaging.messages.status.Warning;
 import com.telenav.kivakit.core.messaging.messages.status.activity.Activity;
-import com.telenav.kivakit.core.lexakai.DiagramMessageType;
 import com.telenav.kivakit.core.string.Formatter;
 import com.telenav.kivakit.core.string.Strings;
 import com.telenav.kivakit.core.thread.ReentrancyTracker;
@@ -98,7 +98,7 @@ public abstract class OperationMessage implements Named, Message
 
     public static Message of(Class<? extends Message> type)
     {
-        return parse(Listener.throwing(), type.getSimpleName());
+        return parse(Listener.throwingListener(), type.getSimpleName());
     }
 
     public static Message parse(Listener listener, String name)
@@ -169,6 +169,7 @@ public abstract class OperationMessage implements Named, Message
         return cause;
     }
 
+    @Override
     public final OperationMessage cause(Throwable cause)
     {
         this.cause = cause;

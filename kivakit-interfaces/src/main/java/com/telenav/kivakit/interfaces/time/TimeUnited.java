@@ -1,11 +1,16 @@
 package com.telenav.kivakit.interfaces.time;
 
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
 
-public interface TimeUnited<SubClass extends TimeUnited<SubClass>> extends
-        Minimizable<SubClass>,
-        Maximizable<SubClass>,
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
+public interface TimeUnited<TimeOrDuration extends TimeUnited<TimeOrDuration>> extends
+        Minimizable<TimeOrDuration>,
+        Maximizable<TimeOrDuration>,
         Milliseconds
 {
     default long asUnits()
@@ -21,7 +26,7 @@ public interface TimeUnited<SubClass extends TimeUnited<SubClass>> extends
      */
     long millisecondsPerUnit();
 
-    default SubClass minusUnits(long units)
+    default TimeOrDuration minusUnits(long units)
     {
         return plusUnits(-units);
     }
@@ -35,22 +40,22 @@ public interface TimeUnited<SubClass extends TimeUnited<SubClass>> extends
     }
 
     /**
-     * Returns an instance of the subclass of this length of time for the given number of milliseconds.
+     * Returns an instance of the subclass of this length or point in time.
      *
      * @param milliseconds The number of milliseconds
      * @return The subclass instance
      */
-    SubClass newInstance(long milliseconds);
+    TimeOrDuration newTimeOrDuration(long milliseconds);
 
     /**
      * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
      */
-    default SubClass newInstanceFromUnits(long units)
+    default TimeOrDuration newTimeOrDurationFromUnits(long units)
     {
-        return newInstanceInRange(units * millisecondsPerUnit());
+        return newTimeOrDurationInRange(units * millisecondsPerUnit());
     }
 
-    default SubClass newInstanceInRange(long milliseconds)
+    default TimeOrDuration newTimeOrDurationInRange(long milliseconds)
     {
         var modulo = modulo();
         var units = milliseconds / millisecondsPerUnit();
@@ -63,17 +68,17 @@ public interface TimeUnited<SubClass extends TimeUnited<SubClass>> extends
         {
             units = units % modulo;
         }
-        return newInstance(minimum().milliseconds() + (units * millisecondsPerUnit()));
+        return newTimeOrDuration(minimum().milliseconds() + (units * millisecondsPerUnit()));
     }
 
-    default SubClass next()
+    default TimeOrDuration next()
     {
         return plusUnits(1);
     }
 
-    default SubClass plusUnits(long units)
+    default TimeOrDuration plusUnits(long units)
     {
-        return newInstanceFromUnits(asUnits() + units);
+        return newTimeOrDurationFromUnits(asUnits() + units);
     }
 
     default long units(Milliseconds value)

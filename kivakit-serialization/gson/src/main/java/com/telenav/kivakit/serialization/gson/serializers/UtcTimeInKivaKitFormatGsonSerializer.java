@@ -42,7 +42,7 @@ public class UtcTimeInKivaKitFormatGsonSerializer extends PrimitiveGsonSerialize
     @Override
     protected Time toObject(String identifier)
     {
-        var converted = new LocalDateTimeConverter(Listener.throwing(), utc()).convert(identifier);
+        var converted = new LocalDateTimeConverter(Listener.throwingListener(), utc()).convert(identifier);
         if (converted != null)
         {
             return converted.asTime();
@@ -53,6 +53,6 @@ public class UtcTimeInKivaKitFormatGsonSerializer extends PrimitiveGsonSerialize
     @Override
     protected String toPrimitive(Time time)
     {
-        return time.asLocalTime(utc()).asDateTimeString();
+        return time.asZonedTime(utc()).asDateTimeString();
     }
 }

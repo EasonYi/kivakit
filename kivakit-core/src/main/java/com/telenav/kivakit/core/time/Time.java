@@ -18,16 +18,21 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.lexakai.DiagramTime;
+import com.telenav.kivakit.core.messaging.Listener;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.time.PointInTime;
 import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
-import static com.telenav.kivakit.core.time.LocalTime.localTime;
+import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE;
+import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE_TIME;
+import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_TIME;
 import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
 
 /**
@@ -41,7 +46,7 @@ import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
  * @since 1.2.6
  */
 @SuppressWarnings({ "unused", "unchecked" })
-@UmlClassDiagram(diagram = DiagramTime.class)
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
 public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, Comparable<PointInTime<?, ?>>
 {
     /** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
@@ -90,7 +95,38 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
      */
     public static Time now()
     {
-        return epochMilliseconds(System.currentTimeMillis());
+        return epochMilliseconds(systemClock().millis());
+    }
+
+    public static Time parseKivaKitDate(Listener listener, String text)
+    {
+        return parseTime(listener, KIVAKIT_DATE, text);
+    }
+
+    public static Time parseKivaKitDateTime(Listener listener, String text)
+    {
+        return parseTime(listener, KIVAKIT_DATE_TIME, text);
+    }
+
+    public static Time parseKivaKitTime(Listener listener, String text)
+    {
+        return parseTime(listener, KIVAKIT_TIME, text);
+    }
+
+    public static Time parseTime(Listener listener, DateTimeFormatter formatter, String text)
+    {
+        try
+        {
+            return epochMilliseconds(LocalDateTime.parse(text, formatter)
+                    .atZone(TimeZoned.utc())
+                    .toInstant()
+                    .toEpochMilli());
+        }
+        catch (Exception e)
+        {
+            listener.problem("Unable to parse time: $", text);
+            return null;
+        }
     }
 
     public static Time time(Year year, Month month, Day dayOfMonth, Hour hour)
@@ -115,7 +151,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
                             Minute minute,
                             Second second)
     {
-        return localTime(TimeZoned.utc(), year, month, dayOfMonth, hour, minute, second).asTime();
+        return ZonedTime.zonedTime(TimeZoned.utc(), year, month, dayOfMonth, hour, minute, second).asTime();
     }
 
     /**
@@ -138,15 +174,9 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     }
 
     @Override
-    public LocalTime asLocalTime()
+    public ZonedTime asLocalTime()
     {
-        return asLocalTime(localTimeZone());
-    }
-
-    @Override
-    public LocalTime asLocalTime(ZoneId zone)
-    {
-        return LocalTime.epochMilliseconds(zone, epochMilliseconds());
+        return asZonedTime(localTimeZone());
     }
 
     @Override
@@ -164,6 +194,12 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
             default:
                 return asLocalTime().toString();
         }
+    }
+
+    @Override
+    public ZonedTime asZonedTime(ZoneId zone)
+    {
+        return ZonedTime.epochMilliseconds(zone, epochMilliseconds());
     }
 
     @Override
@@ -191,22 +227,22 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     }
 
     @Override
-    public Duration newLengthOfTime(long milliseconds)
+    public Duration newDuration(long milliseconds)
     {
         return Duration.milliseconds(milliseconds);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public LocalTime newLocalPointInTime(ZoneId zone, long epochMilliseconds)
+    public Time newTime(long epochMilliseconds)
     {
-        return LocalTime.epochMilliseconds(zone, epochMilliseconds);
+        return epochMilliseconds(epochMilliseconds);
     }
 
     @Override
-    public Time newPointInTime(long epochMilliseconds)
+    @SuppressWarnings("unchecked")
+    public ZonedTime newZonedTime(ZoneId zone, long epochMilliseconds)
     {
-        return epochMilliseconds(epochMilliseconds);
+        return ZonedTime.epochMilliseconds(zone, epochMilliseconds);
     }
 
     @Override

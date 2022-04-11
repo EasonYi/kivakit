@@ -18,13 +18,11 @@
 
 package com.telenav.kivakit.core.string;
 
+import com.telenav.kivakit.core.collections.iteration.Iterables;
 import com.telenav.kivakit.core.collections.list.ObjectList;
 import com.telenav.kivakit.core.collections.list.StringList;
-import com.telenav.kivakit.core.collections.iteration.Iterables;
 import com.telenav.kivakit.core.language.Objects;
-import com.telenav.kivakit.core.lexakai.DiagramLanguage;
 import com.telenav.kivakit.interfaces.collection.Sized;
-import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.associations.UmlAggregation;
 import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
@@ -36,7 +34,6 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
  *
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramLanguage.class)
 public class Differences implements Sized
 {
     @UmlAggregation

@@ -235,6 +235,7 @@ public class FilePath extends ResourcePath
     /**
      * @return This file path as an absolute path
      */
+    @Override
     public FilePath absolute()
     {
         if (isCurrentFolder())
@@ -324,6 +325,7 @@ public class FilePath extends ResourcePath
         return (FilePath) super.first(n);
     }
 
+    @Override
     public boolean hasExtension(Extension extension)
     {
         return extension.ends(this);
@@ -356,6 +358,7 @@ public class FilePath extends ResourcePath
     /**
      * @return The last component of this path
      */
+    @Override
     public String last()
     {
         // If this path has a trailing slash, it has a final empty component,
@@ -371,6 +374,7 @@ public class FilePath extends ResourcePath
     /**
      * @return True if this path matches the given matcher
      */
+    @Override
     public boolean matches(Matcher<String> matcher)
     {
         return matcher.matches(asString());
@@ -483,7 +487,7 @@ public class FilePath extends ResourcePath
 
     public FilePath withPrefix(String prefix)
     {
-        return parseFilePath(Listener.none(), prefix + this);
+        return parseFilePath(Listener.deafListener(), prefix + this);
     }
 
     /**
@@ -500,6 +504,7 @@ public class FilePath extends ResourcePath
         return withSchemes(StringList.stringList(scheme));
     }
 
+    @Override
     public FilePath withSchemes(StringList scheme)
     {
         return (FilePath) super.withSchemes(scheme);
@@ -585,7 +590,7 @@ public class FilePath extends ResourcePath
 
     public FilePath withoutPrefix(String prefix)
     {
-        return parseFilePath(Listener.none(), Strip.leading(toString(), prefix));
+        return parseFilePath(Listener.deafListener(), Strip.leading(toString(), prefix));
     }
 
     /**
@@ -600,6 +605,7 @@ public class FilePath extends ResourcePath
     /**
      * @return This filepath without any scheme
      */
+    @Override
     public FilePath withoutSchemes()
     {
         return (FilePath) super.withoutSchemes();

@@ -18,7 +18,7 @@
 
 package com.telenav.kivakit.core.language;
 
-import com.telenav.kivakit.core.lexakai.DiagramLanguage;
+import com.telenav.kivakit.core.lexakai.DiagramJava;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -30,7 +30,7 @@ import java.util.stream.StreamSupport;
  *
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramLanguage.class)
+@UmlClassDiagram(diagram = DiagramJava.class)
 @LexakaiJavadoc(complete = true)
 public class Streams
 {

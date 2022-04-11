@@ -21,8 +21,8 @@ package com.telenav.kivakit.conversion.core.time;
 import com.telenav.kivakit.conversion.lexakai.DiagramConversionTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.string.Paths;
-import com.telenav.kivakit.core.time.LocalTime;
 import com.telenav.kivakit.core.time.TimeZones;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.time.Instant;
@@ -56,7 +56,7 @@ public class BaseFormattedLocalTimeConverter extends BaseFormattedConverter
     }
 
     @Override
-    protected String onToString(LocalTime value)
+    protected String onToString(ZonedTime value)
     {
         var timeZone = value.timeZone();
         return formatter().format(Instant.ofEpochMilli(value.asMilliseconds())
@@ -64,7 +64,7 @@ public class BaseFormattedLocalTimeConverter extends BaseFormattedConverter
     }
 
     @Override
-    protected LocalTime onToValue(String value)
+    protected ZonedTime onToValue(String value)
     {
         zone(zone(this, value));
         var time = Paths.withoutSuffix(value, '_');
@@ -86,6 +86,6 @@ public class BaseFormattedLocalTimeConverter extends BaseFormattedConverter
         {
             return zone;
         }
-        return LocalTime.localTimeZone();
+        return ZonedTime.localTimeZone();
     }
 }

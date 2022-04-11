@@ -18,11 +18,14 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.util.regex.Pattern;
 
@@ -37,36 +40,47 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
  * <p>
  * These static factory methods allow easy construction of value objects using either long values like
  * <code>seconds(30)</code> or <code>hours(3)</code>:
+ * </p>
+ *
  * <ul>
- * <li><code>Duration.milliseconds(long)</code>
- * <li><code>Duration.seconds(int)</code>
- * <li><code>Duration.minutes(int)</code>
- * <li><code>Duration.hours(int)</code>
- * <li><code>Duration.days(int)</code>
+ *     <li>{@link #milliseconds(long)}</li>
+ *     <li>{@link #seconds(long)}</li>
+ *     <li>{@link #minutes(long)}</li>
+ *     <li>{@link #hours(long)}</li>
+ *     <li>{@link #days(long)}</li>
  * </ul>
+ *
+ * <p>
  * ...or double-precision floating point values like <code>days(3.2)</code>:
+ * </p>
+ *
  * <ul>
- * <li><code>Duration.milliseconds(double)</code>
- * <li><code>Duration.seconds(double)</code>
- * <li><code>Duration.minutes(double)</code>
- * <li><code>Duration.hours(double)</code>
- * <li><code>Duration.days(double)</code>
+ *     <li>{@link #milliseconds(double)}</li>
+ *     <li>{@link #seconds(double)}</li>
+ *     <li>{@link #minutes(double)}</li>
+ *     <li>{@link #hours(double)}</li>
+ *     <li>{@link #days(double)}</li>
  * </ul>
+ *
+ * <p>
  * The precise number of milliseconds represented by a <code>Duration</code> object can be retrieved
  * by calling the <code>milliseconds</code> method. The value of a <code>Duration</code> object
  * in a given unit like days or hours can be retrieved by calling one of the following unit methods,
  * each of which returns a double-precision floating point number:
+ * </p>
+ *
  * <ul>
- * <li><code>{#asSeconds()}</code>
- * <li><code>{#asMinutes()}</code>
- * <li><code>{#asHours()}</code>
- * <li><code>{#asDays()}</code>
- * <li><code>{#asWeeks()}</code>
- * <li><code>{#asYears()}</code>
+ *     <li>{@link #asSeconds()}</li>
+ *     <li>{@link #asMinutes()}</li>
+ *     <li>{@link #asHours()}</li>
+ *     <li>{@link #asDays()}</li>
+ *     <li>{@link #asWeeks()}</li>
+ *     <li>{@link #asYears()}</li>
  * </ul>
+ *
  * <p>
- * Values can be added and subtracted using the <code>{#add(Duration)}</code> and
- * <code>#{subtract(Duration)}</code> methods, each of which returns a new immutable
+ * Values can be added and subtracted using the {@link #plus(LengthOfTime)} and
+ * <code>{@link #minus(Duration)}</code> methods, each of which returns a new immutable
  * <code>Duration</code> object.
  * <p>
  * Finally, the <code>sleep</code> method will sleep for the value of a <code>Duration</code>.
@@ -75,8 +89,8 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
  * @see Time
  */
 @SuppressWarnings("unused")
-@UmlClassDiagram(diagram = DiagramTime.class)
 @Tested
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
 public class Duration extends BaseDuration<Duration>
 {
     /** Constant for maximum duration. */
@@ -116,66 +130,77 @@ public class Duration extends BaseDuration<Duration>
                     + "(?<units> d | h | m | s | ms | ((millisecond | second | minute | hour | day | week | year) s?))", CASE_INSENSITIVE);
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration days(double days)
     {
         return hours(24.0 * days);
     }
 
     @Tested
-    public static Duration days(int days)
+    @UmlMethodGroup("factory")
+    public static Duration days(long days)
     {
         return hours(24 * days);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration hours(double hours)
     {
         return minutes(60.0 * hours);
     }
 
     @Tested
-    public static Duration hours(int hours)
+    @UmlMethodGroup("factory")
+    public static Duration hours(long hours)
     {
         return minutes(60 * hours);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration milliseconds(double milliseconds)
     {
         return milliseconds((long) (milliseconds + 0.5));
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration milliseconds(long milliseconds)
     {
         return new Duration(milliseconds, POSITIVE_ONLY);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration minutes(double minutes)
     {
         return seconds(60.0 * minutes);
     }
 
     @Tested
-    public static Duration minutes(int minutes)
+    @UmlMethodGroup("factory")
+    public static Duration minutes(long minutes)
     {
         return seconds(60 * minutes);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration nanoseconds(long nanoseconds)
     {
         return milliseconds(nanoseconds / 1_000_000.0);
     }
 
     @Tested
+    @UmlMethodGroup("parsing")
     public static Duration parseDuration(String value)
     {
-        return parseDuration(Listener.throwing(), value);
+        return parseDuration(Listener.throwingListener(), value);
     }
 
     @Tested
+    @UmlMethodGroup("parsing")
     public static Duration parseDuration(Listener listener, String value)
     {
         var matcher = PATTERN.matcher(value);
@@ -225,18 +250,21 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration seconds(double seconds)
     {
         return milliseconds(seconds * 1000.0);
     }
 
     @Tested
-    public static Duration seconds(int seconds)
+    @UmlMethodGroup("factory")
+    public static Duration seconds(long seconds)
     {
         return milliseconds(seconds * 1000L);
     }
 
     @Tested
+    @UmlMethodGroup("arithmetic")
     public static Duration untilNextSecond()
     {
         var now = Time.now();
@@ -245,12 +273,14 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration weeks(double scalar)
     {
         return days(7 * scalar);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Duration years(double scalar)
     {
         return weeks(52 * scalar);
@@ -297,6 +327,7 @@ public class Duration extends BaseDuration<Duration>
      * @return The sum of this duration and that one, but never a negative value.
      */
     @Tested
+    @UmlMethodGroup("arithmetic")
     public Duration add(Duration that)
     {
         return add(that, POSITIVE_ONLY);
@@ -306,6 +337,7 @@ public class Duration extends BaseDuration<Duration>
      * @return The sum of this duration and that duration, but restricted to the given range
      */
     @Tested
+    @UmlMethodGroup("arithmetic")
     public Duration add(Duration that, Restriction restriction)
     {
         var sum = milliseconds() + that.milliseconds();
@@ -317,6 +349,7 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @NoTestRequired
+    @UmlMethodGroup("conversion")
     public Frequency asFrequency()
     {
         return Frequency.every(this);
@@ -327,6 +360,7 @@ public class Duration extends BaseDuration<Duration>
      * 00:00, modulo the length of a week.
      */
     @Tested
+    @UmlMethodGroup("arithmetic")
     public String fromStartOfWeekModuloWeekLength()
     {
         // There are 10080 minutes in a week
@@ -344,12 +378,14 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Duration maximum()
     {
         return FOREVER;
     }
 
     @Override
+    @UmlMethodGroup("units")
     public long millisecondsPerUnit()
     {
         return 1;
@@ -357,12 +393,14 @@ public class Duration extends BaseDuration<Duration>
 
     @Override
     @Tested
+    @UmlMethodGroup("arithmetic")
     public Duration minimum(Duration that)
     {
         return isLessThan(that) ? this : that;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Duration minimum()
     {
         return INSTANTANEOUS;
@@ -372,6 +410,7 @@ public class Duration extends BaseDuration<Duration>
      * @return This duration minus that duration, but never a negative value
      */
     @Tested
+    @UmlMethodGroup("arithmetic")
     public Duration minus(Duration that)
     {
         return minus(that, POSITIVE_ONLY);
@@ -381,6 +420,7 @@ public class Duration extends BaseDuration<Duration>
      * @return This duration minus that duration, but restricted to the given range
      */
     @Tested
+    @UmlMethodGroup("arithmetic")
     public Duration minus(Duration that, Restriction restriction)
     {
         if (restriction == POSITIVE_ONLY)
@@ -394,13 +434,15 @@ public class Duration extends BaseDuration<Duration>
     }
 
     @Tested
+    @UmlMethodGroup("arithmetic")
     public Duration nearestHour()
     {
         return nearest(hours(1));
     }
 
     @Override
-    public Duration newLengthOfTime(long milliseconds)
+    @UmlExcludeMember
+    public Duration newDuration(long milliseconds)
     {
         return milliseconds(milliseconds);
     }

@@ -122,7 +122,7 @@ public class PreciseDuration extends BaseDuration<PreciseDuration>
     }
 
     @Override
-    public PreciseDuration newLengthOfTime(long milliseconds)
+    public PreciseDuration newDuration(long milliseconds)
     {
         return milliseconds(milliseconds);
     }

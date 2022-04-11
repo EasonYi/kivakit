@@ -20,8 +20,8 @@ package com.telenav.kivakit.conversion.core.time;
 
 import com.telenav.kivakit.conversion.lexakai.DiagramConversionTime;
 import com.telenav.kivakit.core.messaging.Listener;
-import com.telenav.kivakit.core.time.LocalTime;
 import com.telenav.kivakit.core.time.TimeFormats;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.time.ZoneId;
@@ -50,7 +50,7 @@ public class LocalTimeConverter extends BaseFormattedLocalTimeConverter
     }
 
     @Override
-    protected String onToString(LocalTime value)
+    protected String onToString(ZonedTime value)
     {
         return DateTimeFormatter.ofPattern("h.mma").format(value.javaLocalDateTime());
     }

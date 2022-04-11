@@ -18,10 +18,10 @@
 
 package com.telenav.kivakit.core.messaging;
 
+import com.telenav.kivakit.core.lexakai.DiagramBroadcaster;
 import com.telenav.kivakit.core.lexakai.DiagramRepeater;
 import com.telenav.kivakit.interfaces.comparison.Filter;
 import com.telenav.kivakit.interfaces.messaging.Transmittable;
-import com.telenav.kivakit.core.lexakai.DiagramBroadcaster;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.associations.UmlRelation;
 
@@ -125,6 +125,7 @@ public interface Broadcaster extends Transceiver
     /**
      * Allows subclass to transmit message to listeners
      */
+    @Override
     default void onTransmit(Transmittable message)
     {
     }
@@ -154,7 +155,7 @@ public interface Broadcaster extends Transceiver
     default void silence()
     {
         clearListeners();
-        addListener(Listener.none());
+        addListener(Listener.deafListener());
     }
 
     /**

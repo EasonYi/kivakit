@@ -18,19 +18,15 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.lexakai.DiagramTime;
-import com.telenav.lexakai.annotations.UmlClassDiagram;
-
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
+import static com.telenav.kivakit.core.time.ZonedTime.nowLocal;
 
 /**
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramTime.class)
 public class TimeFormats
 {
     public static final DateTimeFormatter KIVAKIT_DATE = builder("yyy.MM.dd")
@@ -41,9 +37,9 @@ public class TimeFormats
             .toFormatter();
 
     public static final DateTimeFormatter KIVAKIT_TIME = builder("h.mma")
-            .parseDefaulting(ChronoField.YEAR, nowInLocalTime().year().asUnits())
-            .parseDefaulting(ChronoField.MONTH_OF_YEAR, nowInLocalTime().month().monthOfYear())
-            .parseDefaulting(ChronoField.DAY_OF_MONTH, nowInLocalTime().dayOfMonth().asUnits())
+            .parseDefaulting(ChronoField.YEAR, nowLocal().year().asUnits())
+            .parseDefaulting(ChronoField.MONTH_OF_YEAR, nowLocal().month().monthOfYear())
+            .parseDefaulting(ChronoField.DAY_OF_MONTH, nowLocal().dayOfMonth().asUnits())
             .toFormatter();
 
     public static final DateTimeFormatter KIVAKIT_DATE_TIME = builder("yyyy.MM.dd_h.mma").toFormatter();

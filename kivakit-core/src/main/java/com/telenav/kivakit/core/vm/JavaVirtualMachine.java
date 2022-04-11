@@ -25,7 +25,7 @@ import com.telenav.kivakit.core.collections.map.VariableMap;
 import com.telenav.kivakit.core.language.primitive.Primitives;
 import com.telenav.kivakit.core.language.reflection.Field;
 import com.telenav.kivakit.core.language.reflection.Type;
-import com.telenav.kivakit.core.lexakai.DiagramLanguage;
+import com.telenav.kivakit.core.lexakai.DiagramJava;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.messaging.repeaters.BaseRepeater;
 import com.telenav.kivakit.core.object.Lazy;
@@ -58,7 +58,7 @@ import static com.telenav.kivakit.core.project.Project.resolveProject;
  *
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramLanguage.class)
+@UmlClassDiagram(diagram = DiagramJava.class)
 public class JavaVirtualMachine extends BaseRepeater
 {
     private static final boolean DETAILED_DEBUG = true;
@@ -127,14 +127,14 @@ public class JavaVirtualMachine extends BaseRepeater
     }
 
     @UmlAggregation
+    private JavaVirtualMachineHealth health;
+
+    @UmlAggregation
     private Instrumentation instrumentation;
 
     private boolean triedToInstrument;
 
     private VariableMap<String> variables;
-
-    @UmlAggregation
-    private JavaVirtualMachineHealth health;
 
     private JavaVirtualMachine()
     {

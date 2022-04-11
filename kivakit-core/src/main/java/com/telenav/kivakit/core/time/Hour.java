@@ -3,7 +3,12 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.associations.UmlAggregation;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.util.Objects;
 
@@ -54,47 +59,55 @@ import static com.telenav.kivakit.core.time.Meridiem.meridiemHour;
  * @author jonathanl (shibo)
  */
 @SuppressWarnings({ "unused", "SpellCheckingInspection" })
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
 public class Hour extends BaseDuration<Hour>
 {
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour am(long meridiemHour)
     {
         return hourOfDay(meridiemHour, AM);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour hour(long militaryHour)
     {
         return new Hour(HOUR, NO_MERIDIEM, militaryHour);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour hourOfDay(long hour, Meridiem meridiem)
     {
         return new Hour(HOUR_OF_MERIDIEM, meridiem, hour);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour midnight()
     {
         return am(12);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour militaryHour(long militaryHouor)
     {
         return new Hour(MILITARY_HOUR, NO_MERIDIEM, militaryHouor);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour noon()
     {
         return pm(12);
     }
 
     @Tested
+    @UmlMethodGroup("factory")
     public static Hour pm(long meridiemHour)
     {
         return hourOfDay(meridiemHour, PM);
@@ -102,6 +115,7 @@ public class Hour extends BaseDuration<Hour>
 
     @SuppressWarnings("UnusedReturnValue")
     @NoTestRequired
+    @UmlClassDiagram(diagram = DiagramTimeDuration.class)
     public enum Type
     {
         HOUR(0, Integer.MAX_VALUE),
@@ -140,9 +154,11 @@ public class Hour extends BaseDuration<Hour>
         }
     }
 
+    @UmlAggregation(label = "has")
     private final Meridiem meridiem;
 
     /** The type of hour being modeled */
+    @UmlAggregation(label = "is of type")
     private final Type type;
 
     @Tested
@@ -155,6 +171,7 @@ public class Hour extends BaseDuration<Hour>
     }
 
     @NoTestRequired
+    @UmlMethodGroup("conversion")
     public HourOfWeek asHourOfWeek()
     {
         return hourOfWeek(asMilitaryHour());
@@ -164,6 +181,7 @@ public class Hour extends BaseDuration<Hour>
      * Returns this hour of the day on a 12-hour AM/PM clock
      */
     @Tested
+    @UmlMethodGroup("conversion")
     public long asMeridiemHour()
     {
         return meridiemHour(asMilitaryHour());
@@ -173,6 +191,7 @@ public class Hour extends BaseDuration<Hour>
      * Returns this hour of the day on a 24-hour clock
      */
     @Tested
+    @UmlMethodGroup("conversion")
     public int asMilitaryHour()
     {
         return (int) (milliseconds() / millisecondsPerHour);
@@ -198,30 +217,34 @@ public class Hour extends BaseDuration<Hour>
     }
 
     @Tested
+    @UmlMethodGroup("conversion")
     public boolean isMeridiem()
     {
         return type() == HOUR_OF_MERIDIEM;
     }
 
     @Tested
+    @UmlMethodGroup("conversion")
     public boolean isMilitary()
     {
         return type() == MILITARY_HOUR;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Hour maximum(Hour that)
     {
         return isGreaterThan(that) ? this : that;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Hour maximum()
     {
         switch (type())
         {
             case HOUR:
-                return newLengthOfTime(Long.MAX_VALUE);
+                return newDuration(Long.MAX_VALUE);
 
             case MILITARY_HOUR:
             case HOUR_OF_MERIDIEM:
@@ -238,39 +261,36 @@ public class Hour extends BaseDuration<Hour>
     /**
      * Returns the {@link Meridiem} for this hour of the day
      */
+    @UmlMethodGroup("properties")
     public Meridiem meridiem()
     {
         return meridiem;
     }
 
     @Override
+    @UmlMethodGroup("units")
     public long millisecondsPerUnit()
     {
         return millisecondsPerHour;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Hour minimum(Hour that)
     {
         return isLessThan(that) ? this : that;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Hour minimum()
     {
         return militaryHour(0);
     }
 
     @Override
-    @Tested
-    public Hour newInstanceFromUnits(long units)
-    {
-        var rounded = (units + 24) % 24;
-        return super.newInstanceFromUnits(rounded + 1);
-    }
-
-    @Override
-    public Hour newLengthOfTime(long milliseconds)
+    @UmlExcludeMember
+    public Hour newDuration(long milliseconds)
     {
         long militaryHour = (milliseconds / millisecondsPerUnit() + 24) % 24;
 
@@ -283,6 +303,16 @@ public class Hour extends BaseDuration<Hour>
     }
 
     @Override
+    @Tested
+    @UmlExcludeMember
+    public Hour newTimeOrDurationFromUnits(long units)
+    {
+        var rounded = (units + 24) % 24;
+        return super.newTimeOrDurationFromUnits(rounded + 1);
+    }
+
+    @Override
+    @UmlExcludeMember
     public long quantum()
     {
         return asMilitaryHour();
@@ -307,6 +337,7 @@ public class Hour extends BaseDuration<Hour>
         }
     }
 
+    @UmlMethodGroup("properties")
     public Type type()
     {
         return type;

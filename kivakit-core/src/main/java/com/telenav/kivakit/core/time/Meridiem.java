@@ -19,7 +19,8 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.language.primitive.Longs;
-import com.telenav.kivakit.core.lexakai.DiagramTime;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -43,7 +44,8 @@ import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
  * @see Hour#asMilitaryHour()
  */
 @SuppressWarnings({ "unused", "SpellCheckingInspection" })
-@UmlClassDiagram(diagram = DiagramTime.class)
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
 @LexakaiJavadoc(complete = true)
 public enum Meridiem
 {

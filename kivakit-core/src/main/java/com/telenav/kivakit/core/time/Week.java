@@ -1,10 +1,13 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.language.primitive.Longs;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 
 @SuppressWarnings("unused")
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
 public class Week extends BaseDuration<Week>
 {
     private static final long millisecondsPerWeek = 7 * 24 * 60 * 60 * 1_000;
@@ -51,7 +54,7 @@ public class Week extends BaseDuration<Week>
     }
 
     @Override
-    public Week newLengthOfTime(long milliseconds)
+    public Week newDuration(long milliseconds)
     {
         return weeks(milliseconds / millisecondsPerUnit());
     }

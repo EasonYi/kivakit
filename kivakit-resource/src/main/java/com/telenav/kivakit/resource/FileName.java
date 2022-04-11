@@ -27,7 +27,7 @@ import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.string.Paths;
 import com.telenav.kivakit.core.string.Strings;
 import com.telenav.kivakit.core.string.Strip;
-import com.telenav.kivakit.core.time.LocalTime;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.filesystem.File;
 import com.telenav.kivakit.filesystem.FilePath;
 import com.telenav.kivakit.interfaces.comparison.Matcher;
@@ -39,7 +39,7 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 import java.time.ZoneId;
 import java.util.regex.Pattern;
 
-import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
+import static com.telenav.kivakit.core.time.ZonedTime.nowLocal;
 
 /**
  * A file name, with a base name and an {@link Extension}.
@@ -55,7 +55,7 @@ import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
  *     <li>{@link #base()} - This filename without any extension</li>
  *     <li>{@link #compoundExtension()} - The (possibly compound) extension of this filename, like ".tar" or ".tar.gz"</li>
  *     <li>{@link #extension()} - The final extension of this filename, for example the extension of "data.tar.gz" is ".gz"</li>
- *     <li>{@link #localDateTime()} - This file name parsed as a {@link LocalTime} object using the KivaKit DATE_TIME format
+ *     <li>{@link #localDateTime()} - This file name parsed as a {@link ZonedTime} object using the KivaKit DATE_TIME format
  *       ("yyyy.MM.dd_h.mma").</li>
  * </ul>
  *
@@ -99,40 +99,40 @@ public class FileName implements Named, Comparable<FileName>
 
     public static FileName date()
     {
-        return parseFileName(LOGGER, nowInLocalTime().asDateString());
+        return parseFileName(LOGGER, nowLocal().asDateString());
     }
 
-    public static FileName date(LocalTime time)
+    public static FileName date(ZonedTime time)
     {
         return parseFileName(LOGGER, new LocalDateConverter(LOGGER).unconvert(time));
     }
 
-    public static FileName date(LocalTime time, ZoneId zone)
+    public static FileName date(ZonedTime time, ZoneId zone)
     {
         return parseFileName(LOGGER, new LocalDateConverter(LOGGER, zone).unconvert(time));
     }
 
     public static FileName dateTime()
     {
-        return dateTime(nowInLocalTime());
+        return dateTime(nowLocal());
     }
 
-    public static FileName dateTime(LocalTime time)
+    public static FileName dateTime(ZonedTime time)
     {
         return parseFileName(LOGGER, new LocalDateTimeConverter(LOGGER).unconvert(time));
     }
 
-    public static FileName dateTime(LocalTime time, ZoneId zone)
+    public static FileName dateTime(ZonedTime time, ZoneId zone)
     {
         return parseFileName(LOGGER, new LocalDateTimeConverter(LOGGER, zone).unconvert(time));
     }
 
-    public static LocalTime parseDateTime(Listener listener, String dateTime)
+    public static ZonedTime parseDateTime(Listener listener, String dateTime)
     {
         return new LocalDateTimeConverter(listener).convert(dateTime);
     }
 
-    public static LocalTime parseDateTime(Listener listener, String dateTime, ZoneId zone)
+    public static ZonedTime parseDateTime(Listener listener, String dateTime, ZoneId zone)
     {
         return new LocalDateTimeConverter(listener, zone).convert(dateTime);
     }
@@ -142,12 +142,12 @@ public class FileName implements Named, Comparable<FileName>
         return new FileName(name);
     }
 
-    public static FileName time(LocalTime time)
+    public static FileName time(ZonedTime time)
     {
         return parseFileName(LOGGER, new LocalTimeConverter(LOGGER, time.timeZone()).unconvert(time));
     }
 
-    public static FileName time(LocalTime time, ZoneId zone)
+    public static FileName time(ZonedTime time, ZoneId zone)
     {
         return parseFileName(LOGGER, new LocalTimeConverter(LOGGER, zone).unconvert(time));
     }
@@ -261,20 +261,20 @@ public class FileName implements Named, Comparable<FileName>
     }
 
     /**
-     * @return The {@link LocalTime} object for this filename
+     * @return The {@link ZonedTime} object for this filename
      */
-    public LocalTime localDateTime()
+    public ZonedTime localDateTime()
     {
         return localDateTime(LOGGER);
     }
 
     /**
-     * @return This file name parsed as a {@link LocalTime} object using the KivaKit DATE_TIME format
+     * @return This file name parsed as a {@link ZonedTime} object using the KivaKit DATE_TIME format
      * ("yyyy.MM.dd_h.mma").
      */
-    public LocalTime localDateTime(Listener listener)
+    public ZonedTime localDateTime(Listener listener)
     {
-        LocalTime time;
+        ZonedTime time;
         if ((time = new LocalDateTimeConverter(listener).convert(name())) != null)
         {
             return time;

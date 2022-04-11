@@ -218,7 +218,7 @@ public class Extension implements
 
     public static Extension parseExtension(String value)
     {
-        return parseExtension(Listener.throwing(), value);
+        return parseExtension(Listener.throwingListener(), value);
     }
 
     private final String extension;
@@ -288,6 +288,16 @@ public class Extension implements
         return false;
     }
 
+    @NotNull
+    public Matcher<File> fileMatcher()
+    {
+        return pathed ->
+        {
+            var extension = pathed.path().compoundExtension();
+            return extension != null && extension.endsWith(this);
+        };
+    }
+
     public Extension gzipped()
     {
         return new Extension(extension + ".gz");
@@ -317,16 +327,6 @@ public class Extension implements
     @Override
     @NotNull
     public Matcher<ResourcePathed> matcher()
-    {
-        return pathed ->
-        {
-            var extension = pathed.path().compoundExtension();
-            return extension != null && extension.endsWith(this);
-        };
-    }
-
-    @NotNull
-    public Matcher<File> fileMatcher()
     {
         return pathed ->
         {

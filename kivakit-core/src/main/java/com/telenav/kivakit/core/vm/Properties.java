@@ -10,7 +10,7 @@ import com.telenav.kivakit.core.project.Project;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
+import static com.telenav.kivakit.core.time.ZonedTime.nowLocal;
 
 /**
  * Provides access to system properties, environment variables and project properties
@@ -59,7 +59,7 @@ public class Properties
             properties.putIfNotNull("build-name", build.name());
             properties.putIfNotNull("build-date", build.formattedDate());
             properties.putIfNotNull("build-number", Integer.toString(build.number()));
-            properties.put("date-and-time", nowInLocalTime().asDateTimeString());
+            properties.put("date-and-time", nowLocal().asDateTimeString());
 
             properties = properties.expanded();
 

@@ -18,13 +18,11 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.string.Strip;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
-import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.Objects;
 
@@ -46,7 +44,6 @@ import static com.telenav.kivakit.core.time.Duration.parseDuration;
  * @author jonathanl (shibo)
  */
 @SuppressWarnings("unused")
-@UmlClassDiagram(diagram = DiagramTime.class)
 @LexakaiJavadoc(complete = true)
 @Tested
 public class Frequency
@@ -106,7 +103,7 @@ public class Frequency
     @Tested
     public static Frequency parseFrequency(String value)
     {
-        return parseFrequency(Listener.throwing(), value);
+        return parseFrequency(Listener.throwingListener(), value);
     }
 
     @Tested

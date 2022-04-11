@@ -1,8 +1,10 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.value.level.Percent;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.kivakit.interfaces.numeric.Percentage;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.Objects;
 
@@ -17,6 +19,7 @@ import java.util.Objects;
  * @see Day
  * @see Week
  */
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
 public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> implements LengthOfTime<SubClass>
 {
     private long milliseconds;
@@ -59,9 +62,9 @@ public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> impl
     }
 
     @Override
-    public SubClass newInstance(long milliseconds)
+    public SubClass newTimeOrDuration(long milliseconds)
     {
-        return newLengthOfTime(milliseconds);
+        return newDuration(milliseconds);
     }
 
     @Override

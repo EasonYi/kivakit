@@ -18,7 +18,7 @@
 
 package com.telenav.kivakit.core.vm;
 
-import com.telenav.kivakit.core.lexakai.DiagramLanguage;
+import com.telenav.kivakit.core.lexakai.DiagramJava;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramLanguage.class)
+@UmlClassDiagram(diagram = DiagramJava.class)
 public class ShutdownHook
 {
     private static final LinkedList<ShutdownHook> queue = new LinkedList<>();

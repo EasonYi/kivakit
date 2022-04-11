@@ -37,9 +37,9 @@ import com.telenav.kivakit.core.messaging.messages.status.Warning;
 import com.telenav.kivakit.core.messaging.messages.status.activity.Activity;
 import com.telenav.kivakit.core.time.Duration;
 import com.telenav.kivakit.core.time.Frequency;
-import com.telenav.kivakit.core.time.LocalTime;
 import com.telenav.kivakit.core.time.Meridiem;
 import com.telenav.kivakit.core.time.Time;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.core.value.count.BitCount;
 import com.telenav.kivakit.core.value.count.Bytes;
 import com.telenav.kivakit.core.value.count.Count;
@@ -129,7 +129,7 @@ public class CoreKryoTypes extends KryoTypes
         {
             register(Time.class);
             register(Duration.class);
-            register(LocalTime.class);
+            register(ZonedTime.class);
             register(Meridiem.class);
             register(Frequency.class);
             register(ZoneId.class);

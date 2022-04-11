@@ -20,17 +20,17 @@ package com.telenav.kivakit.serialization.gson.serializers;
 
 import com.telenav.kivakit.conversion.core.time.LocalDateTimeConverter;
 import com.telenav.kivakit.core.messaging.Listener;
-import com.telenav.kivakit.core.time.LocalTime;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.serialization.gson.PrimitiveGsonSerializer;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 
 /**
- * Serializes {@link LocalTime} objects to and from JSON in KivaKit format.
+ * Serializes {@link ZonedTime} objects to and from JSON in KivaKit format.
  *
  * @author jonathanl (shibo)
  */
 @LexakaiJavadoc(complete = true)
-public class LocalTimeGsonSerializer extends PrimitiveGsonSerializer<LocalTime, String>
+public class LocalTimeGsonSerializer extends PrimitiveGsonSerializer<ZonedTime, String>
 {
     public LocalTimeGsonSerializer()
     {
@@ -38,13 +38,13 @@ public class LocalTimeGsonSerializer extends PrimitiveGsonSerializer<LocalTime, 
     }
 
     @Override
-    protected LocalTime toObject(String text)
+    protected ZonedTime toObject(String text)
     {
-        return new LocalDateTimeConverter(Listener.throwing(), LocalTime.localTimeZone()).convert(text);
+        return new LocalDateTimeConverter(Listener.throwingListener(), ZonedTime.localTimeZone()).convert(text);
     }
 
     @Override
-    protected String toPrimitive(LocalTime time)
+    protected String toPrimitive(ZonedTime time)
     {
         return time.asUtc().toString();
     }

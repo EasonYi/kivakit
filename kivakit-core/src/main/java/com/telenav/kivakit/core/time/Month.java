@@ -1,8 +1,12 @@
 package com.telenav.kivakit.core.time;
 
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
+
 import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 
 @SuppressWarnings("unused")
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
 public enum Month
 {
     JANUARY(1),

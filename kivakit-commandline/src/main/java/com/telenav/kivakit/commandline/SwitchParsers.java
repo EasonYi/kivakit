@@ -21,7 +21,7 @@ import com.telenav.kivakit.core.collections.list.StringList;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.string.CaseFormat;
 import com.telenav.kivakit.core.time.Duration;
-import com.telenav.kivakit.core.time.LocalTime;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.core.value.count.Bytes;
 import com.telenav.kivakit.core.value.count.Count;
 import com.telenav.kivakit.core.value.count.Maximum;
@@ -109,19 +109,19 @@ public class SwitchParsers
                 .description(description);
     }
 
-    public static SwitchParser.Builder<LocalTime> localDateSwitchParser(Listener listener, String name,
+    public static SwitchParser.Builder<ZonedTime> localDateSwitchParser(Listener listener, String name,
                                                                         String description)
     {
-        return SwitchParser.builder(LocalTime.class)
+        return SwitchParser.builder(ZonedTime.class)
                 .name(name)
                 .description(description)
                 .converter(new LocalDateConverter(listener));
     }
 
-    public static SwitchParser.Builder<LocalTime> localDateTimeSwitchParser(Listener listener, String name,
+    public static SwitchParser.Builder<ZonedTime> localDateTimeSwitchParser(Listener listener, String name,
                                                                             String description)
     {
-        return SwitchParser.builder(LocalTime.class)
+        return SwitchParser.builder(ZonedTime.class)
                 .name(name)
                 .description(description)
                 .converter(new LocalDateTimeConverter(listener));

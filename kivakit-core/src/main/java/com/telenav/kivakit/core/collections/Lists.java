@@ -18,16 +18,12 @@
 
 package com.telenav.kivakit.core.collections;
 
-import com.telenav.kivakit.core.lexakai.DiagramLanguage;
-import com.telenav.lexakai.annotations.UmlClassDiagram;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramLanguage.class)
 public class Lists
 {
     @SafeVarargs

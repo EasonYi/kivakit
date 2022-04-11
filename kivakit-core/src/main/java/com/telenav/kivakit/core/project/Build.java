@@ -21,8 +21,8 @@ package com.telenav.kivakit.core.project;
 import com.telenav.cactus.build.metadata.BuildMetadata;
 import com.telenav.kivakit.core.collections.map.VariableMap;
 import com.telenav.kivakit.core.language.primitive.Ints;
-import com.telenav.kivakit.core.time.LocalTime;
 import com.telenav.kivakit.core.time.TimeZones;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.interfaces.naming.Named;
 
 import java.time.LocalDate;
@@ -72,9 +72,9 @@ public class Build implements Named
     /**
      * @return The date of the build in UTC time
      */
-    public LocalTime date()
+    public ZonedTime date()
     {
-        return LocalTime.localTime(TimeZones.utc(), LocalDate.ofEpochDay(epochDay()).atTime(0, 0));
+        return ZonedTime.zonedTime(TimeZones.utc(), LocalDate.ofEpochDay(epochDay()).atTime(0, 0));
     }
 
     /**

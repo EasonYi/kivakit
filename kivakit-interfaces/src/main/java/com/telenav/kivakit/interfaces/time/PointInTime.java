@@ -1,12 +1,14 @@
 package com.telenav.kivakit.interfaces.time;
 
-import com.telenav.kivakit.interfaces.lexakai.DiagramTime;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
 import com.telenav.kivakit.interfaces.string.Stringable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
@@ -22,8 +24,8 @@ import java.time.Instant;
  *
  * <ul>
  *     <li>{@link #epochMilliseconds()} - The number of milliseconds since the start of the UNIX epoch for this point in time</li>
- *     <li>{@link #newPointInTime(long)} - Creates instances of the implementing class</li>
- *     <li>{@link #newLengthOfTime(long)} - Creates instances of a related {@link LengthOfTime} for use by methods such as {@link #minus(PointInTime)}</li>
+ *     <li>{@link #newTime(long)} - Creates instances of the implementing class</li>
+ *     <li>{@link #newDuration(long)} - Creates instances of a related {@link LengthOfTime} for use by methods such as {@link #minus(PointInTime)}</li>
  * </ul>
  *
  * <p><b>Arithmetic</b></p>
@@ -75,21 +77,24 @@ import java.time.Instant;
  * @author jonathanl (shibo)
  */
 @SuppressWarnings("unused")
-@UmlClassDiagram(diagram = DiagramTime.class)
-public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTimeSubClass>, LengthOfTimeSubClass extends LengthOfTime<LengthOfTimeSubClass>> extends
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
+public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration extends LengthOfTime<Duration>> extends
         QuantumComparable<PointInTime<?, ?>>,
         Comparable<PointInTime<?, ?>>,
-        Minimizable<SubClass>,
-        Maximizable<SubClass>,
+        Minimizable<Time>,
+        Maximizable<Time>,
         Stringable,
-        TimeZoned<SubClass>,
-        TimeUnited<SubClass>,
-        Milliseconds
+        TimeZoned<Time>,
+        TimeUnited<Time>,
+        Milliseconds,
+        Clocked
 {
+
     /**
      * Returns the length of time that has elapsed since this point in time. Same as {@link #elapsedSince()}.
      */
-    default LengthOfTimeSubClass age()
+    @UmlMethodGroup("temporal")
+    default Duration age()
     {
         return elapsedSince();
     }
@@ -97,6 +102,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return A Java {@link Instant} for this time value
      */
+    @UmlMethodGroup("conversion")
     default Instant asInstant()
     {
         return Instant.ofEpochMilli(epochMilliseconds());
@@ -105,6 +111,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return The number of milliseconds since the start of the UNIX epoch on January 1, 1970
      */
+    @UmlMethodGroup("conversion")
     default long asMilliseconds()
     {
         return epochMilliseconds();
@@ -114,6 +121,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      * {@inheritDoc}
      */
     @Override
+    @UmlMethodGroup("conversion")
     default String asString(Format format)
     {
         switch (format)
@@ -136,6 +144,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     }
 
     @Override
+    @UmlMethodGroup("conversion")
     default long asUnits()
     {
         return epochMilliseconds() / millisecondsPerUnit();
@@ -147,57 +156,64 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
         return Long.compare(milliseconds(), that.milliseconds());
     }
 
-    default SubClass decremented()
+    @UmlMethodGroup("arithmetic")
+    default Time decremented()
     {
-        return minus(newLengthOfTime(millisecondsPerUnit()));
+        return minus(newDuration(millisecondsPerUnit()));
     }
 
     /**
      * Returns the length of time between this point in time and the given point in time
      */
-    default LengthOfTimeSubClass difference(PointInTime<?, ?> that)
+    @UmlMethodGroup("arithmetic")
+    default Duration difference(PointInTime<?, ?> that)
     {
-        return newLengthOfTime(epochMilliseconds() - that.epochMilliseconds());
+        return newDuration(epochMilliseconds() - that.epochMilliseconds());
     }
 
     /**
      * Returns the length of time that has elapsed between this point in time and the given point in time in the future
      */
-    default LengthOfTimeSubClass durationBefore(PointInTime<?, ?> future)
+    @UmlMethodGroup("temporal")
+    default Duration durationBefore(PointInTime<?, ?> future)
     {
         // If this time is before the given time,
         if (isLessThan(future))
         {
             // then we can subtract to get the duration.
-            return newLengthOfTime(future.epochMilliseconds() - epochMilliseconds());
+            return newDuration(future.epochMilliseconds() - epochMilliseconds());
         }
 
-        return newLengthOfTime(0);
+        return newDuration(0);
     }
 
     /**
      * Returns the length of time that has elapsed since this point in time. If this point in time is in the future,
      * returns a zero length of time.
      */
-    default LengthOfTimeSubClass elapsedSince()
+    @UmlMethodGroup("temporal")
+    default Duration elapsedSince()
     {
-        var now = newPointInTime(System.currentTimeMillis());
+        var now = newTime(System.currentTimeMillis());
         return durationBefore(now);
     }
 
     /**
      * @return Number of milliseconds since the start of the UNIX epoch for this point in time
      */
+    @UmlMethodGroup("units")
     long epochMilliseconds();
 
-    default SubClass incremented()
+    @UmlMethodGroup("arithmetic")
+    default Time incremented()
     {
-        return plus(newLengthOfTime(millisecondsPerUnit()));
+        return plus(newDuration(millisecondsPerUnit()));
     }
 
     /**
      * @return True if this point in time is after the given point in time
      */
+    @UmlMethodGroup("temporal")
     default boolean isAfter(PointInTime<?, ?> that)
     {
         return isGreaterThan(that);
@@ -206,6 +222,7 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is at or after the given point in time
      */
+    @UmlMethodGroup("temporal")
     default boolean isAtOrAfter(PointInTime<?, ?> that)
     {
         return isGreaterThanOrEqualTo(that);
@@ -214,7 +231,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is at or before the given point in time
      */
-    default boolean isAtOrBefore(SubClass that)
+    @UmlMethodGroup("temporal")
+    default boolean isAtOrBefore(Time that)
     {
         return isLessThanOrEqualTo(that);
     }
@@ -222,7 +240,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is before the given point in time
      */
-    default boolean isBefore(SubClass that)
+    @UmlMethodGroup("temporal")
+    default boolean isBefore(Time that)
     {
         return isLessThanOrEqualTo(that);
     }
@@ -230,7 +249,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is older than the given age
      */
-    default boolean isOlderThan(LengthOfTimeSubClass age)
+    @UmlMethodGroup("temporal")
+    default boolean isOlderThan(Duration age)
     {
         return age().isGreaterThan(age);
     }
@@ -238,7 +258,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is older or equal to than the given age
      */
-    default boolean isOlderThanOrEqualTo(LengthOfTimeSubClass duration)
+    @UmlMethodGroup("temporal")
+    default boolean isOlderThanOrEqualTo(Duration duration)
     {
         return age().isGreaterThanOrEqualTo(duration);
     }
@@ -246,7 +267,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is younger than the given age
      */
-    default boolean isYoungerThan(LengthOfTimeSubClass age)
+    @UmlMethodGroup("temporal")
+    default boolean isYoungerThan(Duration age)
     {
         return age().isLessThan(age);
     }
@@ -254,7 +276,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return True if this point in time is younger than or equal to the given age
      */
-    default boolean isYoungerThanOrEqualTo(LengthOfTimeSubClass age)
+    @UmlMethodGroup("temporal")
+    default boolean isYoungerThanOrEqualTo(Duration age)
     {
         return age().isLessThanOrEqualTo(age);
     }
@@ -262,64 +285,72 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * @return The amount of time left until the given amount of time has elapsed
      */
+    @UmlMethodGroup("temporal")
     default LengthOfTime<?> leftUntil(LengthOfTime<?> elapsed)
     {
         return elapsed.minus(elapsedSince());
     }
 
     @Override
-    default SubClass maximum(SubClass that)
+    @UmlMethodGroup("arithmetic")
+    default Time maximum(Time that)
     {
-        return isAfter(that) ? newPointInTime(epochMilliseconds()) : that;
+        return isAfter(that) ? newTime(epochMilliseconds()) : that;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    default SubClass maximum()
+    @UmlMethodGroup("arithmetic")
+    default Time maximum()
     {
-        return newPointInTime(Integer.MAX_VALUE);
+        return newTime(Integer.MAX_VALUE);
     }
 
     /**
      * Returns the number of milliseconds per unit of time
      */
     @Override
+    @UmlMethodGroup("units")
     long millisecondsPerUnit();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    default SubClass minimum()
+    @UmlMethodGroup("arithmetic")
+    default Time minimum()
     {
-        return newPointInTime(0);
+        return newTime(0);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    default SubClass minimum(SubClass that)
+    @UmlMethodGroup("arithmetic")
+    default Time minimum(Time that)
     {
-        return isBefore(that) ? newPointInTime(epochMilliseconds()) : that;
+        return isBefore(that) ? newTime(epochMilliseconds()) : that;
     }
 
     /**
      * Returns this length of time minus the given length of time
      */
-    default LengthOfTimeSubClass minus(PointInTime<?, ?> that)
+    @UmlMethodGroup("arithmetic")
+    default Duration minus(PointInTime<?, ?> that)
     {
-        return newLengthOfTime(epochMilliseconds() - that.epochMilliseconds());
+        return newDuration(epochMilliseconds() - that.epochMilliseconds());
     }
 
     /**
      * Returns this length of time minus the given length of time
      */
-    default SubClass minus(LengthOfTime<?> that)
+    @UmlMethodGroup("arithmetic")
+    default Time minus(LengthOfTime<?> that)
     {
-        return newInstanceInRange(epochMilliseconds() - that.milliseconds());
+        return newTimeOrDurationInRange(epochMilliseconds() - that.milliseconds());
     }
 
     /**
@@ -328,7 +359,8 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      * @param milliseconds The number of milliseconds
      * @return The {@link LengthOfTime} instance
      */
-    LengthOfTimeSubClass newLengthOfTime(long milliseconds);
+    @UmlExcludeMember
+    Duration newDuration(long milliseconds);
 
     /**
      * Returns an instance of the subclass of this length of time for the given number of milliseconds.
@@ -337,20 +369,23 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
      * @return The subclass instance
      */
     @Override
-    SubClass newPointInTime(long epochMilliseconds);
+    @UmlExcludeMember
+    Time newTime(long epochMilliseconds);
 
     /**
      * Returns this length of time plus the given length of time
      */
-    default SubClass plus(LengthOfTime<?> that)
+    @UmlMethodGroup("arithmetic")
+    default Time plus(LengthOfTime<?> that)
     {
-        return newInstanceInRange(epochMilliseconds() + that.milliseconds());
+        return newTimeOrDurationInRange(epochMilliseconds() + that.milliseconds());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @UmlExcludeMember
     default long quantum()
     {
         return epochMilliseconds();
@@ -359,44 +394,49 @@ public interface PointInTime<SubClass extends PointInTime<SubClass, LengthOfTime
     /**
      * Returns this length of time rounded down to the nearest whole unit
      */
-    default SubClass roundDown(LengthOfTime<?> unit)
+    @UmlMethodGroup("arithmetic")
+    default Time roundDown(LengthOfTime<?> unit)
     {
-        return newInstanceInRange(epochMilliseconds() / unit.milliseconds() * unit.milliseconds());
+        return newTimeOrDurationInRange(epochMilliseconds() / unit.milliseconds() * unit.milliseconds());
     }
 
     /**
      * Returns this length of time rounded up to the nearest whole unit
      */
-    default SubClass roundUp(LengthOfTime<?> unit)
+    @UmlMethodGroup("arithmetic")
+    default Time roundUp(LengthOfTime<?> unit)
     {
         return roundDown(unit).plus(unit);
     }
 
     @SuppressWarnings("unchecked")
-    default SubClass subclass()
+    @UmlExcludeMember
+    default Time subclass()
     {
-        return (SubClass) this;
+        return (Time) this;
     }
 
     /**
      * The amount of time between now and the given point in time. If this point in time is in the past, returns a zero
      * length of time.
      */
-    default LengthOfTimeSubClass until(SubClass that)
+    @UmlMethodGroup("temporal")
+    default Duration until(Time that)
     {
         if (that.isAfter(subclass()))
         {
-            return newLengthOfTime(that.epochMilliseconds() - epochMilliseconds());
+            return newDuration(that.epochMilliseconds() - epochMilliseconds());
         }
-        return newLengthOfTime(0);
+        return newDuration(0);
     }
 
     /**
      * Returns the amount of time between this point in time and now. If this point in time is in the future, returns a
      * zero length of time.
      */
+    @UmlMethodGroup("temporal")
     default LengthOfTime<?> untilNow()
     {
-        return until(newPointInTime(System.currentTimeMillis()));
+        return until(newTime(System.currentTimeMillis()));
     }
 }

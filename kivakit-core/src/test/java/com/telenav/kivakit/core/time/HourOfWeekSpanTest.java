@@ -45,7 +45,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
 
         var utcSpan = utcSpan();
 
-        ensureEqual(utcSpan.asLocalTime(localZone()), local);
+        ensureEqual(utcSpan.asZoned(localZone()), local);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
     public void testIncludes()
     {
         // Right included: Monday at 3am to Saturday at 11pm in UTC should include Saturday at 11pm
-        ensure(utcSpan().includes(LocalTime.localTime(utc(),
+        ensure(utcSpan().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(9),
@@ -90,7 +90,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         // Right excluded: Monday at 3am to Saturday at 11pm in UTC should not include Sunday at midnight
-        ensure(!utcSpan().includes(LocalTime.localTime(utc(),
+        ensure(!utcSpan().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(10),
@@ -99,7 +99,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         // Left included: Monday at 3am to Saturday at 11pm in UTC should include Monday at 3am
-        ensure(utcSpan().includes(LocalTime.localTime(utc(),
+        ensure(utcSpan().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(4),
@@ -108,7 +108,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         // Left excluded: Monday at 3am to Saturday at 11pm in UTC should include Monday at 2am
-        ensure(!utcSpan().includes(LocalTime.localTime(utc(),
+        ensure(!utcSpan().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(4),
@@ -125,7 +125,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 .forEach(at -> ensure(!utcSpan().includes(hourOfWeek(at.asLong()))));
 
         //  sat at 3am to tues at 11pm, should include sun at midnight
-        ensure(utcSpanWrapping().includes(LocalTime.localTime(utc(),
+        ensure(utcSpanWrapping().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(3),
@@ -134,7 +134,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         //  sat at 3am to tues at 11pm, should include sat at 3am
-        ensure(utcSpanWrapping().includes(LocalTime.localTime(utc(),
+        ensure(utcSpanWrapping().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(9),
@@ -143,7 +143,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         // sat at 3am to tues at 11pm should include tues 5 at 11pm
-        ensure(utcSpanWrapping().includes(LocalTime.localTime(utc(),
+        ensure(utcSpanWrapping().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(5),
@@ -152,7 +152,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         //  sat at 3am to tues at 11pm should not include fri at midnight
-        ensure(!utcSpanWrapping().includes(LocalTime.localTime(utc(),
+        ensure(!utcSpanWrapping().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(8),
@@ -161,7 +161,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         // sat at 3am to tues at 11pm should include sat 9 at 2am
-        ensure(!utcSpanWrapping().includes(LocalTime.localTime(utc(),
+        ensure(!utcSpanWrapping().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(9),
@@ -170,7 +170,7 @@ public class HourOfWeekSpanTest extends CoreUnitTest
                 seconds(0))));
 
         // sat at 3am to tues at 11pm should include wed at midnight
-        ensure(!utcSpanWrapping().includes(LocalTime.localTime(utc(),
+        ensure(!utcSpanWrapping().includes(ZonedTime.zonedTime(utc(),
                 year(2022),
                 APRIL,
                 dayOfMonth(6),

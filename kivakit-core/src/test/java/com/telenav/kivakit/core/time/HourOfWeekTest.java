@@ -160,7 +160,7 @@ public class HourOfWeekTest extends CoreUnitTest
         {
             //  Tuesday at 9am in time zone -07:00, is TUESDAY at 2am,
             var local = hourOfWeek(TUESDAY, militaryHour(9))
-                    .asLocalTime(ZoneId.of("-07:00"));
+                    .asZonedTime(ZoneId.of("-07:00"));
             ensureEqual(local.dayOfWeek(), TUESDAY);
             ensureEqual(local.hourOfDay(), militaryHour(2));
         }
@@ -168,7 +168,7 @@ public class HourOfWeekTest extends CoreUnitTest
         {
             // Tuesday at 9am in time zone -10:00, is Monday at 11pm.
             var local = hourOfWeek(TUESDAY, militaryHour(9))
-                    .asLocalTime(ZoneId.of("-10:00"));
+                    .asZonedTime(ZoneId.of("-10:00"));
             ensureEqual(local.dayOfWeek(), MONDAY);
             ensureEqual(local.hourOfDay(), militaryHour(12 + 11));
         }
@@ -180,7 +180,7 @@ public class HourOfWeekTest extends CoreUnitTest
         {
             // Monday at 9am in time zone -10:00, is Sunday at 11pm.
             var local = hourOfWeek(MONDAY, militaryHour(9))
-                    .asLocalTime(ZoneId.of("-10:00"));
+                    .asZonedTime(ZoneId.of("-10:00"));
             ensureEqual(local.dayOfWeek(), SUNDAY);
             ensureEqual(local.hourOfDay(), militaryHour(23));
         }
@@ -188,7 +188,7 @@ public class HourOfWeekTest extends CoreUnitTest
         {
             // Sunday at 9pm in time zone 6:00, is MONDAY at 3am.
             var local = hourOfWeek(SUNDAY, militaryHour(12 + 9))
-                    .asLocalTime(ZoneId.of("+06:00"));
+                    .asZonedTime(ZoneId.of("+06:00"));
             ensureEqual(local.dayOfWeek(), MONDAY);
             ensureEqual(local.hourOfDay(), militaryHour(3));
         }

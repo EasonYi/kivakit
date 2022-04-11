@@ -71,7 +71,7 @@ public class BroadcastingProgressReporter extends Multicaster implements Progres
 
     public static BroadcastingProgressReporter create()
     {
-        return BroadcastingProgressReporter.create(Listener.none());
+        return BroadcastingProgressReporter.create(Listener.deafListener());
     }
 
     public static BroadcastingProgressReporter create(Listener listener)

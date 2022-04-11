@@ -16,13 +16,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-package com.telenav.kivakit.core.lexakai;
+package com.telenav.kivakit.interfaces.lexakai;
 
 import com.telenav.lexakai.annotations.diagrams.UmlDiagramIdentifier;
 
 /**
  * @author jonathanl (shibo)
  */
-public class DiagramLanguage implements UmlDiagramIdentifier
+public class DiagramTimePoint implements UmlDiagramIdentifier
 {
 }

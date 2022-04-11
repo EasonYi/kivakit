@@ -4,6 +4,11 @@ import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.time.DayOfWeek.Standard;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.associations.UmlAggregation;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.util.Objects;
 
@@ -27,6 +32,7 @@ import static java.lang.Integer.MAX_VALUE;
  */
 @SuppressWarnings("unused")
 @Tested
+@UmlClassDiagram(diagram = DiagramTimeDuration.class)
 public class Day extends BaseDuration<Day>
 {
     private static final int millisecondsPerDay = 24 * 60 * 60 * 1_000;
@@ -35,6 +41,7 @@ public class Day extends BaseDuration<Day>
      * @return A day since the start of a month, from 1 to 31
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static Day dayOfMonth(long day)
     {
         return new Day(DAY_OF_MONTH, ISO, day);
@@ -44,6 +51,7 @@ public class Day extends BaseDuration<Day>
      * @return A day since the start of the UNIX epoch, from 0 to n
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static Day dayOfUnixEpoch(long day)
     {
         return new Day(DAY_OF_UNIX_EPOCH, ISO, day);
@@ -53,6 +61,7 @@ public class Day extends BaseDuration<Day>
      * @return A day since the start of the week in the given day-of-week {@link Standard}
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static Day dayOfWeek(long day, Standard standard)
     {
         return new Day(DAY_OF_WEEK, standard, day);
@@ -62,6 +71,7 @@ public class Day extends BaseDuration<Day>
      * @return A day since the start of the year, from 0 to 365 (in leap years)
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static Day dayOfYear(long day)
     {
         return new Day(DAY_OF_YEAR, ISO, day);
@@ -71,6 +81,7 @@ public class Day extends BaseDuration<Day>
      * @return An absolute day from 0 to n
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static Day days(long day)
     {
         return new Day(DAY, ISO, day);
@@ -80,6 +91,7 @@ public class Day extends BaseDuration<Day>
      * The type of day
      */
     @NoTestRequired
+    @UmlClassDiagram(diagram = DiagramTimeDuration.class)
     public enum Type
     {
         /** A number of days */
@@ -101,9 +113,11 @@ public class Day extends BaseDuration<Day>
     private final Standard standard;
 
     /** The type of day this is */
+    @UmlAggregation(label = "is of type")
     private final Type type;
 
     @NoTestRequired
+    @UmlExcludeMember
     protected Day(Type type, Standard standard, long day)
     {
         super(day * millisecondsPerDay);
@@ -118,6 +132,7 @@ public class Day extends BaseDuration<Day>
      * @return This day as a day of the week if it is a day of the week, otherwise, an exception will be thrown.
      */
     @Tested
+    @UmlMethodGroup("conversion")
     public DayOfWeek asDayOfWeek()
     {
         ensure(type() == DAY_OF_WEEK);
@@ -131,6 +146,7 @@ public class Day extends BaseDuration<Day>
      * @return This day as a zero-based index
      */
     @Tested
+    @UmlMethodGroup("conversion")
     public int asIndex()
     {
         switch (type())
@@ -176,6 +192,7 @@ public class Day extends BaseDuration<Day>
      * invalid in some context, for example, the 31st day of the month doesn't exist for all months.
      */
     @Tested
+    @UmlMethodGroup("validation")
     public boolean isValid()
     {
         switch (type)
@@ -209,42 +226,49 @@ public class Day extends BaseDuration<Day>
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Day maximum(Day that)
     {
         return isGreaterThan(that) ? this : that;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Day maximum()
     {
         return null;
     }
 
     @Override
+    @UmlMethodGroup("inits")
     public long millisecondsPerUnit()
     {
         return millisecondsPerDay;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Day minimum(Day that)
     {
         return isLessThan(that) ? this : that;
     }
 
     @Override
+    @UmlMethodGroup("arithmetic")
     public Day minimum()
     {
         return null;
     }
 
     @Override
-    public Day newLengthOfTime(long day)
+    @UmlExcludeMember
+    public Day newDuration(long day)
     {
         return days((int) day);
     }
 
     @NoTestRequired
+    @UmlExcludeMember
     public Standard standard()
     {
         return standard;
@@ -268,6 +292,7 @@ public class Day extends BaseDuration<Day>
     }
 
     @Tested
+    @UmlMethodGroup("properties")
     public Type type()
     {
         return type;

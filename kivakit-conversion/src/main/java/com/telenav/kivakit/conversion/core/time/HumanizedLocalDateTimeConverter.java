@@ -22,7 +22,7 @@ import com.telenav.kivakit.conversion.BaseStringConverter;
 import com.telenav.kivakit.conversion.lexakai.DiagramConversionTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.time.Day;
-import com.telenav.kivakit.core.time.LocalTime;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.util.HashMap;
@@ -30,14 +30,14 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.telenav.kivakit.core.time.Day.days;
-import static com.telenav.kivakit.core.time.LocalTime.localTimeZone;
-import static com.telenav.kivakit.core.time.LocalTime.nowInLocalTime;
+import static com.telenav.kivakit.core.time.ZonedTime.localTimeZone;
+import static com.telenav.kivakit.core.time.ZonedTime.nowLocal;
 
 /**
  * @author jonathanl (shibo)
  */
 @UmlClassDiagram(diagram = DiagramConversionTime.class)
-public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTime>
+public class HumanizedLocalDateTimeConverter extends BaseStringConverter<ZonedTime>
 {
     private static final Pattern HUMANIZED_DATE = Pattern.compile("("
             + "(?<yesterday>yesterday)"
@@ -69,18 +69,18 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
     }
 
     @Override
-    protected String onToString(LocalTime time)
+    protected String onToString(ZonedTime time)
     {
-        return humanizedDate(time) + " " + new LocalTimeConverter(Listener.none(), time.timeZone()).unconvert(time);
+        return humanizedDate(time) + " " + new LocalTimeConverter(Listener.deafListener(), time.timeZone()).unconvert(time);
     }
 
     @Override
-    protected LocalTime onToValue(String value)
+    protected ZonedTime onToValue(String value)
     {
         var matcher = HUMANIZED_DATE.matcher(value);
         if (matcher.matches())
         {
-            var localTime = new LocalTimeConverter(Listener.none(), localTimeZone())
+            var localTime = new LocalTimeConverter(Listener.deafListener(), localTimeZone())
                     .convert(matcher.group("time"));
             if (localTime != null)
             {
@@ -89,7 +89,7 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
                 var day = matcher.group("day");
                 var date = matcher.group("date");
 
-                var now = nowInLocalTime();
+                var now = nowLocal();
                 if (today != null)
                 {
                     return localTime.withUnixEpochDay(now.dayOfUnixEpoch());
@@ -111,7 +111,7 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
                 }
                 if (date != null)
                 {
-                    var localDate = new LocalDateConverter(Listener.none()).convert(date);
+                    var localDate = new LocalDateConverter(Listener.deafListener()).convert(date);
                     if (localDate != null)
                     {
                         return localTime.withUnixEpochDay(localDate.dayOfUnixEpoch());
@@ -122,9 +122,9 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
         return null;
     }
 
-    private String humanizedDate(LocalTime time)
+    private String humanizedDate(ZonedTime time)
     {
-        var now = nowInLocalTime();
+        var now = nowLocal();
         var nowYear = now.year();
         var nowDayOfYear = now.dayOfYear();
 
@@ -144,6 +144,6 @@ public class HumanizedLocalDateTimeConverter extends BaseStringConverter<LocalTi
             }
         }
 
-        return new LocalDateConverter(Listener.none()).unconvert(time);
+        return new LocalDateConverter(Listener.deafListener()).unconvert(time);
     }
 }

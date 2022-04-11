@@ -1,5 +1,8 @@
 package com.telenav.kivakit.interfaces.time;
 
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
+
 import java.time.ZoneId;
 import java.util.TimeZone;
 
@@ -8,6 +11,7 @@ import java.util.TimeZone;
  *
  * @author jonathanl (shibo)
  */
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
 public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Milliseconds
 {
     static ZoneId localTimeZone()
@@ -20,25 +24,9 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
         return ZoneId.of("UTC");
     }
 
-    /**
-     * Returns this point in time in the given time zone
-     */
-    @SuppressWarnings("unchecked")
-    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asLocalTime(ZoneId zone)
-    {
-        if (hasTimeZone())
-        {
-            return (ZonedSubClass) this;
-        }
-        else
-        {
-            return newLocalPointInTime(timeZone(), milliseconds());
-        }
-    }
-
     default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asLocalTime()
     {
-        return asLocalTime(localTimeZone());
+        return asZonedTime(localTimeZone());
     }
 
     /**
@@ -48,7 +36,7 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
     {
         var offset = TimeZone.getTimeZone(zone).getOffset(milliseconds());
         var milliseconds = milliseconds() - offset;
-        return newPointInTime(milliseconds);
+        return newTime(milliseconds);
     }
 
     /**
@@ -57,6 +45,22 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
     default SubClass asUtc()
     {
         return asUtc(timeZone());
+    }
+
+    /**
+     * Returns this point in time in the given time zone
+     */
+    @SuppressWarnings("unchecked")
+    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asZonedTime(ZoneId zone)
+    {
+        if (hasTimeZone())
+        {
+            return (ZonedSubClass) this;
+        }
+        else
+        {
+            return newZonedTime(timeZone(), milliseconds());
+        }
     }
 
     /**
@@ -72,13 +76,13 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
         return timeZone().equals(utc());
     }
 
-    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newLocalPointInTime(ZoneId zone,
-                                                                                          long epochMilliseconds)
+    SubClass newTime(long milliseconds);
+
+    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newZonedTime(ZoneId zone,
+                                                                                   long epochMilliseconds)
     {
         throw new UnsupportedOperationException();
     }
-
-    SubClass newPointInTime(long milliseconds);
 
     default ZoneId timeZone()
     {

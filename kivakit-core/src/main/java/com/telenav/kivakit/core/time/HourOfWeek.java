@@ -3,6 +3,8 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.value.count.BaseCount;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
+import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.time.ZoneId;
 import java.util.Objects;
@@ -17,6 +19,7 @@ import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
  * @author jonathanl (shibo)
  */
 @SuppressWarnings({ "unused", "unchecked" })
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
 public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
 {
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
@@ -96,20 +99,20 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     @Override
     public HourOfWeek asLocalTime()
     {
-        return asLocalTime(LocalTime.localTimeZone());
-    }
-
-    @Override
-    public HourOfWeek asLocalTime(ZoneId zone)
-    {
-        var modulo = modulo();
-        return HourOfWeek.hourOfWeek((asHours() + offsetInHours(zone) + modulo) % modulo);
+        return asZonedTime(ZonedTime.localTimeZone());
     }
 
     @Override
     public HourOfWeek asUtc(ZoneId zone)
     {
         return HourOfWeek.hourOfWeek(asHours() - offsetInHours(zone));
+    }
+
+    @Override
+    public HourOfWeek asZonedTime(ZoneId zone)
+    {
+        var modulo = modulo();
+        return HourOfWeek.hourOfWeek((asHours() + offsetInHours(zone) + modulo) % modulo);
     }
 
     /**
@@ -161,26 +164,26 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
         return millisecondsPerHour;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    @NoTestRequired
-    public HourOfWeek newInstance(long milliseconds)
-    {
-        return hourOfWeek((int) milliseconds / millisecondsPerUnit());
-    }
-
-    @Override
-    public Duration newLengthOfTime(long milliseconds)
+    public Duration newDuration(long milliseconds)
     {
         return Duration.milliseconds(milliseconds);
     }
 
     @Override
-    public HourOfWeek newPointInTime(long epochMilliseconds)
+    public HourOfWeek newTime(long epochMilliseconds)
     {
         return hourOfWeek(epochMilliseconds / millisecondsPerUnit());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NoTestRequired
+    public HourOfWeek newTimeOrDuration(long milliseconds)
+    {
+        return hourOfWeek((int) milliseconds / millisecondsPerUnit());
     }
 
     @Override

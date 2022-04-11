@@ -59,19 +59,6 @@ public class HourOfWeekSpan
     }
 
     /**
-     * @return This UTC span of hours in local time
-     */
-    @Tested
-    public HourOfWeekSpan asLocalTime(ZoneId zone)
-    {
-        if (isUtc())
-        {
-            return hourOfWeekSpan(startHourOfWeek.asLocalTime(zone), endHourOfWeek.asLocalTime(zone), zone);
-        }
-        return this;
-    }
-
-    /**
      * @return This localtime span of hours in UTC time
      */
     @Tested
@@ -80,6 +67,19 @@ public class HourOfWeekSpan
         if (!isUtc())
         {
             return hourOfWeekSpan(startHourOfWeek.asUtc(zoneId()), endHourOfWeek.asUtc(zoneId()), ZoneId.of("UTC"));
+        }
+        return this;
+    }
+
+    /**
+     * @return This UTC span of hours in local time
+     */
+    @Tested
+    public HourOfWeekSpan asZoned(ZoneId zone)
+    {
+        if (isUtc())
+        {
+            return hourOfWeekSpan(startHourOfWeek.asZonedTime(zone), endHourOfWeek.asZonedTime(zone), zone);
         }
         return this;
     }
@@ -117,7 +117,7 @@ public class HourOfWeekSpan
      * @param time The time to test
      * @return True if this span of hours (in local time) includes the given local time
      */
-    public boolean includes(LocalTime time)
+    public boolean includes(ZonedTime time)
     {
         if (startHourOfWeek.isLessThanOrEqualTo(endHourOfWeek))
         {
@@ -137,7 +137,7 @@ public class HourOfWeekSpan
      */
     public boolean includes(Time time)
     {
-        return includes(LocalTime.epochMilliseconds(zoneId(), time.epochMilliseconds()));
+        return includes(ZonedTime.epochMilliseconds(zoneId(), time.epochMilliseconds()));
     }
 
     public boolean includes(HourOfWeek hourOfWeek)

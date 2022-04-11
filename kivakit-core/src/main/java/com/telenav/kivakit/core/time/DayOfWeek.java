@@ -19,9 +19,9 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.language.Hash;
-import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.core.test.NoTestRequired;
 import com.telenav.kivakit.core.test.Tested;
+import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
@@ -59,7 +59,8 @@ import static com.telenav.kivakit.interfaces.string.Stringable.Format.USER_LABEL
  * @author matthieun
  * @see java.time.DayOfWeek
  */
-@SuppressWarnings("unused") @UmlClassDiagram(diagram = DiagramTime.class)
+@SuppressWarnings("unused")
+@UmlClassDiagram(diagram = DiagramTimePoint.class)
 @LexakaiJavadoc(complete = true)
 @Tested
 public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
@@ -266,22 +267,22 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     }
 
     @Override
-    @NoTestRequired
-    public DayOfWeek newInstance(long milliseconds)
-    {
-        return dayOfWeek(milliseconds / millisecondsPerDay, standard);
-    }
-
-    @Override
-    public Duration newLengthOfTime(long milliseconds)
+    public Duration newDuration(long milliseconds)
     {
         return Duration.milliseconds(milliseconds);
     }
 
     @Override
-    public DayOfWeek newPointInTime(long epochMilliseconds)
+    public DayOfWeek newTime(long epochMilliseconds)
     {
-        return newInstance(epochMilliseconds / millisecondsPerUnit());
+        return newTimeOrDuration(epochMilliseconds / millisecondsPerUnit());
+    }
+
+    @Override
+    @NoTestRequired
+    public DayOfWeek newTimeOrDuration(long milliseconds)
+    {
+        return dayOfWeek(milliseconds / millisecondsPerDay, standard);
     }
 
     public Standard standard()

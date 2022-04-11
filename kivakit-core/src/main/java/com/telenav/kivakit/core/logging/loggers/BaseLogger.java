@@ -21,19 +21,19 @@ package com.telenav.kivakit.core.logging.loggers;
 import com.telenav.kivakit.core.collections.map.ConcurrentObjectMap;
 import com.telenav.kivakit.core.collections.set.ObjectSet;
 import com.telenav.kivakit.core.ensure.Ensure;
+import com.telenav.kivakit.core.lexakai.DiagramLogging;
 import com.telenav.kivakit.core.logging.Log;
+import com.telenav.kivakit.core.logging.LogEntry;
+import com.telenav.kivakit.core.logging.Logger;
 import com.telenav.kivakit.core.logging.LoggerCodeContext;
 import com.telenav.kivakit.core.logging.filters.LogEntriesWithSeverityGreaterThanOrEqualTo;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.core.messaging.Message;
-import com.telenav.kivakit.core.logging.LogEntry;
-import com.telenav.kivakit.core.logging.Logger;
 import com.telenav.kivakit.core.messaging.messages.OperationMessage;
 import com.telenav.kivakit.core.messaging.messages.Severity;
-import com.telenav.kivakit.core.lexakai.DiagramLogging;
+import com.telenav.kivakit.core.time.Time;
 import com.telenav.kivakit.interfaces.comparison.Filter;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
-import com.telenav.kivakit.core.time.Time;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
@@ -190,7 +190,7 @@ public abstract class BaseLogger implements Logger
             var levelName = System.getProperty("KIVAKIT_LOG_LEVEL");
             if (levelName != null)
             {
-                Message message = OperationMessage.parse(Listener.console(), levelName);
+                Message message = OperationMessage.parse(Listener.consoleListener(), levelName);
                 if (message != null)
                 {
                     level = message.severity();

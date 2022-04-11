@@ -389,7 +389,7 @@ public abstract class CoreUnitTest extends TestWatcher implements
     protected <T extends Project> void initializeProject(Class<T> project)
     {
 
-        Listener.none().listenTo(resolveProject(project)).initialize();
+        Listener.deafListener().listenTo(resolveProject(project)).initialize();
     }
 
     protected boolean isMac()

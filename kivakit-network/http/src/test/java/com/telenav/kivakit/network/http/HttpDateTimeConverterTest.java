@@ -14,7 +14,7 @@ public class HttpDateTimeConverterTest extends UnitTest
     @Test
     public void testConvert()
     {
-        var converter = new HttpDateTimeConverter(Listener.none());
+        var converter = new HttpDateTimeConverter(Listener.deafListener());
         var time = converter.convert("Mon, 19 Jul 2021 13:05:31 GMT");
 
         var calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));

@@ -18,10 +18,8 @@
 
 package com.telenav.kivakit.core.time;
 
-import com.telenav.kivakit.core.lexakai.DiagramTime;
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
-import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.time.ZoneId;
 import java.time.format.TextStyle;
@@ -34,7 +32,6 @@ import java.util.Map;
  *
  * @author jonathanl (shibo)
  */
-@UmlClassDiagram(diagram = DiagramTime.class)
 @LexakaiJavadoc(complete = true)
 public class TimeZones
 {
@@ -63,7 +60,7 @@ public class TimeZones
      */
     public static boolean isValidShortDisplayName(String identifier)
     {
-        return parseShortDisplayName(Listener.none(), identifier) != null;
+        return parseShortDisplayName(Listener.deafListener(), identifier) != null;
     }
 
     /**
@@ -71,7 +68,7 @@ public class TimeZones
      */
     public static boolean isValidZoneId(String identifier)
     {
-        return parseZoneId(Listener.none(), identifier) != null;
+        return parseZoneId(Listener.deafListener(), identifier) != null;
     }
 
     static ZoneId localTimeZone()
@@ -114,10 +111,10 @@ public class TimeZones
      */
     public static ZoneId parseZoneIdOrDisplayName(Listener listener, String identifier)
     {
-        var zone = parseShortDisplayName(Listener.none(), identifier);
+        var zone = parseShortDisplayName(Listener.deafListener(), identifier);
         if (zone == null)
         {
-            zone = parseZoneId(Listener.none(), identifier);
+            zone = parseZoneId(Listener.deafListener(), identifier);
         }
         if (zone == null)
         {

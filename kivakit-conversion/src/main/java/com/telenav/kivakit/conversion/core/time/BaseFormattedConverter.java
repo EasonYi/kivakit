@@ -21,7 +21,7 @@ package com.telenav.kivakit.conversion.core.time;
 import com.telenav.kivakit.conversion.BaseStringConverter;
 import com.telenav.kivakit.conversion.lexakai.DiagramConversionTime;
 import com.telenav.kivakit.core.messaging.Listener;
-import com.telenav.kivakit.core.time.LocalTime;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 
 import java.time.Instant;
@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter;
  * Convert to/from local time
  */
 @UmlClassDiagram(diagram = DiagramConversionTime.class)
-public class BaseFormattedConverter extends BaseStringConverter<LocalTime>
+public class BaseFormattedConverter extends BaseStringConverter<ZonedTime>
 {
     /** The date time formatter */
     private DateTimeFormatter formatter;
@@ -70,16 +70,16 @@ public class BaseFormattedConverter extends BaseStringConverter<LocalTime>
     }
 
     @Override
-    protected String onToString(LocalTime value)
+    protected String onToString(ZonedTime value)
     {
         return formatter().format(value.javaLocalDateTime());
     }
 
     @Override
-    protected LocalTime onToValue(String value)
+    protected ZonedTime onToValue(String value)
     {
         var parsed = formatter().parse(value);
         var time = Instant.from(parsed);
-        return LocalTime.epochMilliseconds(zone, time.toEpochMilli());
+        return ZonedTime.epochMilliseconds(zone, time.toEpochMilli());
     }
 }

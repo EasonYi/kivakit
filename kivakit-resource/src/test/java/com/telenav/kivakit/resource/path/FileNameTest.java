@@ -22,8 +22,8 @@ import com.telenav.kivakit.conversion.core.time.LocalDateTimeWithMillisecondsCon
 import com.telenav.kivakit.conversion.core.time.LocalDateTimeWithSecondsConverter;
 import com.telenav.kivakit.core.messaging.listeners.ThrowingListener;
 import com.telenav.kivakit.core.time.DayOfWeek;
-import com.telenav.kivakit.core.time.LocalTime;
 import com.telenav.kivakit.core.time.Time;
+import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.test.UnitTest;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class FileNameTest extends UnitTest
         var timeZone = ZoneId.of("America/Los_Angeles");
         trace("TimeZone:  ${debug}", timeZone.toString());
 
-        var localTime = LocalTime.epochMilliseconds(timeZone, 1344025281123L);
+        var localTime = ZonedTime.epochMilliseconds(timeZone, 1344025281123L);
         trace("LocalTime: ${debug}", localTime.asMilliseconds());
 
         var localMillisecondsConverter = new LocalDateTimeWithMillisecondsConverter(this);
@@ -80,7 +80,7 @@ public class FileNameTest extends UnitTest
         var timeZone = ZoneId.of("America/Los_Angeles");
         trace("TimeZone:  ${debug}", timeZone.toString());
 
-        var localTime = LocalTime.epochMilliseconds(timeZone, 1344025281123L);
+        var localTime = ZonedTime.epochMilliseconds(timeZone, 1344025281123L);
         trace("LocalTime: ${debug}", localTime.asMilliseconds());
 
         var time = localTime.asUtc();
