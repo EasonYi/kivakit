@@ -101,8 +101,13 @@ public interface TimeUnits<TimeOrDuration extends TimeUnits<TimeOrDuration>> ext
         return newTimeOrDurationFromUnits(asUnits() + units);
     }
 
+    default long units(long value)
+    {
+        return value / millisecondsPerUnit();
+    }
+
     default long units(Milliseconds value)
     {
-        return value.milliseconds() / millisecondsPerUnit();
+        return units(value.milliseconds());
     }
 }

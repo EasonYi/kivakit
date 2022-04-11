@@ -1,7 +1,6 @@
 package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
-import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.kivakit.interfaces.time.PointInTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
@@ -14,8 +13,7 @@ import java.util.Objects;
 import static com.telenav.kivakit.core.time.Duration.days;
 
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTimeSubClass>, LengthOfTimeSubClass extends LengthOfTime<LengthOfTimeSubClass>>
-        implements PointInTime<SubClass, LengthOfTimeSubClass>
+public abstract class BaseTime<SubClass extends PointInTime<SubClass, Duration>> implements PointInTime<SubClass, Duration>
 {
     /**
      * The system clock consulted for system measurements, like the current epoch time in milliseconds or system time
@@ -108,6 +106,12 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTi
     public long milliseconds()
     {
         return epochMilliseconds();
+    }
+
+    @Override
+    public Duration newDuration(long milliseconds)
+    {
+        return Duration.milliseconds(milliseconds);
     }
 
     @Override

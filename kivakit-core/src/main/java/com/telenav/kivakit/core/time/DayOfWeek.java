@@ -65,7 +65,7 @@ import static com.telenav.kivakit.interfaces.string.Stringable.Format.USER_LABEL
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
 @LexakaiJavadoc(complete = true)
 @Tested
-public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
+public class DayOfWeek extends BaseTime<DayOfWeek>
 {
     public static final DayOfWeek MONDAY = isoDayOfWeek(0);
 

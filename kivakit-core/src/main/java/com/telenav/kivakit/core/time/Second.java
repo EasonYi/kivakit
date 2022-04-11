@@ -14,12 +14,12 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
  * @author jonathanl (shibo)
  */
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public class Second extends BaseDuration<Second>
+public class Second extends BaseTime<Second>
 {
     private static final int millisecondsPerSecond = 1_000;
 
     @UmlMethodGroup("factory")
-    public static Second seconds(long second)
+    public static Second second(long second)
     {
         ensure(Longs.isBetweenInclusive(second, 0, 59));
         return new Second(second);
@@ -42,7 +42,7 @@ public class Second extends BaseDuration<Second>
     @UmlMethodGroup("arithmetic")
     public Second maximum()
     {
-        return seconds(59);
+        return second(59);
     }
 
     @Override
@@ -63,14 +63,31 @@ public class Second extends BaseDuration<Second>
     @UmlMethodGroup("arithmetic")
     public Second minimum()
     {
-        return seconds(0);
+        return second(0);
     }
 
     @Override
     @UmlExcludeMember
-    public Second newDuration(long seconds)
+    public Duration newDuration(long seconds)
     {
-        return seconds(seconds);
+        return Duration.seconds(seconds);
+    }
+
+    @Override
+    public Second newTime(long epochMilliseconds)
+    {
+        return Second.second(units(epochMilliseconds));
+    }
+
+    public long second()
+    {
+        return asUnits();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "second " + second();
     }
 }
 

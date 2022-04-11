@@ -37,8 +37,7 @@ import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 import static com.telenav.kivakit.core.time.DayOfWeek.javaDayOfWeek;
 import static com.telenav.kivakit.core.time.Duration.ONE_HOUR;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
-import static com.telenav.kivakit.core.time.Minute.minutes;
-import static com.telenav.kivakit.core.time.Second.seconds;
+import static com.telenav.kivakit.core.time.Second.second;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE_TIME;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_TIME;
@@ -64,7 +63,7 @@ import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
  */
 @SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZoned<ZonedTime>
+public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTime>
 {
     /**
      * Retrieves a <code>Time</code> instance based on the given milliseconds.
@@ -114,7 +113,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     @UmlMethodGroup("factory")
     public static ZonedTime localTime(Year year, Month month, Day dayOfMonth, Hour hour)
     {
-        return zonedTime(localTimeZone(), year, month, dayOfMonth, hour, minutes(0), seconds(0));
+        return zonedTime(localTimeZone(), year, month, dayOfMonth, hour, Minute.minute(0), second(0));
     }
 
     /**
@@ -220,7 +219,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone, Year year, Month month, Day dayOfMonth, Hour hour)
     {
-        return zonedTime(zone, year, month, dayOfMonth, hour, minutes(0), seconds(0));
+        return zonedTime(zone, year, month, dayOfMonth, hour, Minute.minute(0), second(0));
     }
 
     @UmlMethodGroup("factory")
@@ -470,7 +469,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
 
     public Minute minuteOfHour()
     {
-        return minutes(javaLocalDateTime().get(MINUTE_OF_HOUR));
+        return Minute.minute(javaLocalDateTime().get(MINUTE_OF_HOUR));
     }
 
     public Month month()

@@ -14,12 +14,12 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
  * @author jonathanl (shibo)
  */
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public class Minute extends BaseDuration<Minute>
+public class Minute extends BaseTime<Minute>
 {
     private static final int millisecondsPerMinute = 60 * 1_000;
 
     @UmlMethodGroup("factory")
-    public static Minute minutes(long minute)
+    public static Minute minute(long minute)
     {
         ensure(Longs.isBetweenInclusive(minute, 0, 59));
         return new Minute(minute);
@@ -42,7 +42,7 @@ public class Minute extends BaseDuration<Minute>
     @UmlMethodGroup("arithmetic")
     public Minute maximum()
     {
-        return minutes(59);
+        return minute(59);
     }
 
     @Override
@@ -63,19 +63,31 @@ public class Minute extends BaseDuration<Minute>
     @UmlMethodGroup("arithmetic")
     public Minute minimum()
     {
-        return minutes(0);
+        return minute(0);
     }
 
     @UmlMethodGroup("units")
-    public long minutes()
+    public long minute()
     {
         return asUnits();
     }
 
     @Override
     @UmlExcludeMember
-    public Minute newDuration(long minute)
+    public Duration newDuration(long milliseconds)
     {
-        return minutes(minute);
+        return Duration.milliseconds(milliseconds);
+    }
+
+    @Override
+    public Minute newTime(long epochMilliseconds)
+    {
+        return Minute.minute(units(epochMilliseconds));
+    }
+
+    @Override
+    public String toString()
+    {
+        return "minute " + minute();
     }
 }

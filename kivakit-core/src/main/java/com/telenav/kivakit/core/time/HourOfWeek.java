@@ -22,7 +22,7 @@ import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
  */
 @SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
+public class HourOfWeek extends BaseTime<HourOfWeek>
 {
     private static final long millisecondsPerHour = 60 * 60 * 1_000;
 

@@ -9,11 +9,11 @@ import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public class Week extends BaseDuration<Week>
+public class Week extends BaseTime<Week>
 {
     private static final long millisecondsPerWeek = 7 * 24 * 60 * 60 * 1_000;
 
-    public static Week weeks(long weeks)
+    public static Week week(long weeks)
     {
         ensure(Longs.isBetweenInclusive(weeks, 0, 59));
         return new Week(weeks);
@@ -34,7 +34,7 @@ public class Week extends BaseDuration<Week>
     @Override
     public Week maximum()
     {
-        return weeks(Long.MAX_VALUE);
+        return week(Long.MAX_VALUE);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Week extends BaseDuration<Week>
     @Override
     public Week minimum()
     {
-        return weeks(0);
+        return week(0);
     }
 
     @Override
@@ -56,8 +56,19 @@ public class Week extends BaseDuration<Week>
     }
 
     @Override
-    public Week newDuration(long milliseconds)
+    public Week newTime(long epochMilliseconds)
     {
-        return weeks(milliseconds / millisecondsPerUnit());
+        return week(units(epochMilliseconds));
+    }
+
+    @Override
+    public String toString()
+    {
+        return week() + " weeks";
+    }
+
+    public long week()
+    {
+        return asUnits();
     }
 }

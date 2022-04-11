@@ -325,16 +325,14 @@ public class Hour extends BaseDuration<Hour>
     {
         switch (type())
         {
-            case HOUR:
-            case HOUR_OF_WEEK:
-            case MILITARY_HOUR:
-                return Long.toString(asUnits());
-
             case HOUR_OF_MERIDIEM:
                 return asMeridiemHour() + meridiem().name().toLowerCase();
 
+            case HOUR:
+            case HOUR_OF_WEEK:
+            case MILITARY_HOUR:
             default:
-                return unsupported();
+                return "hour" + asUnits();
         }
     }
 
@@ -342,5 +340,10 @@ public class Hour extends BaseDuration<Hour>
     public Type type()
     {
         return type;
+    }
+
+    public long weeks()
+    {
+        return asUnits();
     }
 }

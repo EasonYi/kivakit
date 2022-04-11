@@ -49,7 +49,7 @@ import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
  */
 @SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, Comparable<PointInTime<?, ?>>
+public class Time extends BaseTime<Time> implements TimeZoned<Time>, Comparable<PointInTime<?, ?>>
 {
     /** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
     public static final Time START_OF_UNIX_EPOCH = epochMilliseconds(0);
@@ -142,7 +142,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     @UmlMethodGroup("factory")
     public static Time time(Year year, Month month, Day dayOfMonth, Hour hour)
     {
-        return time(year, month, dayOfMonth, hour, Minute.minutes(0), Second.seconds(0));
+        return time(year, month, dayOfMonth, hour, Minute.minute(0), Second.second(0));
     }
 
     @UmlMethodGroup("factory")

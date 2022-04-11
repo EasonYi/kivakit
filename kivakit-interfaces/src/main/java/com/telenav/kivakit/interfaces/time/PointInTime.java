@@ -423,6 +423,12 @@ public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration 
         return (Time) this;
     }
 
+    @Override
+    default long units(long value)
+    {
+        return value / millisecondsPerUnit();
+    }
+
     /**
      * @return The amount of time left until the given amount of time has elapsed
      */
