@@ -94,7 +94,8 @@ Javadoc coverage for this project is 47.2%.
 
 The following significant classes are undocumented:  
 
-- CastTrait
+- CastTrait  
+- TimeUnited
 
 | Class | Documentation Sections |
 |---|---|

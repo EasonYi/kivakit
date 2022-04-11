@@ -476,7 +476,6 @@ The following significant classes are undocumented:
 | | Repeater Chains |  
 | | Convenience Methods and Logging |  
 | [*Lists*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/collections/Lists.html) |  |  
-| [*LocalTime*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/time/LocalTime.html) |  |  
 | [*Locale*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/locale/Locale.html) |  |  
 | [*Lock*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/thread/locks/Lock.html) |  |  
 | [*Log*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/logging/Log.html) |  |  
@@ -716,6 +715,7 @@ The following significant classes are undocumented:
 | [*Weight*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/value/level/Weight.html) |  |  
 | [*Wrap*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/string/Wrap.html) |  |  
 | [*Year*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/time/Year.html) |  |  
+| [*ZonedTime*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.core/com/telenav/kivakit/core/time/ZonedTime.html) |  |  
 
 [//]: # (start-user-text)
 
