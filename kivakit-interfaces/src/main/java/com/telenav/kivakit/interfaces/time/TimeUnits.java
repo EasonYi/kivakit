@@ -5,10 +5,27 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
+/**
+ * An object with time units.
+ *
+ * <ul>
+ *      <li>{@link #asUnits()}</li>
+ *      <li>{@link #milliseconds()}</li>
+ *      <li>{@link #millisecondsPerUnit()}</li>
+ *      <li>{@link #minusUnits(long)}</li>
+ *      <li>{@link #modulo()}</li>
+ *      <li>{@link #next()}</li>
+ *      <li>{@link #plusUnits(long)}</li>
+ *      <li>{@link #units(Milliseconds)}</li>
+ * </ul>
+ *
+ * @author jonathanl (shibo)
+ */
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public interface TimeUnited<TimeOrDuration extends TimeUnited<TimeOrDuration>> extends
+public interface TimeUnits<TimeOrDuration extends TimeUnits<TimeOrDuration>> extends
         Minimizable<TimeOrDuration>,
         Maximizable<TimeOrDuration>,
         Milliseconds
@@ -45,16 +62,19 @@ public interface TimeUnited<TimeOrDuration extends TimeUnited<TimeOrDuration>> e
      * @param milliseconds The number of milliseconds
      * @return The subclass instance
      */
+    @UmlExcludeMember
     TimeOrDuration newTimeOrDuration(long milliseconds);
 
     /**
      * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
      */
+    @UmlExcludeMember
     default TimeOrDuration newTimeOrDurationFromUnits(long units)
     {
         return newTimeOrDurationInRange(units * millisecondsPerUnit());
     }
 
+    @UmlExcludeMember
     default TimeOrDuration newTimeOrDurationInRange(long milliseconds)
     {
         var modulo = modulo();

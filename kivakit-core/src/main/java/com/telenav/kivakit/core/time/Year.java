@@ -2,6 +2,7 @@ package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 import static com.telenav.kivakit.core.time.Day.dayOfMonth;
@@ -19,6 +20,7 @@ public class Year extends BaseDuration<Year>
         return new Year(year);
     }
 
+    @UmlExcludeMember
     protected Year(int year)
     {
         super(year * millisecondsPerYear);
@@ -48,8 +50,8 @@ public class Year extends BaseDuration<Year>
         return year((int) year);
     }
 
-    public ZonedTime withMonth(Month month)
+    public Time withMonth(Month month)
     {
-        return ZonedTime.zonedTime(utc(), this, month, dayOfMonth(1));
+        return ZonedTime.zonedTime(utc(), this, month, dayOfMonth(1)).asTime();
     }
 }

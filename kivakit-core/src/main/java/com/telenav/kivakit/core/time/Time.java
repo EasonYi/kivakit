@@ -23,6 +23,8 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.time.PointInTime;
 import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -64,6 +66,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
+    @UmlMethodGroup("factory")
     public static Time epochMilliseconds(long milliseconds)
     {
         return new Time(milliseconds);
@@ -75,6 +78,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
      * @param nanoseconds the <code>Time</code> value in nanoseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
+    @UmlMethodGroup("factory")
     public static Time epochNanoseconds(long nanoseconds)
     {
         return new Time(nanoseconds / 1_000_000);
@@ -83,6 +87,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     /**
      * @return A <code>Time</code> object representing the given number of seconds since START_OF_UNIX_TIME
      */
+    @UmlMethodGroup("factory")
     public static Time epochSeconds(double seconds)
     {
         return epochMilliseconds((long) (seconds * 1000));
@@ -93,26 +98,31 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
      *
      * @return The current time
      */
+    @UmlMethodGroup("factory")
     public static Time now()
     {
         return epochMilliseconds(systemClock().millis());
     }
 
+    @UmlMethodGroup("factory")
     public static Time parseKivaKitDate(Listener listener, String text)
     {
         return parseTime(listener, KIVAKIT_DATE, text);
     }
 
+    @UmlMethodGroup("factory")
     public static Time parseKivaKitDateTime(Listener listener, String text)
     {
         return parseTime(listener, KIVAKIT_DATE_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static Time parseKivaKitTime(Listener listener, String text)
     {
         return parseTime(listener, KIVAKIT_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static Time parseTime(Listener listener, DateTimeFormatter formatter, String text)
     {
         try
@@ -129,21 +139,25 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
         }
     }
 
+    @UmlMethodGroup("factory")
     public static Time time(Year year, Month month, Day dayOfMonth, Hour hour)
     {
         return time(year, month, dayOfMonth, hour, Minute.minutes(0), Second.seconds(0));
     }
 
+    @UmlMethodGroup("factory")
     public static Time time(Year year, Month month, Day dayOfMonth)
     {
         return time(year, month, dayOfMonth, militaryHour(0));
     }
 
+    @UmlMethodGroup("factory")
     public static Time time(Year year, Month month)
     {
         return time(year, month, Day.dayOfMonth(1), militaryHour(0));
     }
 
+    @UmlMethodGroup("factory")
     public static Time time(Year year,
                             Month month,
                             Day dayOfMonth,
@@ -159,27 +173,32 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
      *
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      */
+    @UmlExcludeMember
     protected Time(long milliseconds)
     {
         super(milliseconds);
     }
 
+    @UmlExcludeMember
     protected Time()
     {
     }
 
+    @UmlMethodGroup("conversion")
     public Duration asDuration()
     {
         return Duration.milliseconds(milliseconds());
     }
 
     @Override
+    @UmlMethodGroup("conversion")
     public ZonedTime asLocalTime()
     {
         return asZonedTime(localTimeZone());
     }
 
     @Override
+    @UmlMethodGroup("conversion")
     public String asString(Format format)
     {
         switch (format)
@@ -197,6 +216,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     }
 
     @Override
+    @UmlMethodGroup("conversion")
     public ZonedTime asZonedTime(ZoneId zone)
     {
         return ZonedTime.epochMilliseconds(zone, epochMilliseconds());
@@ -227,12 +247,14 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
     }
 
     @Override
+    @UmlExcludeMember
     public Duration newDuration(long milliseconds)
     {
         return Duration.milliseconds(milliseconds);
     }
 
     @Override
+    @UmlExcludeMember
     public Time newTime(long epochMilliseconds)
     {
         return epochMilliseconds(epochMilliseconds);
@@ -240,6 +262,7 @@ public class Time extends BaseTime<Time, Duration> implements TimeZoned<Time>, C
 
     @Override
     @SuppressWarnings("unchecked")
+    @UmlExcludeMember
     public ZonedTime newZonedTime(ZoneId zone, long epochMilliseconds)
     {
         return ZonedTime.epochMilliseconds(zone, epochMilliseconds);

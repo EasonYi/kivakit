@@ -24,6 +24,8 @@ import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.lexakai.annotations.LexakaiJavadoc;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensureBetweenInclusive;
 import static com.telenav.kivakit.core.ensure.Ensure.ensureNotNull;
@@ -89,6 +91,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
      * @return The day of the week
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static DayOfWeek dayOfWeek(long dayOfWeek, Standard standard)
     {
         return new DayOfWeek(dayOfWeek, standard);
@@ -101,6 +104,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
      * @return The day of the week
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static DayOfWeek isoDayOfWeek(long dayOfWeek)
     {
         return dayOfWeek(dayOfWeek, ISO);
@@ -113,6 +117,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
      * @return The day of the week
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static DayOfWeek javaDayOfWeek(java.time.DayOfWeek day)
     {
         return dayOfWeek(day.getValue(), JAVA);
@@ -125,6 +130,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
      * @return The day of the week
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static DayOfWeek javaDayOfWeek(long dayOfWeek)
     {
         ensureBetweenInclusive(dayOfWeek, 1, 7);
@@ -148,6 +154,7 @@ public class DayOfWeek extends BaseTime<DayOfWeek, Duration>
     private final Standard standard;
 
     @NoTestRequired
+    @UmlExcludeMember
     protected DayOfWeek(long dayOfWeek, Standard standard)
     {
         super(dayOfWeek * millisecondsPerDay);

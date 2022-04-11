@@ -87,15 +87,14 @@ This module provides an interface grammar for communicating with KivaKit.
 
 ### Javadoc <a name="javadoc"></a> &nbsp;&nbsp; <img src="https://www.kivakit.org/images/books-32.png" srcset="https://www.kivakit.org/images/books-32-2x.png 2x"/>
 
-Javadoc coverage for this project is 47.2%.  
+Javadoc coverage for this project is 48.2%.  
   
 &nbsp; &nbsp; <img src="https://www.kivakit.org/images/meter-50-96.png" srcset="https://www.kivakit.org/images/meter-50-96-2x.png 2x"/>
 
 
 The following significant classes are undocumented:  
 
-- CastTrait  
-- TimeUnited
+- CastTrait
 
 | Class | Documentation Sections |
 |---|---|
@@ -150,8 +149,10 @@ The following significant classes are undocumented:
 | [*Keyed*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.interfaces/com/telenav/kivakit/interfaces/collection/Keyed.html) |  |  
 | [*LengthOfTime*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.interfaces/com/telenav/kivakit/interfaces/time/LengthOfTime.html) | Creation |  
 | | Comparison |  
+| | Math |  
 | | Threading |  
 | | Conversion |  
+| | Units |  
 | | Arithmetic |  
 | [*Loadable*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.interfaces/com/telenav/kivakit/interfaces/loading/Loadable.html) |  |  
 | [*Locator*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.interfaces/com/telenav/kivakit/interfaces/value/Locator.html) |  |  
@@ -179,6 +180,7 @@ The following significant classes are undocumented:
 | [*Percentage*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.interfaces/com/telenav/kivakit/interfaces/numeric/Percentage.html) |  |  
 | [*PointInTime*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.interfaces/com/telenav/kivakit/interfaces/time/PointInTime.html) | Creation |  
 | | Comparison |  
+| | Math |  
 | | Conversion |  
 | | Age |  
 | | Arithmetic |  

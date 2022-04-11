@@ -25,6 +25,7 @@ public class Minute extends BaseDuration<Minute>
         return new Minute(minute);
     }
 
+    @UmlExcludeMember
     protected Minute(long minute)
     {
         super(minute * millisecondsPerMinute);

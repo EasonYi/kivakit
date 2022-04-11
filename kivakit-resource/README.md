@@ -324,6 +324,7 @@ The following significant classes are undocumented:
 | [*FilePath.Converter*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/FilePath.Converter.html) |  |  
 | [*FileService*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/spi/FileService.html) |  |  
 | [*FileSystemObject*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/FileSystemObject.html) |  |  
+| [*FileSystemObjectService*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/spi/FileSystemObjectService.html) |  |  
 | [*FileSystemService*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/spi/FileSystemService.html) |  |  
 | [*FileSystemServiceLoader*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/loader/FileSystemServiceLoader.html) |  |  
 | [*Folder*](https://www.kivakit.org/1.5.1-SNAPSHOT/javadoc/kivakit/kivakit.resource/com/telenav/kivakit/filesystem/Folder.html) | Hierarchy |  

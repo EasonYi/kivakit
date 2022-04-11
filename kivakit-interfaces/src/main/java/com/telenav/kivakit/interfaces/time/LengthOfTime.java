@@ -33,7 +33,8 @@ import java.util.concurrent.locks.Condition;
  *
  * <ul>
  *     <li>{@link #milliseconds()} - The number of milliseconds for this length of time</li>
- *     <li>{@link #newDuration(long)} - Creates instances of the implementing class</li>
+ *     <li>{@link #newDuration(long)}</li>
+ *     <li>{@link #newTimeOrDuration(long)}</li>
  *     <li>{@link #millisecondsPerUnit()} - The number of milliseconds per unit of the implementing class</li>
  * </ul>
  *
@@ -41,6 +42,8 @@ import java.util.concurrent.locks.Condition;
  *
  * <p>
  * A length of time can be converted to specific time units by calling one of the following methods:
+ * </p>
+ *
  * <ul>
  *     <li>{@link #asMilliseconds()}</li>
  *     <li>{@link #asSeconds()}</li>
@@ -51,18 +54,41 @@ import java.util.concurrent.locks.Condition;
  *     <li>{@link #asYears()}</li>
  * </ul>
  *
- * <p><b>Arithmetic</b></p>
+ * <p><b>Units</b></p>
  *
  * <ul>
- *     <li>{@link #plus(LengthOfTime)}</li>
- *     <li>{@link #minus(LengthOfTime)}</li>
- *     <li>{@link #times(double)}</li>
+ *     <li>{@link #asUnits()}</li>
+ *     <li>{@link #minusUnits(long)}</li>
+ *     <li>{@link #oneUnit()}</li>
+ *     <li>{@link #plusUnits(long)}</li>
+ *     <li>{@link #units(Milliseconds)}</li>
+ * </ul>
+ *
+ *
+ * <p><b>Arithmetic</b></p>
+ *
+ * <li>
+ *     <li>{@link #decremented()}</li>
+ *     <li>{@link #dividedBy(LengthOfTime)}</li>
  *     <li>{@link #dividedBy(double)}</li>
- *     <li>{@link #newTimeOrDurationFromUnits(long)}</li>
+ *     <li>{@link #incremented()}</li>
+ *     <li>{@link #minus(LengthOfTime)}</li>
+ *     <li>{@link #plus(LengthOfTime)}</li>
+ *     <li>{@link #times(double)}</li>
+ * </li>
+ *
+ * <p><b>Math</b></p>
+ *
+ * <ul>
+ *     <li>{@link #difference(LengthOfTime)}</li>
+ *     <li>{@link #longerBy(Percentage)}</li>
  *     <li>{@link #modulo()}</li>
  *     <li>{@link #modulus(LengthOfTime)}</li>
+ *     <li>{@link #nearest(LengthOfTime)}</li>
  *     <li>{@link #roundDown(LengthOfTime)}</li>
  *     <li>{@link #roundUp(LengthOfTime)}</li>
+ *     <li>{@link #shorterBy(Percentage)}</li>
+ *     <li>{@link #percentageOf(LengthOfTime)}</li>
  * </ul>
  *
  * <p><b>Comparison</b></p>
@@ -98,7 +124,7 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
         Comparable<LengthOfTime<?>>,
         Minimizable<Duration>,
         Maximizable<Duration>,
-        TimeUnited<Duration>,
+        TimeUnits<Duration>,
         Stringable
 {
     /**

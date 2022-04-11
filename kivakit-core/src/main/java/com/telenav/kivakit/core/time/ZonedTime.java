@@ -23,6 +23,8 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.time.PointInTime;
 import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -70,6 +72,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
+    @UmlMethodGroup("factory")
     public static ZonedTime epochMilliseconds(ZoneId zone, long milliseconds)
     {
         return new ZonedTime(zone, milliseconds);
@@ -81,6 +84,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      * @param nanoseconds the <code>Time</code> value in nanoseconds since START_OF_UNIX_TIME
      * @return a corresponding immutable <code>Time</code> object
      */
+    @UmlMethodGroup("factory")
     public static ZonedTime epochNanoseconds(ZoneId zone, long nanoseconds)
     {
         return new ZonedTime(zone, nanoseconds / 1_000_000);
@@ -89,21 +93,25 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     /**
      * @return A <code>Time</code> object representing the given number of seconds since START_OF_UNIX_TIME
      */
+    @UmlMethodGroup("factory")
     public static ZonedTime epochSeconds(ZoneId zone, double seconds)
     {
         return epochMilliseconds(zone, (long) (seconds * 1000));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime localTime(Year year, Month month, Day dayOfMonth)
     {
         return zonedTime(localTimeZone(), year, month, dayOfMonth, militaryHour(0));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime localTime(Year year, Month month)
     {
         return zonedTime(localTimeZone(), year, month, Day.dayOfMonth(1), militaryHour(0));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime localTime(Year year, Month month, Day dayOfMonth, Hour hour)
     {
         return zonedTime(localTimeZone(), year, month, dayOfMonth, hour, minutes(0), seconds(0));
@@ -112,6 +120,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     /**
      * @return The local time zone, as defined by {@link ZoneId#systemDefault()}
      */
+    @UmlMethodGroup("factory")
     public static ZoneId localTimeZone()
     {
         return systemClock().getZone();
@@ -122,6 +131,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      *
      * @return the current <code>Time</code>
      */
+    @UmlMethodGroup("factory")
     public static ZonedTime now(ZoneId zone)
     {
         return epochMilliseconds(zone, systemClock().millis());
@@ -130,56 +140,67 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
     /**
      * @return The current time in the local timezone, as defined by #localTimeZone
      */
+    @UmlMethodGroup("factory")
     public static ZonedTime nowLocal()
     {
         return now(localTimeZone());
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseIsoLocalTime(Listener listener, String text)
     {
         return parseZonedTime(listener, localTimeZone(), ISO_LOCAL_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseIsoTime(Listener listener, ZoneId zone, String text)
     {
         return parseZonedTime(listener, zone, ISO_LOCAL_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseLocalDate(Listener listener, String text)
     {
         return parseZonedTime(listener, localTimeZone(), KIVAKIT_DATE, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseLocalDateTime(Listener listener, String text)
     {
         return parseZonedTime(listener, localTimeZone(), KIVAKIT_DATE_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseLocalTime(Listener listener, String text)
     {
         return parseZonedTime(listener, localTimeZone(), KIVAKIT_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseLocalTime(Listener listener, DateTimeFormatter formatter, String text)
     {
         return parseZonedTime(listener, localTimeZone(), formatter, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseZonedDate(Listener listener, ZoneId zone, String text)
     {
         return parseZonedTime(listener, zone, KIVAKIT_DATE, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseZonedDateTime(Listener listener, ZoneId zone, String text)
     {
         return parseZonedTime(listener, zone, KIVAKIT_DATE_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseZonedTime(Listener listener, ZoneId zone, String text)
     {
         return parseZonedTime(listener, zone, KIVAKIT_TIME, text);
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime parseZonedTime(Listener listener, ZoneId zone, DateTimeFormatter formatter, String text)
     {
         try
@@ -196,21 +217,25 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
         }
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone, Year year, Month month, Day dayOfMonth, Hour hour)
     {
         return zonedTime(zone, year, month, dayOfMonth, hour, minutes(0), seconds(0));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone, Year year, Month month, Day dayOfMonth)
     {
         return zonedTime(zone, year, month, dayOfMonth, militaryHour(0));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone, Year year, Month month)
     {
         return zonedTime(zone, year, month, Day.dayOfMonth(1), militaryHour(0));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone,
                                       Year year,
                                       Month month,
@@ -227,6 +252,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
                 (int) second.asUnits()));
     }
 
+    @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone, LocalDateTime dateTime)
     {
         return epochMilliseconds(zone, dateTime
@@ -242,6 +268,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
      *
      * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      */
+    @UmlExcludeMember
     protected ZonedTime(final ZoneId zone, long milliseconds)
     {
         super(milliseconds);
@@ -249,6 +276,7 @@ public class ZonedTime extends BaseTime<ZonedTime, Duration> implements TimeZone
         this.zone = zone;
     }
 
+    @UmlExcludeMember
     protected ZonedTime()
     {
     }

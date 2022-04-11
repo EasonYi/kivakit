@@ -3,6 +3,7 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 
@@ -18,6 +19,7 @@ public class Week extends BaseDuration<Week>
         return new Week(weeks);
     }
 
+    @UmlExcludeMember
     protected Week(long weeks)
     {
         super(weeks * millisecondsPerWeek);

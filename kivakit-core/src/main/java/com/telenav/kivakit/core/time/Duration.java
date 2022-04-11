@@ -303,6 +303,7 @@ public class Duration extends BaseDuration<Duration>
      * For reflective construction
      */
     @NoTestRequired
+    @UmlExcludeMember
     protected Duration()
     {
     }
@@ -313,6 +314,7 @@ public class Duration extends BaseDuration<Duration>
      * @param milliseconds Number of milliseconds in this <code>Duration</code>
      */
     @NoTestRequired
+    @UmlExcludeMember
     protected Duration(long milliseconds, Restriction restriction)
     {
         super(milliseconds);
@@ -321,31 +323,6 @@ public class Duration extends BaseDuration<Duration>
         {
             throw new IllegalArgumentException("Negative time not allowed");
         }
-    }
-
-    /**
-     * @return The sum of this duration and that one, but never a negative value.
-     */
-    @Tested
-    @UmlMethodGroup("arithmetic")
-    public Duration add(Duration that)
-    {
-        return add(that, POSITIVE_ONLY);
-    }
-
-    /**
-     * @return The sum of this duration and that duration, but restricted to the given range
-     */
-    @Tested
-    @UmlMethodGroup("arithmetic")
-    public Duration add(Duration that, Restriction restriction)
-    {
-        var sum = milliseconds() + that.milliseconds();
-        if (restriction == POSITIVE_ONLY && sum < 0)
-        {
-            return INSTANTANEOUS;
-        }
-        return new Duration(sum, restriction);
     }
 
     @NoTestRequired
@@ -445,6 +422,32 @@ public class Duration extends BaseDuration<Duration>
     public Duration newDuration(long milliseconds)
     {
         return milliseconds(milliseconds);
+    }
+
+    /**
+     * @return The sum of this duration and that one, but never a negative value.
+     */
+    @Tested
+    @UmlExcludeMember
+    public Duration plus(Duration that)
+    {
+        return plus(that, POSITIVE_ONLY);
+    }
+
+    /**
+     * @return The sum of this duration and that duration, but restricted to the given range
+     */
+    @Tested
+    @UmlMethodGroup("arithmetic")
+    @UmlExcludeMember
+    public Duration plus(Duration that, Restriction restriction)
+    {
+        var sum = milliseconds() + that.milliseconds();
+        if (restriction == POSITIVE_ONLY && sum < 0)
+        {
+            return INSTANTANEOUS;
+        }
+        return new Duration(sum, restriction);
     }
 
     @Override

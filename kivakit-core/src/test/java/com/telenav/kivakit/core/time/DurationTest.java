@@ -55,9 +55,9 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testAdd()
     {
-        ensureEqual(seconds(2), ONE_SECOND.add(ONE_SECOND));
-        ensureEqual(seconds(2), ONE_SECOND.add(ONE_SECOND, POSITIVE_ONLY));
-        ensureEqual(seconds(2), ONE_SECOND.add(ONE_SECOND, ALLOW_NEGATIVE));
+        ensureEqual(seconds(2), ONE_SECOND.plus(ONE_SECOND));
+        ensureEqual(seconds(2), ONE_SECOND.plus(ONE_SECOND, POSITIVE_ONLY));
+        ensureEqual(seconds(2), ONE_SECOND.plus(ONE_SECOND, ALLOW_NEGATIVE));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class DurationTest extends CoreUnitTest
     @Test
     public void testModulus()
     {
-        ensureEqual(ONE_SECOND, ONE_MINUTE.add(ONE_SECOND).modulus(ONE_MINUTE));
+        ensureEqual(ONE_SECOND, ONE_MINUTE.plus(ONE_SECOND).modulus(ONE_MINUTE));
     }
 
     @Test

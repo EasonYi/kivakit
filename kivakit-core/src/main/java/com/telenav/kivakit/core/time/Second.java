@@ -25,6 +25,7 @@ public class Second extends BaseDuration<Second>
         return new Second(second);
     }
 
+    @UmlExcludeMember
     protected Second(long second)
     {
         super(second * millisecondsPerSecond);

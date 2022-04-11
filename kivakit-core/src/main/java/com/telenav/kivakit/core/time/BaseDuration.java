@@ -5,6 +5,7 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.kivakit.interfaces.numeric.Percentage;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.util.Objects;
 
@@ -24,10 +25,12 @@ public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> impl
 {
     private long milliseconds;
 
+    @UmlExcludeMember
     protected BaseDuration()
     {
     }
 
+    @UmlExcludeMember
     protected BaseDuration(long milliseconds)
     {
         this.milliseconds = milliseconds;

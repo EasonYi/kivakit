@@ -25,7 +25,6 @@ import com.telenav.kivakit.core.time.DayOfWeek;
 import com.telenav.kivakit.core.time.Time;
 import com.telenav.kivakit.core.time.ZonedTime;
 import com.telenav.kivakit.test.UnitTest;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.ZoneId;
@@ -58,17 +57,17 @@ public class FileNameTest extends UnitTest
         trace("Time Representation: ${debug}", timeRepresentation);
 
         trace("Hour of day:     ${debug}", localTime.hourOfDay());
-        Assert.assertEquals(13, localTime.hourOfDay().asMilitaryHour());
+        ensureEqual(13, localTime.hourOfDay().asMilitaryHour());
         trace("Minutes of day:  ${debug}", localTime.minuteOfDay());
-        Assert.assertEquals(801, localTime.minuteOfDay());
+        ensureEqual(801, localTime.minuteOfDay());
         trace("Minutes of Hour: ${debug}", localTime.minuteOfHour());
-        Assert.assertEquals(21, localTime.minuteOfHour().minutes());
+        ensureEqual(21, (long) localTime.minuteOfHour().asMinutes());
         trace("Day of Year:    ${debug}", localTime.dayOfYear());
-        Assert.assertEquals(216, localTime.dayOfYear().asUnits());
+        ensureEqual(216, localTime.dayOfYear().asUnits());
         trace("Week of Year:    ${debug}", localTime.weekOfYear());
-        Assert.assertEquals(30, localTime.weekOfYear());
+        ensureEqual(30, localTime.weekOfYear());
         trace("Day of Week:    ${debug}", localTime.dayOfWeek());
-        Assert.assertEquals(DayOfWeek.FRIDAY, localTime.dayOfWeek());
+        ensureEqual(DayOfWeek.FRIDAY, localTime.dayOfWeek());
     }
 
     @Test

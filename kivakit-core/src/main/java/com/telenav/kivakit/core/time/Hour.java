@@ -162,6 +162,7 @@ public class Hour extends BaseDuration<Hour>
     private final Type type;
 
     @Tested
+    @UmlExcludeMember
     protected Hour(Type type, Meridiem meridiem, long hour)
     {
         super(type.militaryHour(meridiem, hour) * millisecondsPerHour);

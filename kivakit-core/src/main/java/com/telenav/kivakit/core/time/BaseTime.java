@@ -4,6 +4,7 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.kivakit.interfaces.time.PointInTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -53,10 +54,12 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, LengthOfTi
     /** This point in time in milliseconds since the start of the UNIX epoch */
     private long epochMilliseconds;
 
-    public BaseTime()
+    @UmlExcludeMember
+    protected BaseTime()
     {
     }
 
+    @UmlExcludeMember
     protected BaseTime(long epochMilliseconds)
     {
         this.epochMilliseconds = epochMilliseconds;

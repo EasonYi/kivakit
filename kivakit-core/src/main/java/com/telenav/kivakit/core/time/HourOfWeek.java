@@ -5,6 +5,8 @@ import com.telenav.kivakit.core.test.Tested;
 import com.telenav.kivakit.core.value.count.BaseCount;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
+import com.telenav.lexakai.annotations.UmlMethodGroup;
+import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import java.time.ZoneId;
 import java.util.Objects;
@@ -32,6 +34,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
      * @param militaryHourOfWeek The hour of the week from 0 to 7 * 24 (168), exclusive.
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static HourOfWeek hourOfWeek(long militaryHourOfWeek)
     {
         ensureBetweenExclusive(militaryHourOfWeek, 0, 24 * 7, "Hour of week $ is out of range", militaryHourOfWeek);
@@ -48,6 +51,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
      * @param hourOfWeek The hour of the week from 0 to 7 * 24 (168), exclusive.
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static HourOfWeek hourOfWeek(BaseCount<?> hourOfWeek)
     {
         return hourOfWeek(hourOfWeek.asInt());
@@ -61,6 +65,7 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
      * @return The hour of the week
      */
     @Tested
+    @UmlMethodGroup("factory")
     public static HourOfWeek hourOfWeek(DayOfWeek dayOfWeek, Hour hourOfDay)
     {
         return hourOfWeek((dayOfWeek.asIso() * 24 + hourOfDay.asUnits()));
@@ -73,11 +78,13 @@ public class HourOfWeek extends BaseTime<HourOfWeek, Duration>
     private Hour hourOfDay;
 
     @NoTestRequired
+    @UmlExcludeMember
     protected HourOfWeek()
     {
     }
 
     @NoTestRequired
+    @UmlExcludeMember
     protected HourOfWeek(DayOfWeek dayOfWeek, Hour hourOfDay)
     {
         super(dayOfWeek.milliseconds() + hourOfDay.milliseconds());

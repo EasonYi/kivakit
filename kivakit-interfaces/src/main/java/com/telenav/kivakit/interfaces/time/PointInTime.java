@@ -26,16 +26,30 @@ import java.time.Instant;
  *     <li>{@link #epochMilliseconds()} - The number of milliseconds since the start of the UNIX epoch for this point in time</li>
  *     <li>{@link #newTime(long)} - Creates instances of the implementing class</li>
  *     <li>{@link #newDuration(long)} - Creates instances of a related {@link LengthOfTime} for use by methods such as {@link #minus(PointInTime)}</li>
+ *     <li>{@link #newTimeOrDuration(long)}</li>
+ *     <li>{@link #subclass()}</li>
  * </ul>
  *
  * <p><b>Arithmetic</b></p>
  *
  * <ul>
- *     <li>{@link #difference(PointInTime)} - Returns the {@link LengthOfTime} between this point in time and the given point in time</li>
+ *     <li>{@link #incremented()} - This point in time plus one unit</li>
+ *     <li>{@link #decremented()} - This point in time minus one unit</li>
  *     <li>{@link #minus(PointInTime)} - Returns this point in time minus the given point in time as a {@link LengthOfTime}</li>
  *     <li>{@link #plus(LengthOfTime)} - Returns this point in time plus the given {@link LengthOfTime}</li>
- *     <li>{@link #leftUntil(LengthOfTime)} - Returns the amount of time left before the given amount of time has elapsed since this point in time</li>
  * </ul>
+ *
+ * <p><b>Math</b></p>
+ *
+ * <li>
+ *     <li>{@link #durationBefore(PointInTime)}</li>
+ *     <li>{@link #difference(PointInTime)} - Returns the {@link LengthOfTime} between this point in time and the given point in time</li>
+ *     <li>{@link #until(LengthOfTime)} - Returns the amount of time left before the given amount of time has elapsed since this point in time</li>
+ *     <li>{@link #until(PointInTime)}</li>
+ *     <li>{@link #untilNow()}</li>
+ *     <li>{@link #roundUp(LengthOfTime)}</li>
+ *     <li>{@link #roundDown(LengthOfTime)}</li>
+ * </li>
  *
  * <p><b>Conversion</b></p>
  *
@@ -85,8 +99,9 @@ public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration 
         Maximizable<Time>,
         Stringable,
         TimeZoned<Time>,
-        TimeUnited<Time>,
+        TimeUnits<Time>,
         Milliseconds,
+        Epochal,
         Clocked
 {
 
@@ -201,6 +216,7 @@ public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration 
     /**
      * @return Number of milliseconds since the start of the UNIX epoch for this point in time
      */
+    @Override
     @UmlMethodGroup("units")
     long epochMilliseconds();
 
@@ -280,15 +296,6 @@ public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration 
     default boolean isYoungerThanOrEqualTo(Duration age)
     {
         return age().isLessThanOrEqualTo(age);
-    }
-
-    /**
-     * @return The amount of time left until the given amount of time has elapsed
-     */
-    @UmlMethodGroup("temporal")
-    default LengthOfTime<?> leftUntil(LengthOfTime<?> elapsed)
-    {
-        return elapsed.minus(elapsedSince());
     }
 
     @Override
@@ -414,6 +421,15 @@ public interface PointInTime<Time extends PointInTime<Time, Duration>, Duration 
     default Time subclass()
     {
         return (Time) this;
+    }
+
+    /**
+     * @return The amount of time left until the given amount of time has elapsed
+     */
+    @UmlMethodGroup("temporal")
+    default LengthOfTime<?> until(LengthOfTime<?> elapsed)
+    {
+        return elapsed.minus(elapsedSince());
     }
 
     /**
