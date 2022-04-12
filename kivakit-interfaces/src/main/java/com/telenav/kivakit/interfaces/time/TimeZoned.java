@@ -12,7 +12,7 @@ import java.util.TimeZone;
  * @author jonathanl (shibo)
  */
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Milliseconds
+public interface TimeZoned<TimeSubclass extends PointInTime<TimeSubclass, ?>> extends Milliseconds
 {
     static ZoneId localTimeZone()
     {
@@ -24,7 +24,7 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
         return ZoneId.of("UTC");
     }
 
-    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asLocalTime()
+    default <ZonedSubclass extends TimeZoned<TimeSubclass>> ZonedSubclass asLocalTime()
     {
         return asZonedTime(localTimeZone());
     }
@@ -32,17 +32,17 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
     /**
      * Returns this point in time in UTC time based on the given time zone
      */
-    default SubClass asUtc(ZoneId zone)
+    default TimeSubclass asUtc(ZoneId zone)
     {
         var offset = TimeZone.getTimeZone(zone).getOffset(milliseconds());
         var milliseconds = milliseconds() - offset;
-        return newTime(milliseconds);
+        return newTimeSubclass(milliseconds);
     }
 
     /**
      * @return This point in time, in UTC time
      */
-    default SubClass asUtc()
+    default TimeSubclass asUtc()
     {
         return asUtc(timeZone());
     }
@@ -51,11 +51,11 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
      * Returns this point in time in the given time zone
      */
     @SuppressWarnings("unchecked")
-    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass asZonedTime(ZoneId zone)
+    default <ZonedSubclass extends TimeZoned<TimeSubclass>> ZonedSubclass asZonedTime(ZoneId zone)
     {
         if (hasTimeZone())
         {
-            return (ZonedSubClass) this;
+            return (ZonedSubclass) this;
         }
         else
         {
@@ -76,10 +76,10 @@ public interface TimeZoned<SubClass extends PointInTime<SubClass, ?>> extends Mi
         return timeZone().equals(utc());
     }
 
-    SubClass newTime(long milliseconds);
+    TimeSubclass newTimeSubclass(long milliseconds);
 
-    default <ZonedSubClass extends TimeZoned<SubClass>> ZonedSubClass newZonedTime(ZoneId zone,
-                                                                                   long epochMilliseconds)
+    default <ZonedSubclass extends TimeZoned<TimeSubclass>> ZonedSubclass newZonedTime(ZoneId zone,
+                                                                                       long epochMilliseconds)
     {
         throw new UnsupportedOperationException();
     }

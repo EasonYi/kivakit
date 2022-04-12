@@ -178,6 +178,16 @@ public class Hour extends BaseTime<Hour>
         this.meridiem = ensureNotNull(meridiem);
     }
 
+    /**
+     * <b>Not public API</b>
+     */
+    protected Hour(Hour that, long milliseconds)
+    {
+        super(milliseconds);
+        this.type = that.type;
+        this.meridiem = that.meridiem;
+    }
+
     @NoTestRequired
     @UmlMethodGroup("conversion")
     public HourOfWeek asHourOfWeek()
@@ -302,25 +312,9 @@ public class Hour extends BaseTime<Hour>
     }
 
     @Override
-    @UmlExcludeMember
-    public Duration newDuration(long milliseconds)
+    public Hour newTimeSubclass(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    public Hour newTime(long epochMilliseconds)
-    {
-        return Hour.hour(units(epochMilliseconds));
-    }
-
-    @Override
-    @Tested
-    @UmlExcludeMember
-    public Hour newTimeOrDurationFromUnits(long units)
-    {
-        var rounded = (units + 24) % 24;
-        return super.newTimeOrDurationFromUnits(rounded + 1);
+        return new Hour(this, milliseconds);
     }
 
     @Override
@@ -343,7 +337,7 @@ public class Hour extends BaseTime<Hour>
             case HOUR_OF_WEEK:
             case MILITARY_HOUR:
             default:
-                return "hour" + hour();
+                return "hour " + hour();
         }
     }
 

@@ -268,10 +268,10 @@ public class HourTest extends CoreUnitTest
         ensureEqual(pm(1).toString(), "1pm");
         ensureEqual(am(8).toString(), "8am");
         ensureEqual(am(12).toString(), "12am");
-        ensureEqual(militaryHour(0).toString(), "0");
-        ensureEqual(militaryHour(1).toString(), "1");
-        ensureEqual(militaryHour(12).toString(), "12");
-        ensureEqual(militaryHour(13).toString(), "13");
-        ensureEqual(militaryHour(23).toString(), "23");
+        ensureEqual(militaryHour(0).toString(), "hour 0");
+        ensureEqual(militaryHour(1).toString(), "hour 1");
+        ensureEqual(militaryHour(12).toString(), "hour 12");
+        ensureEqual(militaryHour(13).toString(), "hour 13");
+        ensureEqual(militaryHour(23).toString(), "hour 23");
     }
 }

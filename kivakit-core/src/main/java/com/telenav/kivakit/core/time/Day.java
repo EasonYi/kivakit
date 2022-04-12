@@ -118,11 +118,11 @@ public class Day extends BaseTime<Day>
         DAY_OF_YEAR
     }
 
-    private Standard standard;
+    private final Standard standard;
 
     /** The type of day this is */
     @UmlAggregation(label = "is of type")
-    private Type type;
+    private final Type type;
 
     @NoTestRequired
     @UmlExcludeMember
@@ -134,6 +134,16 @@ public class Day extends BaseTime<Day>
         this.standard = standard;
 
         ensure(isValid());
+    }
+
+    /**
+     * <b>Not public API</b>
+     */
+    protected Day(Day that, long milliseconds)
+    {
+        super(milliseconds);
+        this.standard = that.standard;
+        this.type = that.type;
     }
 
     /**
@@ -249,7 +259,22 @@ public class Day extends BaseTime<Day>
     @UmlMethodGroup("arithmetic")
     public Day maximum()
     {
-        return null;
+        switch (type())
+        {
+            case DAY_OF_WEEK:
+                return standard == ISO ? dayOfWeek(0, ISO) : dayOfWeek(1, JAVA);
+
+            case DAY_OF_YEAR:
+                return newTimeSubclass(unitsToMilliseconds(2038));
+
+            case DAY_OF_MONTH:
+                return newTimeSubclass(31);
+
+            case DAY_OF_UNIX_EPOCH:
+            case DAY:
+                return newTimeSubclass(Long.MAX_VALUE);
+        }
+        return type() == DAY_OF_MONTH ? newTimeSubclass(1) : newTimeSubclass(0);
     }
 
     @Override
@@ -270,23 +295,13 @@ public class Day extends BaseTime<Day>
     @UmlMethodGroup("arithmetic")
     public Day minimum()
     {
-        return null;
+        return type() == DAY_OF_MONTH ? newTimeSubclass(1) : newTimeSubclass(0);
     }
 
     @Override
-    @UmlExcludeMember
-    public Duration newDuration(long milliseconds)
+    public Day newTimeSubclass(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    public Day newTime(long epochMilliseconds)
-    {
-        var day = Day.days(units(epochMilliseconds));
-        day.standard = this.standard;
-        day.type = this.type;
-        return day;
+        return new Day(this, milliseconds);
     }
 
     @NoTestRequired

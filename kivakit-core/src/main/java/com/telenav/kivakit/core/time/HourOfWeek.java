@@ -172,25 +172,9 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     }
 
     @Override
-    public Duration newDuration(long milliseconds)
+    public HourOfWeek newTimeSubclass(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    public HourOfWeek newTime(long epochMilliseconds)
-    {
-        return hourOfWeek(epochMilliseconds / millisecondsPerUnit());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NoTestRequired
-    public HourOfWeek newTimeOrDuration(long milliseconds)
-    {
-        return hourOfWeek((int) milliseconds / millisecondsPerUnit());
+        return hourOfWeek(millisecondsToUnits(milliseconds));
     }
 
     @Override

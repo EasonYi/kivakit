@@ -21,7 +21,7 @@ import java.util.Objects;
  * @see Week
  */
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> implements LengthOfTime<SubClass>
+public abstract class BaseDuration<DurationSubclass extends LengthOfTime<DurationSubclass>> implements LengthOfTime<DurationSubclass>
 {
     private long milliseconds;
 
@@ -65,7 +65,7 @@ public abstract class BaseDuration<SubClass extends LengthOfTime<SubClass>> impl
     }
 
     @Override
-    public SubClass newTimeOrDuration(long milliseconds)
+    public DurationSubclass newTimeUnitsSubclass(long milliseconds)
     {
         return newDuration(milliseconds);
     }

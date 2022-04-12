@@ -31,10 +31,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import static com.telenav.kivakit.core.time.Hour.hour;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE_TIME;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_TIME;
+import static com.telenav.kivakit.core.time.Year.unixEpochYear;
 import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
 
 /**
@@ -152,6 +154,24 @@ public class Time extends BaseTime<Time> implements TimeZoned<Time>, Comparable<
     }
 
     @UmlMethodGroup("factory")
+    public static Time time(Hour hour, Minute minute, Second second)
+    {
+        return time(unixEpochYear(), Month.JANUARY, Day.dayOfMonth(1), hour, minute, second);
+    }
+
+    @UmlMethodGroup("factory")
+    public static Time time(Day day, Hour hour, Minute minute, Second second)
+    {
+        return time(unixEpochYear(), Month.JANUARY, day, hour, minute, second);
+    }
+
+    @UmlMethodGroup("factory")
+    public static Time time(Minute minute, Second second)
+    {
+        return time(unixEpochYear(), Month.JANUARY, Day.dayOfMonth(1), hour(0), minute, second);
+    }
+
+    @UmlMethodGroup("factory")
     public static Time time(Year year, Month month)
     {
         return time(year, month, Day.dayOfMonth(1), militaryHour(0));
@@ -182,12 +202,6 @@ public class Time extends BaseTime<Time> implements TimeZoned<Time>, Comparable<
     @UmlExcludeMember
     protected Time()
     {
-    }
-
-    @UmlMethodGroup("conversion")
-    public Duration asDuration()
-    {
-        return Duration.milliseconds(milliseconds());
     }
 
     @Override
@@ -248,14 +262,7 @@ public class Time extends BaseTime<Time> implements TimeZoned<Time>, Comparable<
 
     @Override
     @UmlExcludeMember
-    public Duration newDuration(long milliseconds)
-    {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    @UmlExcludeMember
-    public Time newTime(long epochMilliseconds)
+    public Time newTimeSubclass(long epochMilliseconds)
     {
         return epochMilliseconds(epochMilliseconds);
     }

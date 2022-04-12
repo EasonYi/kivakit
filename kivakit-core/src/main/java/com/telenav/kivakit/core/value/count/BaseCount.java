@@ -6,7 +6,7 @@ import com.telenav.kivakit.core.language.primitive.Primes;
 import com.telenav.kivakit.core.value.level.Percent;
 import com.telenav.kivakit.interfaces.code.FilteredLoopBody;
 import com.telenav.kivakit.interfaces.code.LoopBody;
-import com.telenav.kivakit.interfaces.language.SubClassed;
+import com.telenav.kivakit.interfaces.language.Subclassed;
 import com.telenav.kivakit.interfaces.numeric.IntegerNumeric;
 import com.telenav.kivakit.interfaces.numeric.Quantizable;
 import com.telenav.kivakit.interfaces.numeric.QuantumComparable;
@@ -115,8 +115,8 @@ import static com.telenav.kivakit.core.value.count.Estimate.estimate;
  *     <li>{@link #isMinimum()} - True if this count is zero</li>
  *     <li>{@link #asMaximum()} - Converts this count to a {@link Maximum}</li>
  *     <li>{@link #asMinimum()} - Converts this count to a {@link Minimum}</li>
- *     <li>{@link #maximum(SubClass)} - Returns the maximum of this count and the given count</li>
- *     <li>{@link #minimum(SubClass)} - Returns the minimum of this count and the given count</li>
+ *     <li>{@link #maximum(CountSubclass)} - Returns the maximum of this count and the given count</li>
+ *     <li>{@link #minimum(CountSubclass)} - Returns the minimum of this count and the given count</li>
  * </ul>
  *
  * <p><br/><hr/><br/></p>
@@ -193,7 +193,7 @@ import static com.telenav.kivakit.core.value.count.Estimate.estimate;
  *
  * <p><br/><hr/><br/></p>
  *
- * @param <SubClass> The subclass type
+ * @param <CountSubclass> The subclass type
  * @author jonathanl (shibo)
  * @see Quantizable
  * @see Countable
@@ -203,11 +203,11 @@ import static com.telenav.kivakit.core.value.count.Estimate.estimate;
  * @see Minimum
  */
 @SuppressWarnings("unused")
-public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubClass> & SubClassed<SubClass> & Comparable<Quantizable> & QuantumComparable<Quantizable> & Quantizable> implements
-        IntegerNumeric<SubClass>,
+public abstract class BaseCount<CountSubclass extends Countable & IntegerNumeric<CountSubclass> & Subclassed<CountSubclass> & Comparable<Quantizable> & QuantumComparable<Quantizable> & Quantizable> implements
+        IntegerNumeric<CountSubclass>,
         Countable,
         Comparable<Quantizable>,
-        SubClassed<SubClass>,
+        Subclassed<CountSubclass>,
         QuantumComparable<Quantizable>,
         QuantumStringable,
         Source<Long>
@@ -289,23 +289,23 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
     }
 
     @Override
-    public SubClass decremented()
+    public CountSubclass decremented()
     {
         return offset(-1);
     }
 
     @Override
-    public SubClass dividedBy(SubClass divisor)
+    public CountSubclass dividedBy(CountSubclass divisor)
     {
         return dividedBy(divisor.asLong());
     }
 
-    public SubClass dividedBy(Quantizable divisor)
+    public CountSubclass dividedBy(Quantizable divisor)
     {
         return dividedBy(divisor.quantum());
     }
 
-    public SubClass dividedBy(long divisor)
+    public CountSubclass dividedBy(long divisor)
     {
         return inRangeExclusive(asLong() / divisor);
     }
@@ -326,9 +326,9 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
         return false;
     }
 
-    public void forEach(Consumer<SubClass> consumer)
+    public void forEach(Consumer<CountSubclass> consumer)
     {
-        for (var value = minimum(); value.isLessThan(subClass()); value = value.next())
+        for (var value = minimum(); value.isLessThan(subclass()); value = value.next())
         {
             consumer.accept(value);
         }
@@ -381,7 +381,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
         return Long.hashCode(asLong());
     }
 
-    public SubClass inRangeExclusive(long value)
+    public CountSubclass inRangeExclusive(long value)
     {
         if (value >= maximum().asLong())
         {
@@ -394,7 +394,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
         return newInstance(value);
     }
 
-    public SubClass inRangeInclusive(long value)
+    public CountSubclass inRangeInclusive(long value)
     {
         if (value > maximum().asLong())
         {
@@ -408,7 +408,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
     }
 
     @Override
-    public SubClass incremented()
+    public CountSubclass incremented()
     {
         return offset(1);
     }
@@ -447,17 +447,17 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
         return asLong() == 0;
     }
 
-    public void loop(LoopBody<SubClass> body)
+    public void loop(LoopBody<CountSubclass> body)
     {
-        for (var at = minimum(); at.isLessThan(subClass()); at = at.next())
+        for (var at = minimum(); at.isLessThan(subclass()); at = at.next())
         {
             body.at(at);
         }
     }
 
-    public void loop(FilteredLoopBody<SubClass> body)
+    public void loop(FilteredLoopBody<CountSubclass> body)
     {
-        var maximum = subClass();
+        var maximum = subclass();
         for (var at = minimum(); at.isLessThan(maximum); at = at.next())
         {
 
@@ -476,9 +476,9 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
         }
     }
 
-    public void loopInclusive(LoopBody<SubClass> code)
+    public void loopInclusive(LoopBody<CountSubclass> code)
     {
-        for (var at = minimum(); at.isLessThanOrEqualTo(subClass()); at = at.next())
+        for (var at = minimum(); at.isLessThanOrEqualTo(subclass()); at = at.next())
         {
             code.at(at);
         }
@@ -494,11 +494,11 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      */
     @SuppressWarnings("unchecked")
     @Override
-    public SubClass maximum(SubClass that)
+    public CountSubclass maximum(CountSubclass that)
     {
         if (asLong() > that.asLong())
         {
-            return (SubClass) this;
+            return (CountSubclass) this;
         }
         else
         {
@@ -510,7 +510,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      * {@inheritDoc}
      */
     @Override
-    public SubClass maximum()
+    public CountSubclass maximum()
     {
         return newInstance(Long.MAX_VALUE);
     }
@@ -520,11 +520,11 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      */
     @Override
     @SuppressWarnings("unchecked")
-    public SubClass minimum(SubClass that)
+    public CountSubclass minimum(CountSubclass that)
     {
         if (asLong() < that.asLong())
         {
-            return (SubClass) this;
+            return (CountSubclass) this;
         }
         else
         {
@@ -536,23 +536,23 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      * {@inheritDoc}
      */
     @Override
-    public SubClass minimum()
+    public CountSubclass minimum()
     {
         return inRangeExclusive(0);
     }
 
     @Override
-    public SubClass minus(SubClass count)
+    public CountSubclass minus(CountSubclass count)
     {
         return minus(count.asLong());
     }
 
-    public SubClass minus(Quantizable count)
+    public CountSubclass minus(Quantizable count)
     {
         return minus(count.quantum());
     }
 
-    public SubClass minus(long count)
+    public CountSubclass minus(long count)
     {
         return inRangeExclusive(asLong() - count);
     }
@@ -583,10 +583,10 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      * @param count The count value
      * @return The new instance
      */
-    public abstract SubClass newInstance(long count);
+    public abstract CountSubclass newInstance(long count);
 
     @Override
-    public final SubClass newInstance(Long count)
+    public final CountSubclass newInstance(Long count)
     {
         return newInstance(count.intValue());
     }
@@ -621,12 +621,12 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      * {@inheritDoc}
      */
     @Override
-    public SubClass next()
+    public CountSubclass next()
     {
         return offset(1);
     }
 
-    public SubClass nextPrime()
+    public CountSubclass nextPrime()
     {
         return newInstance(Primes.primeAllocationSize(asInt()));
     }
@@ -634,18 +634,18 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
     /**
      * Returns the next value, but wraps around to {@link #minimum()} when {@link #next()} returns null.
      */
-    public SubClass nextWrap()
+    public CountSubclass nextWrap()
     {
         var next = next();
         return next == null ? minimum() : next;
     }
 
-    public SubClass offset(long offset)
+    public CountSubclass offset(long offset)
     {
         return inRangeInclusive(asLong() + offset);
     }
 
-    public SubClass percent(Percent percentage)
+    public CountSubclass percent(Percent percentage)
     {
         return inRangeExclusive((long) (asLong() * percentage.unitValue()));
     }
@@ -660,17 +660,17 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
     }
 
     @Override
-    public SubClass plus(SubClass count)
+    public CountSubclass plus(CountSubclass count)
     {
         return plus(count.asLong());
     }
 
-    public SubClass plus(Quantizable count)
+    public CountSubclass plus(Quantizable count)
     {
         return plus(count.quantum());
     }
 
-    public SubClass plus(long count)
+    public CountSubclass plus(long count)
     {
         return inRangeExclusive(asLong() + count);
     }
@@ -681,7 +681,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      *
      * @param digits The number of digits
      */
-    public SubClass powerOfTenCeiling(int digits)
+    public CountSubclass powerOfTenCeiling(int digits)
     {
         return inRangeExclusive((asLong() + Ints.powerOfTen(digits))
                 / Ints.powerOfTen(digits)
@@ -694,7 +694,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
      *
      * @param digits The number of digits
      */
-    public SubClass powerOfTenFloor(int digits)
+    public CountSubclass powerOfTenFloor(int digits)
     {
         return inRangeExclusive(asLong() / Ints.powerOfTen(digits) * Ints.powerOfTen(digits));
     }
@@ -702,7 +702,7 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
     /**
      * Rounds this count up to the next higher por of two
      */
-    public SubClass powerOfTwoCeiling()
+    public CountSubclass powerOfTwoCeiling()
     {
         var rounded = 1L;
         while (rounded < asLong())
@@ -731,39 +731,39 @@ public abstract class BaseCount<SubClass extends Countable & IntegerNumeric<SubC
     }
 
     @Override
-    public SubClass times(SubClass count)
+    public CountSubclass times(CountSubclass count)
     {
         return times(count.asLong());
     }
 
-    public SubClass times(Quantizable count)
+    public CountSubclass times(Quantizable count)
     {
         return times(count.quantum());
     }
 
-    public SubClass times(double multiplier)
+    public CountSubclass times(double multiplier)
     {
         return inRangeExclusive((long) (get() * multiplier));
     }
 
-    public SubClass times(long multiplier)
+    public CountSubclass times(long multiplier)
     {
         return inRangeExclusive(asLong() * multiplier);
     }
 
-    public SubClass times(Percent percentage)
+    public CountSubclass times(Percent percentage)
     {
         return times(percentage.unitValue());
     }
 
-    public Range<SubClass> toExclusive(SubClass maximum)
+    public Range<CountSubclass> toExclusive(CountSubclass maximum)
     {
-        return Range.rangeExclusive(subClass(), maximum);
+        return Range.rangeExclusive(subclass(), maximum);
     }
 
-    public Range<SubClass> toInclusive(SubClass maximum)
+    public Range<CountSubclass> toInclusive(CountSubclass maximum)
     {
-        return Range.rangeInclusive(subClass(), maximum);
+        return Range.rangeInclusive(subclass(), maximum);
     }
 
     @Override

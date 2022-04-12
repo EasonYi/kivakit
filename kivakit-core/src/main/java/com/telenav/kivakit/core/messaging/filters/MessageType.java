@@ -20,7 +20,7 @@ package com.telenav.kivakit.core.messaging.filters;
 
 import com.telenav.kivakit.core.messaging.Message;
 
-public class MessageType extends SubClassesOf<Message>
+public class MessageType extends SubclassesOf<Message>
 {
     public MessageType(Class<Message> type)
     {

@@ -4,8 +4,8 @@ import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
-import static com.telenav.kivakit.core.ensure.Ensure.ensure;
 import static com.telenav.kivakit.core.time.Day.dayOfMonth;
+import static com.telenav.kivakit.core.time.ZonedTime.zonedTime;
 import static com.telenav.kivakit.interfaces.time.TimeZoned.utc;
 
 /**
@@ -19,9 +19,13 @@ public class Year extends BaseTime<Year>
 {
     private static final long millisecondsPerYear = 31_557_600_000L;
 
+    public static Year unixEpochYear()
+    {
+        return year(1970);
+    }
+
     public static Year year(long year)
     {
-        ensure(year >= 1970 && year < 3000);
         return new Year(year);
     }
 
@@ -50,15 +54,9 @@ public class Year extends BaseTime<Year>
     }
 
     @Override
-    public Duration newDuration(long milliseconds)
+    public Year newTimeSubclass(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    public Year newTime(long epochMilliseconds)
-    {
-        return Year.year(units(epochMilliseconds));
+        return year(millisecondsToUnits(milliseconds));
     }
 
     @Override
@@ -69,7 +67,7 @@ public class Year extends BaseTime<Year>
 
     public Time withMonth(Month month)
     {
-        return ZonedTime.zonedTime(utc(), this, month, dayOfMonth(1)).asTime();
+        return zonedTime(utc(), this, month, dayOfMonth(1)).asTime();
     }
 
     public long year()

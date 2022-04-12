@@ -74,15 +74,9 @@ public class Minute extends BaseTime<Minute>
 
     @Override
     @UmlExcludeMember
-    public Duration newDuration(long milliseconds)
+    public Minute newTimeSubclass(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    public Minute newTime(long epochMilliseconds)
-    {
-        return Minute.minute(units(epochMilliseconds));
+        return minute(millisecondsToUnits(milliseconds));
     }
 
     @Override

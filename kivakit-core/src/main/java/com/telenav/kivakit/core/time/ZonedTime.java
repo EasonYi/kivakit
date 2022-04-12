@@ -36,11 +36,13 @@ import java.util.Objects;
 import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 import static com.telenav.kivakit.core.time.DayOfWeek.javaDayOfWeek;
 import static com.telenav.kivakit.core.time.Duration.ONE_HOUR;
+import static com.telenav.kivakit.core.time.Hour.hour;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.Second.second;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_DATE_TIME;
 import static com.telenav.kivakit.core.time.TimeFormats.KIVAKIT_TIME;
+import static com.telenav.kivakit.core.time.Year.unixEpochYear;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 import static java.time.temporal.ChronoField.DAY_OF_WEEK;
@@ -99,6 +101,24 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     public static ZonedTime epochSeconds(ZoneId zone, double seconds)
     {
         return epochMilliseconds(zone, (long) (seconds * 1000));
+    }
+
+    @UmlMethodGroup("factory")
+    public static ZonedTime localTime(Hour hour, Minute minute, Second second)
+    {
+        return zonedTime(localTimeZone(), unixEpochYear(), Month.JANUARY, Day.dayOfMonth(1), hour, minute, second);
+    }
+
+    @UmlMethodGroup("factory")
+    public static ZonedTime localTime(Day day, Hour hour, Minute minute, Second second)
+    {
+        return zonedTime(localTimeZone(), unixEpochYear(), Month.JANUARY, day, hour, minute, second);
+    }
+
+    @UmlMethodGroup("factory")
+    public static ZonedTime localTime(Minute minute, Second second)
+    {
+        return zonedTime(localTimeZone(), unixEpochYear(), Month.JANUARY, Day.dayOfMonth(1), hour(0), minute, second);
     }
 
     @UmlMethodGroup("factory")
@@ -220,6 +240,24 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     }
 
     @UmlMethodGroup("factory")
+    public static ZonedTime zonedTime(ZoneId zone, Hour hour, Minute minute, Second second)
+    {
+        return zonedTime(zone, unixEpochYear(), Month.JANUARY, Day.dayOfMonth(1), hour, minute, second);
+    }
+
+    @UmlMethodGroup("factory")
+    public static ZonedTime zonedTime(ZoneId zone, Day day, Hour hour, Minute minute, Second second)
+    {
+        return zonedTime(zone, unixEpochYear(), Month.JANUARY, day, hour, minute, second);
+    }
+
+    @UmlMethodGroup("factory")
+    public static ZonedTime zonedTime(ZoneId zone, Minute minute, Second second)
+    {
+        return zonedTime(zone, unixEpochYear(), Month.JANUARY, Day.dayOfMonth(1), hour(0), minute, second);
+    }
+
+    @UmlMethodGroup("factory")
     public static ZonedTime zonedTime(ZoneId zone, Year year, Month month, Day dayOfMonth, Hour hour)
     {
         return zonedTime(zone, year, month, dayOfMonth, hour, Minute.minute(0), second(0));
@@ -268,12 +306,12 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     /**
      * Private constructor forces use of static factory methods.
      *
-     * @param milliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
+     * @param epochMilliseconds the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
      */
     @UmlExcludeMember
-    protected ZonedTime(final ZoneId zone, long milliseconds)
+    protected ZonedTime(ZoneId zone, long epochMilliseconds)
     {
-        super(milliseconds);
+        super(epochMilliseconds);
 
         this.zone = zone;
     }
@@ -318,12 +356,6 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     public String asTimeString(ZoneId zone)
     {
         return KIVAKIT_TIME.format(asInstant()) + "_" + TimeZones.shortDisplayName(zone);
-    }
-
-    @Override
-    public ZonedTime asUtc()
-    {
-        return super.asUtc();
     }
 
     public Quarter calendarQuarter()
@@ -434,7 +466,7 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     @Override
     public ZonedTime maximum()
     {
-        return newTime(Integer.MAX_VALUE);
+        return newTimeSubclass(Integer.MAX_VALUE);
     }
 
     public Meridiem meridiem()
@@ -451,7 +483,7 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     @Override
     public ZonedTime minimum()
     {
-        return newTime(0);
+        return newTimeSubclass(0);
     }
 
     /**
@@ -481,21 +513,9 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
     }
 
     @Override
-    public Duration newDuration(long epochMilliseconds)
-    {
-        return Duration.milliseconds(epochMilliseconds);
-    }
-
-    @Override
-    public ZonedTime newTime(long epochMilliseconds)
+    public ZonedTime newTimeSubclass(long epochMilliseconds)
     {
         return epochMilliseconds(timeZone(), epochMilliseconds);
-    }
-
-    @Override
-    public ZonedTime newTimeOrDuration(long milliseconds)
-    {
-        return epochMilliseconds(timeZone(), milliseconds);
     }
 
     @Override

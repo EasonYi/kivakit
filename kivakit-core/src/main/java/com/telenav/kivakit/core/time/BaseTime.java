@@ -69,8 +69,9 @@ import static com.telenav.kivakit.core.time.Duration.days;
  * @see Quantizable
  * @see Clock
  */
+@SuppressWarnings("unchecked")
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public abstract class BaseTime<SubClass extends PointInTime<SubClass, Duration>> implements PointInTime<SubClass, Duration>
+public abstract class BaseTime<TimeSubclass extends PointInTime<TimeSubclass, Duration>> implements PointInTime<TimeSubclass, Duration>
 {
     /**
      * The system clock consulted for system measurements, like the current epoch time in milliseconds or system time
@@ -131,7 +132,7 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, Duration>>
         this.clock = clock;
     }
 
-    public SubClass endOfDay()
+    public TimeSubclass endOfDay()
     {
         return roundUp(days(1));
     }
@@ -166,18 +167,24 @@ public abstract class BaseTime<SubClass extends PointInTime<SubClass, Duration>>
     }
 
     @Override
-    public Duration newDuration(long milliseconds)
+    public Duration newDurationSubclass(long milliseconds)
     {
         return Duration.milliseconds(milliseconds);
     }
 
     @Override
-    public SubClass newTimeOrDuration(long milliseconds)
+    public TimeSubclass newTimeSubclass(long epochMilliseconds)
     {
-        return newTime(milliseconds);
+        return (TimeSubclass) Time.epochMilliseconds(epochMilliseconds);
     }
 
-    public SubClass startOfDay()
+    @Override
+    public TimeSubclass newTimeUnitsSubclass(long milliseconds)
+    {
+        return newTimeSubclass(milliseconds);
+    }
+
+    public TimeSubclass startOfDay()
     {
         return roundDown(days(1));
     }

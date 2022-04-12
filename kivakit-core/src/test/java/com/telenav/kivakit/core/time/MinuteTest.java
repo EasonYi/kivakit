@@ -3,11 +3,11 @@ package com.telenav.kivakit.core.time;
 import com.telenav.kivakit.core.test.CoreUnitTest;
 import org.junit.Test;
 
-import static com.telenav.kivakit.core.time.Duration.hours;
 import static com.telenav.kivakit.core.time.Duration.minutes;
 import static com.telenav.kivakit.core.time.Duration.seconds;
 import static com.telenav.kivakit.core.time.Minute.minute;
 import static com.telenav.kivakit.core.time.Second.second;
+import static com.telenav.kivakit.core.time.Time.time;
 
 /**
  * Tests for {@link Minute}
@@ -22,8 +22,8 @@ public class MinuteTest extends CoreUnitTest
         ensureEqual(minute(0).decremented(), minute(59));
         ensureEqual(minute(5).decremented(), minute(4));
         ensureEqual(minute(5).incremented(), minute(6));
-        ensureEqual(minute(5).plus(seconds(30)), minutes(5.5));
-        ensureEqual(minute(5).minus(second(30)), minutes(4.5));
+        ensureEqual(minute(5).plus(seconds(60)), time(minute(6), second(0)));
+        ensureEqual(minute(5).minus(seconds(60)), minute(4));
     }
 
     @Test
@@ -56,10 +56,10 @@ public class MinuteTest extends CoreUnitTest
     public void testConversion()
     {
         ensureEqual(minute(5), minute(5));
-        ensureEqual(minute(5).asMilliseconds(), 60 * 5 * 1000.0);
+        ensureEqual(minute(5).asMilliseconds(), 60 * 5 * 1000);
         ensureEqual(minute(5).asUnits(), 5);
-        ensureEqual(minute(5).difference(minute(2)), minute(3));
-        ensureEqual(minute(5).minute(), 5.0);
+        ensureEqual(minute(5).difference(minute(2)), minutes(3));
+        ensureEqual(minute(5).minute(), 5);
     }
 
     @Test
@@ -73,8 +73,8 @@ public class MinuteTest extends CoreUnitTest
     @Test
     public void testEquals()
     {
-        ensureEqual(minute(59), hours(1));
-        ensureEqual(minute(90), hours(1.5));
+        ensureEqual(minute(59), minute(58).incremented());
+        ensureEqual(minute(10), minute(5).plus(minutes(5)));
     }
 
     @Test

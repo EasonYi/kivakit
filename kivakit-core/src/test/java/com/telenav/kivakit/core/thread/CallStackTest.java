@@ -29,7 +29,7 @@ public class CallStackTest extends CoreUnitTest
 {
     public interface TestInterface
     {
-        Class<?> testSubClass();
+        Class<?> testSubclass();
     }
 
     public static class Nested implements TestInterface
@@ -40,7 +40,7 @@ public class CallStackTest extends CoreUnitTest
         }
 
         @Override
-        public Class<?> testSubClass()
+        public Class<?> testSubclass()
         {
             return CallStack.callerOf(IMMEDIATE, Matching.SUBCLASS, TestInterface.class).typeClass();
         }
@@ -49,7 +49,7 @@ public class CallStackTest extends CoreUnitTest
     @Test
     public void test()
     {
-        Assert.assertEquals(CallStackTest.class, new Nested().testSubClass());
+        Assert.assertEquals(CallStackTest.class, new Nested().testSubclass());
         Assert.assertEquals(CallStackTest.class, new Nested().testExact());
     }
 }

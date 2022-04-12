@@ -76,6 +76,11 @@ public class PreciseDuration extends BaseDuration<PreciseDuration>
         return nanoseconds;
     }
 
+    public PreciseDuration dividedBy(PreciseDuration that)
+    {
+        return nanoseconds(nanoseconds / that.nanoseconds);
+    }
+
     public boolean isGreaterThan(PreciseDuration that)
     {
         return nanoseconds > that.nanoseconds;
@@ -130,6 +135,11 @@ public class PreciseDuration extends BaseDuration<PreciseDuration>
     public PreciseDuration plus(PreciseDuration that)
     {
         return nanoseconds(nanoseconds + that.nanoseconds);
+    }
+
+    public PreciseDuration times(final PreciseDuration preciseDuration)
+    {
+        return unsupported();
     }
 
     @Override

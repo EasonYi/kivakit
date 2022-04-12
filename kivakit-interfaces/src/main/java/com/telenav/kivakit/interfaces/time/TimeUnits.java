@@ -11,6 +11,17 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 /**
  * An object with time units.
  *
+ * <p>
+ * A subclass of TimeUnits such as {@link PointInTime} or {@link LengthOfTime} must implement:
+ * </p>
+ *
+ * <ul>
+ *      <li>{@link #millisecondsPerUnit()}</li>
+ *      <li>{@link #newTimeUnitsSubclass(long)}</li>
+ * </ul>
+ *
+ *
+ *
  * <ul>
  *      <li>{@link #asUnits()}</li>
  *      <li>{@link #milliseconds()}</li>
@@ -19,98 +30,117 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
  *      <li>{@link #modulo()}</li>
  *      <li>{@link #next()}</li>
  *      <li>{@link #plusUnits(long)}</li>
- *      <li>{@link #units(Milliseconds)}</li>
+ *      <li>{@link #millisecondsToUnits(Milliseconds)}</li>
  * </ul>
  *
  * @author jonathanl (shibo)
+ * @see PointInTime
+ * @see LengthOfTime
  */
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public interface TimeUnits<TimeOrDuration extends TimeUnits<TimeOrDuration>> extends
-        Minimizable<TimeOrDuration>,
-        Maximizable<TimeOrDuration>,
-        NextValue<TimeOrDuration>,
+public interface TimeUnits<TimeUnitSubclass extends TimeUnits<TimeUnitSubclass>> extends
+        Minimizable<TimeUnitSubclass>,
+        Maximizable<TimeUnitSubclass>,
+        NextValue<TimeUnitSubclass>,
         Milliseconds
 {
+    /**
+     * This time value in units
+     */
     default long asUnits()
     {
         return milliseconds() / millisecondsPerUnit();
     }
 
-    @Override
-    long milliseconds();
+    /**
+     * Returns an instance of a general point in time, restricted to the range for this time unit.
+     *
+     * @param milliseconds The number of milliseconds
+     * @return The subclass instance
+     */
+    @UmlExcludeMember
+    default long millisecondsInRange(long milliseconds)
+    {
+        var modulo = modulo() * millisecondsPerUnit();
+        if (milliseconds < 0)
+        {
+            milliseconds = -milliseconds;
+            milliseconds = (modulo - (milliseconds % modulo));
+        }
+        else
+        {
+            milliseconds = milliseconds % modulo;
+        }
+        return minimum().milliseconds() + milliseconds;
+    }
 
     /**
      * Returns the number of milliseconds per unit of time
      */
     long millisecondsPerUnit();
 
-    default TimeOrDuration minusUnits(long units)
+    /**
+     * Converts from milliseconds to units
+     */
+    default long millisecondsToUnits(long milliseconds)
+    {
+        return milliseconds / millisecondsPerUnit();
+    }
+
+    /**
+     * Converts from milliseconds to units
+     */
+    default long millisecondsToUnits(Milliseconds value)
+    {
+        return millisecondsToUnits(value.milliseconds());
+    }
+
+    default long millisecondsToUnitsInRange(long milliseconds)
+    {
+        return millisecondsToUnits(millisecondsInRange(milliseconds));
+    }
+
+    /**
+     * Returns this object minus the given number of units
+     */
+    default TimeUnitSubclass minusUnits(long units)
     {
         return plusUnits(-units);
     }
 
     /**
-     * Returns the modulo size of this length of time in units. For example, the modulo for military time would be 24.
+     * Returns the modulo size of this number of time units. For example, the modulo for military time would be 24.
      */
     default long modulo()
     {
-        return units(maximum()) - units(minimum()) + 1;
+        return millisecondsToUnits(maximum()) - millisecondsToUnits(minimum()) + 1;
     }
 
     /**
-     * Returns an instance of the subclass of this length or point in time.
-     *
-     * @param milliseconds The number of milliseconds
-     * @return The subclass instance
+     * Returns a new instance of the subclass of {@link TimeUnits} for the given number of milliseconds
      */
-    @UmlExcludeMember
-    TimeOrDuration newTimeOrDuration(long milliseconds);
+    TimeUnitSubclass newTimeUnitsSubclass(long milliseconds);
 
     /**
-     * Forces the given units to be within the range between {@link #minimum()} and {@link #maximum()}, inclusive.
+     * Returns this object plus one unit
      */
-    @UmlExcludeMember
-    default TimeOrDuration newTimeOrDurationFromUnits(long units)
-    {
-        return newTimeOrDurationInRange(units * millisecondsPerUnit());
-    }
-
-    @UmlExcludeMember
-    default TimeOrDuration newTimeOrDurationInRange(long milliseconds)
-    {
-        var modulo = modulo();
-        var units = milliseconds / millisecondsPerUnit();
-        if (units < 0)
-        {
-            units = -units;
-            units = (modulo - (units % modulo));
-        }
-        else
-        {
-            units = units % modulo;
-        }
-        return newTimeOrDuration(minimum().milliseconds() + (units * millisecondsPerUnit()));
-    }
-
     @Override
-    default TimeOrDuration next()
+    default TimeUnitSubclass next()
     {
         return plusUnits(1);
     }
 
-    default TimeOrDuration plusUnits(long units)
+    /**
+     * Returns this object plus the given number of units
+     */
+    default TimeUnitSubclass plusUnits(long units)
     {
-        return newTimeOrDurationFromUnits(asUnits() + units);
+        return newTimeUnitsSubclass(millisecondsInRange(unitsToMilliseconds(asUnits() + units)));
     }
 
-    default long units(long value)
+    default long unitsToMilliseconds(long units)
     {
-        return value / millisecondsPerUnit();
-    }
-
-    default long units(Milliseconds value)
-    {
-        return units(value.milliseconds());
+        return units * millisecondsPerUnit();
     }
 }

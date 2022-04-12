@@ -274,22 +274,9 @@ public class DayOfWeek extends BaseTime<DayOfWeek>
     }
 
     @Override
-    public Duration newDuration(long milliseconds)
+    public DayOfWeek newTimeSubclass(long milliseconds)
     {
-        return Duration.milliseconds(milliseconds);
-    }
-
-    @Override
-    public DayOfWeek newTime(long epochMilliseconds)
-    {
-        return newTimeOrDuration(epochMilliseconds / millisecondsPerUnit());
-    }
-
-    @Override
-    @NoTestRequired
-    public DayOfWeek newTimeOrDuration(long milliseconds)
-    {
-        return dayOfWeek(milliseconds / millisecondsPerDay, standard);
+        return dayOfWeek(millisecondsToUnits(milliseconds), standard);
     }
 
     public Standard standard()

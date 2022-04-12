@@ -3,7 +3,6 @@ package com.telenav.kivakit.interfaces.time;
 import com.telenav.kivakit.interfaces.code.Callback;
 import com.telenav.kivakit.interfaces.collection.NextValue;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
-import com.telenav.kivakit.interfaces.numeric.Arithmetic;
 import com.telenav.kivakit.interfaces.numeric.Maximizable;
 import com.telenav.kivakit.interfaces.numeric.Minimizable;
 import com.telenav.kivakit.interfaces.numeric.Percentage;
@@ -35,9 +34,9 @@ import java.util.concurrent.locks.Condition;
  *
  * <ul>
  *     <li>{@link #milliseconds()} - The number of milliseconds for this length of time</li>
- *     <li>{@link #newDuration(long)}</li>
- *     <li>{@link #newTimeOrDuration(long)}</li>
  *     <li>{@link #millisecondsPerUnit()} - The number of milliseconds per unit of the implementing class</li>
+ *     <li>{@link #newTimeUnitsSubclass(long)}</li>
+ *     <li>{@link #newDuration(long)}</li>
  * </ul>
  *
  * <p><b>Conversion</b></p>
@@ -63,7 +62,7 @@ import java.util.concurrent.locks.Condition;
  *     <li>{@link #minusUnits(long)}</li>
  *     <li>{@link #oneUnit()}</li>
  *     <li>{@link #plusUnits(long)}</li>
- *     <li>{@link #units(Milliseconds)}</li>
+ *     <li>{@link #millisecondsToUnits(Milliseconds)}</li>
  * </ul>
  *
  *
@@ -121,14 +120,13 @@ import java.util.concurrent.locks.Condition;
  */
 @SuppressWarnings("unused")
 @UmlClassDiagram(diagram = DiagramTimeDuration.class)
-public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
+public interface LengthOfTime<DurationSubclass extends LengthOfTime<DurationSubclass>> extends
         QuantumComparable<LengthOfTime<?>>,
         Comparable<LengthOfTime<?>>,
-        Minimizable<Duration>,
-        Arithmetic<Duration>,
-        Maximizable<Duration>,
-        TimeUnits<Duration>,
-        NextValue<Duration>,
+        Minimizable<DurationSubclass>,
+        Maximizable<DurationSubclass>,
+        TimeUnits<DurationSubclass>,
+        NextValue<DurationSubclass>,
         Stringable
 {
     /**
@@ -347,13 +345,13 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration decremented()
+    default DurationSubclass decremented()
     {
         return minus(oneUnit());
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration difference(Duration that)
+    default DurationSubclass difference(DurationSubclass that)
     {
         if (isGreaterThan(that))
         {
@@ -365,19 +363,15 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
         }
     }
 
-    /**
-     * Returns this length of time divided by the given value
-     */
-    @UmlMethodGroup("arithmetic")
-    default Duration dividedBy(double value)
-    {
-        return newDuration((long) (milliseconds() / value));
-    }
-
     @UmlMethodGroup("arithmetic")
     default double dividedBy(LengthOfTime<?> that)
     {
         return (double) milliseconds() / that.milliseconds();
+    }
+
+    default DurationSubclass dividedBy(double divisor)
+    {
+        return newDuration((long) (milliseconds() / divisor));
     }
 
     /**
@@ -398,13 +392,13 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration incremented()
+    default DurationSubclass incremented()
     {
         return plus(oneUnit());
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration longerBy(Percentage percentage)
+    default DurationSubclass longerBy(Percentage percentage)
     {
         return newDuration((long) (milliseconds() * (1.0 + percentage.unitValue())));
     }
@@ -412,9 +406,9 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
     @SuppressWarnings("unchecked")
     @Override
     @UmlMethodGroup("arithmetic")
-    default Duration maximum(Duration that)
+    default DurationSubclass maximum(DurationSubclass that)
     {
-        return isGreaterThan(that) ? (Duration) this : that;
+        return isGreaterThan(that) ? (DurationSubclass) this : that;
     }
 
     /**
@@ -434,23 +428,23 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
     @SuppressWarnings("unchecked")
     @Override
     @UmlMethodGroup("arithmetic")
-    default Duration minimum(Duration that)
+    default DurationSubclass minimum(DurationSubclass that)
     {
-        return isLessThan(that) ? (Duration) this : that;
+        return isLessThan(that) ? (DurationSubclass) this : that;
     }
 
     /**
      * Returns this length of time minus the given length of time
      */
     @UmlMethodGroup("arithmetic")
-    default Duration minus(LengthOfTime<?> that)
+    default DurationSubclass minus(LengthOfTime<?> that)
     {
         return newDuration(milliseconds() - that.milliseconds());
     }
 
     @Override
     @UmlMethodGroup("arithmetic")
-    default Duration minusUnits(long units)
+    default DurationSubclass minusUnits(long units)
     {
         return plusUnits(-units);
     }
@@ -468,7 +462,7 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration modulus(LengthOfTime<?> that)
+    default DurationSubclass modulus(LengthOfTime<?> that)
     {
         return newDuration(milliseconds() % that.milliseconds());
     }
@@ -477,29 +471,29 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
      * @return The nearest length of time to the given length of time
      */
     @UmlMethodGroup("arithmetic")
-    default Duration nearest(LengthOfTime<?> unit)
+    default DurationSubclass nearest(LengthOfTime<?> unit)
     {
         return plus(unit.dividedBy(2)).roundDown(unit);
     }
 
     /**
-     * Returns an instance of the subclass of this length of time for the given number of milliseconds.
+     * Returns a duration implementation for the given number of milliseconds.
      *
      * @param milliseconds The number of milliseconds
      * @return The subclass instance
      */
     @UmlExcludeMember
-    Duration newDuration(long milliseconds);
+    DurationSubclass newDuration(long milliseconds);
 
     @Override
     @UmlMethodGroup("arithmetic")
-    default Duration next()
+    default DurationSubclass next()
     {
         return plusUnits(1);
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration oneUnit()
+    default DurationSubclass oneUnit()
     {
         return newDuration(millisecondsPerUnit());
     }
@@ -511,16 +505,16 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
      * Returns this length of time plus the given length of time
      */
     @UmlMethodGroup("arithmetic")
-    default Duration plus(LengthOfTime<?> that)
+    default DurationSubclass plus(LengthOfTime<?> that)
     {
         return newDuration(milliseconds() + that.milliseconds());
     }
 
     @Override
     @UmlMethodGroup("arithmetic")
-    default Duration plusUnits(long units)
+    default DurationSubclass plusUnits(long units)
     {
-        return newTimeOrDurationFromUnits(asUnits() + units);
+        return newDuration(asUnits() + units);
     }
 
     /**
@@ -537,7 +531,7 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
      * Returns this length of time rounded down to the nearest whole unit
      */
     @UmlMethodGroup("arithmetic")
-    default Duration roundDown(LengthOfTime<?> unit)
+    default DurationSubclass roundDown(LengthOfTime<?> unit)
     {
         return newDuration(milliseconds() / unit.milliseconds() * unit.milliseconds());
     }
@@ -546,13 +540,13 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
      * Returns this length of time rounded up to the nearest whole unit
      */
     @UmlMethodGroup("arithmetic")
-    default Duration roundUp(LengthOfTime<?> unit)
+    default DurationSubclass roundUp(LengthOfTime<?> unit)
     {
         return roundDown(unit).plus(unit);
     }
 
     @UmlMethodGroup("arithmetic")
-    default Duration shorterBy(Percentage percentage)
+    default DurationSubclass shorterBy(Percentage percentage)
     {
         return newDuration((long) (milliseconds() * (1.0 - percentage.unitValue())));
     }
@@ -580,9 +574,9 @@ public interface LengthOfTime<Duration extends LengthOfTime<Duration>> extends
      * Returns this length of time times the given value
      */
     @UmlMethodGroup("arithmetic")
-    default Duration times(double value)
+    default DurationSubclass times(double multiplier)
     {
-        return newDuration((long) (milliseconds() * value));
+        return newDuration((long) (milliseconds() * multiplier));
     }
 
     /**

@@ -23,6 +23,8 @@ import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.associations.UmlRelation;
 import com.telenav.lexakai.annotations.visibility.UmlExcludeSuperTypes;
 
+import static com.telenav.kivakit.interfaces.string.Stringable.Format.TEXT;
+
 /**
  * Interface to an object that can produce one or more different kinds of string representations. This can be useful
  * when the {@link Object#toString()} method is already being used or when other kinds of strings are needed for
@@ -72,6 +74,6 @@ public interface Stringable extends StringSource
     @Override
     default String asString()
     {
-        return asString(Format.TEXT);
+        return asString(TEXT);
     }
 }

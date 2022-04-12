@@ -61,9 +61,9 @@ public class Week extends BaseTime<Week>
     }
 
     @Override
-    public Week newTime(long epochMilliseconds)
+    public Week newTimeSubclass(long milliseconds)
     {
-        return week(units(epochMilliseconds));
+        return week(millisecondsToUnits(milliseconds));
     }
 
     @Override

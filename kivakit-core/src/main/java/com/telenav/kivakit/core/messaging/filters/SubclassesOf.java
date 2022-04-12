@@ -18,14 +18,14 @@
 
 package com.telenav.kivakit.core.messaging.filters;
 
-import com.telenav.kivakit.interfaces.comparison.Filter;
 import com.telenav.kivakit.core.language.Classes;
+import com.telenav.kivakit.interfaces.comparison.Filter;
 
-public class SubClassesOf<T> implements Filter<T>
+public class SubclassesOf<T> implements Filter<T>
 {
     private final Class<T> type;
 
-    public SubClassesOf(Class<T> type)
+    public SubclassesOf(Class<T> type)
     {
         this.type = type;
     }

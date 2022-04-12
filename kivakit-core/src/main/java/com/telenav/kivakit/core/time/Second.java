@@ -67,16 +67,9 @@ public class Second extends BaseTime<Second>
     }
 
     @Override
-    @UmlExcludeMember
-    public Duration newDuration(long seconds)
+    public Second newTimeSubclass(long milliseconds)
     {
-        return Duration.seconds(seconds);
-    }
-
-    @Override
-    public Second newTime(long epochMilliseconds)
-    {
-        return Second.second(units(epochMilliseconds));
+        return second(millisecondsToUnits(milliseconds));
     }
 
     public long second()
