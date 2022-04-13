@@ -82,14 +82,4 @@ public interface QuantumComparable<Value extends Quantizable> extends Quantizabl
     {
         return quantum() <= that.quantum();
     }
-
-    default boolean isNonZero()
-    {
-        return quantum() != 0;
-    }
-
-    default boolean isZero()
-    {
-        return quantum() == 0;
-    }
 }

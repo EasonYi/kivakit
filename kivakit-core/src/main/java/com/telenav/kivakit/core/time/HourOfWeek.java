@@ -20,7 +20,7 @@ import static com.telenav.kivakit.core.time.DayOfWeek.isoDayOfWeek;
  *
  * @author jonathanl (shibo)
  */
-@SuppressWarnings({ "unused", "unchecked" })
+@SuppressWarnings({ "unused" })
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
 public class HourOfWeek extends BaseTime<HourOfWeek>
 {
@@ -103,19 +103,16 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
         return asUnits();
     }
 
-    @Override
     public HourOfWeek asLocalTime()
     {
         return asZonedTime(ZonedTime.localTimeZone());
     }
 
-    @Override
     public HourOfWeek asUtc(ZoneId zone)
     {
         return HourOfWeek.hourOfWeek(asHours() - offsetInHours(zone));
     }
 
-    @Override
     public HourOfWeek asZonedTime(ZoneId zone)
     {
         var modulo = modulo();
@@ -169,6 +166,12 @@ public class HourOfWeek extends BaseTime<HourOfWeek>
     public long millisecondsPerUnit()
     {
         return millisecondsPerHour;
+    }
+
+    @Override
+    public HourOfWeek minimum()
+    {
+        return hourOfWeek(0);
     }
 
     @Override

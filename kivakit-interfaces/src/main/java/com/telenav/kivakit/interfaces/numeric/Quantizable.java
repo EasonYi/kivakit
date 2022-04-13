@@ -59,6 +59,16 @@ public interface Quantizable extends DoubleQuantizable
         return quantum();
     }
 
+    default boolean isNonZero()
+    {
+        return quantum() != 0;
+    }
+
+    default boolean isZero()
+    {
+        return quantum() == 0;
+    }
+
     /**
      * Returns the discrete value for this object
      */

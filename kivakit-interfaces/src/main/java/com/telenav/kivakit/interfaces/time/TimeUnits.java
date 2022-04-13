@@ -12,7 +12,7 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
  * An object with time units.
  *
  * <p>
- * A subclass of TimeUnits such as {@link PointInTime} or {@link LengthOfTime} must implement:
+ * A subclass of TimeUnits such as {@link PointInUnixEpoch} or {@link LengthOfTime} must implement:
  * </p>
  *
  * <ul>
@@ -34,7 +34,7 @@ import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
  * </ul>
  *
  * @author jonathanl (shibo)
- * @see PointInTime
+ * @see PointInUnixEpoch
  * @see LengthOfTime
  */
 @UmlClassDiagram(diagram = DiagramTimePoint.class)

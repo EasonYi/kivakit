@@ -20,7 +20,7 @@ package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
-import com.telenav.kivakit.interfaces.time.PointInTime;
+import com.telenav.kivakit.interfaces.time.PointInUnixEpoch;
 import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.UmlMethodGroup;
@@ -51,7 +51,9 @@ import static com.telenav.kivakit.interfaces.time.TimeZoned.localTimeZone;
  */
 @SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public class Time extends BaseTime<Time> implements TimeZoned<Time>, Comparable<PointInTime<?, ?>>
+public class Time extends BaseUnixEpochTime<Time> implements
+        TimeZoned<Time>,
+        Comparable<PointInUnixEpoch<?, ?>>
 {
     /** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
     public static final Time START_OF_UNIX_EPOCH = epochMilliseconds(0);
@@ -237,7 +239,7 @@ public class Time extends BaseTime<Time> implements TimeZoned<Time>, Comparable<
     }
 
     @Override
-    public int compareTo(@NotNull PointInTime<?, ?> that)
+    public int compareTo(@NotNull PointInUnixEpoch<?, ?> that)
     {
         return Long.compare(epochMilliseconds(), that.epochMilliseconds());
     }

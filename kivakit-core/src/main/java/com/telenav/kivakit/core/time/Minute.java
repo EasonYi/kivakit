@@ -2,11 +2,13 @@ package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.language.primitive.Longs;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimeDuration;
+import com.telenav.kivakit.interfaces.time.LengthOfTime;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.UmlMethodGroup;
 import com.telenav.lexakai.annotations.visibility.UmlExcludeMember;
 
 import static com.telenav.kivakit.core.ensure.Ensure.ensure;
+import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 
 /**
  * Represents the minute of a point in time.
@@ -33,13 +35,6 @@ public class Minute extends BaseTime<Minute>
 
     @Override
     @UmlMethodGroup("arithmetic")
-    public Minute maximum(Minute that)
-    {
-        return isGreaterThan(that) ? this : that;
-    }
-
-    @Override
-    @UmlMethodGroup("arithmetic")
     public Minute maximum()
     {
         return minute(59);
@@ -50,13 +45,6 @@ public class Minute extends BaseTime<Minute>
     public long millisecondsPerUnit()
     {
         return millisecondsPerMinute;
-    }
-
-    @Override
-    @UmlMethodGroup("arithmetic")
-    public Minute minimum(Minute that)
-    {
-        return isLessThan(that) ? this : that;
     }
 
     @Override
@@ -77,6 +65,18 @@ public class Minute extends BaseTime<Minute>
     public Minute newTimeSubclass(long milliseconds)
     {
         return minute(millisecondsToUnits(milliseconds));
+    }
+
+    @Override
+    public Minute roundDown(LengthOfTime<?> duration)
+    {
+        return unsupported();
+    }
+
+    @Override
+    public Minute roundUp(LengthOfTime<?> duration)
+    {
+        return unsupported();
     }
 
     @Override

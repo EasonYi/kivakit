@@ -12,7 +12,7 @@ import java.util.TimeZone;
  * @author jonathanl (shibo)
  */
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public interface TimeZoned<TimeSubclass extends PointInTime<TimeSubclass, ?>> extends Milliseconds
+public interface TimeZoned<TimeSubclass extends PointInUnixEpoch<TimeSubclass, ?>> extends Milliseconds
 {
     static ZoneId localTimeZone()
     {

@@ -20,7 +20,7 @@ package com.telenav.kivakit.core.time;
 
 import com.telenav.kivakit.core.messaging.Listener;
 import com.telenav.kivakit.interfaces.lexakai.DiagramTimePoint;
-import com.telenav.kivakit.interfaces.time.PointInTime;
+import com.telenav.kivakit.interfaces.time.PointInUnixEpoch;
 import com.telenav.kivakit.interfaces.time.TimeZoned;
 import com.telenav.lexakai.annotations.UmlClassDiagram;
 import com.telenav.lexakai.annotations.UmlMethodGroup;
@@ -36,6 +36,7 @@ import java.util.Objects;
 import static com.telenav.kivakit.core.ensure.Ensure.unsupported;
 import static com.telenav.kivakit.core.time.DayOfWeek.javaDayOfWeek;
 import static com.telenav.kivakit.core.time.Duration.ONE_HOUR;
+import static com.telenav.kivakit.core.time.Duration.days;
 import static com.telenav.kivakit.core.time.Hour.hour;
 import static com.telenav.kivakit.core.time.Hour.militaryHour;
 import static com.telenav.kivakit.core.time.Second.second;
@@ -68,7 +69,7 @@ import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
  */
 @SuppressWarnings({ "unused", "unchecked" })
 @UmlClassDiagram(diagram = DiagramTimePoint.class)
-public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTime>
+public class ZonedTime extends BaseUnixEpochTime<ZonedTime> implements TimeZoned<ZonedTime>
 {
     /**
      * Retrieves a <code>Time</code> instance based on the given milliseconds.
@@ -392,19 +393,17 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
         return Day.dayOfYear(javaLocalDateTime().getDayOfYear());
     }
 
-    @Override
-    public Duration durationBefore(PointInTime<?, ?> thatTime)
+    public ZonedTime endOfDay()
     {
-        var milliseconds = thatTime.asUtc().epochMilliseconds() - asUtc().epochMilliseconds();
-        return (Duration) thatTime.asUtc().minus(asUtc());
+        return roundUp(days(1));
     }
 
     @Override
     public boolean equals(Object object)
     {
-        if (object instanceof PointInTime)
+        if (object instanceof PointInUnixEpoch)
         {
-            var that = (PointInTime<?, ?>) object;
+            var that = (PointInUnixEpoch<?, ?>) object;
             return asUtc().epochMilliseconds() == that.asUtc().epochMilliseconds();
         }
         return false;
@@ -524,7 +523,6 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
         return epochMilliseconds(zone, epochMilliseconds);
     }
 
-    @Override
     public ZonedTime startOfDay()
     {
         return epochSeconds(timeZone(), javaZonedDate()
@@ -570,6 +568,13 @@ public class ZonedTime extends BaseTime<ZonedTime> implements TimeZoned<ZonedTim
                 + "." + String.format("%02d", minute().asUnits())
                 + (meridiem() == Meridiem.NO_MERIDIEM ? "Z" : meridiem())
                 + "_" + TimeZones.shortDisplayName(timeZone());
+    }
+
+    @Override
+    public Duration until(ZonedTime thatTime)
+    {
+        var milliseconds = thatTime.asUtc().epochMilliseconds() - asUtc().epochMilliseconds();
+        return thatTime.asUtc().minus(asUtc());
     }
 
     /**
